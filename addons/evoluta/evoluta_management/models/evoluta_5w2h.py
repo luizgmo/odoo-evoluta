@@ -8,7 +8,7 @@ class Evoluta5W2H(models.Model):
     name = fields.Char(required=True, default="Novo plano 5W2H")
     project_id = fields.Many2one("project.project", required=True, ondelete="cascade")
     task_id = fields.Many2one("project.task", readonly=True, ondelete="set null")
-    what = fields.Char(string="What (O que)")
+    what = fields.Char(string="What (O que)", required=True)
     why = fields.Text(string="Why (Por que)")
     where = fields.Char(string="Where (Onde)")
     date_deadline = fields.Date(string="When (Quando)")
@@ -16,12 +16,11 @@ class Evoluta5W2H(models.Model):
     how = fields.Text(string="How (Como)")
     how_much = fields.Float(string="How Much (Quanto)")
 
-    def action_create_task(self):
-        self.ensure_one()
-        task_vals = {
+    def _task_vals(self):
+        return {
             "name": self.what or self.name,
             "project_id": self.project_id.id,
-            "user_ids": [(6, 0, self.who_id.ids)] if self.who_id else False,
+            "user_ids": [(6, 0, self.who_id.ids)] if self.who_id else [(6, 0, [])],
             "date_deadline": self.date_deadline,
             "description": "<br/>".join(
                 filter(
@@ -35,8 +34,15 @@ class Evoluta5W2H(models.Model):
                 )
             ),
         }
-        task = self.env["project.task"].create(task_vals)
-        self.task_id = task.id
+
+    def action_create_task(self):
+        self.ensure_one()
+        if self.task_id:
+            self.task_id.with_context(skip_5w2h_sync=True).write(self._task_vals())
+            task = self.task_id
+        else:
+            task = self.env["project.task"].create(self._task_vals())
+            self.with_context(skip_task_sync=True).task_id = task.id
         return {
             "type": "ir.actions.act_window",
             "res_model": "project.task",
@@ -44,3 +50,14 @@ class Evoluta5W2H(models.Model):
             "view_mode": "form",
             "target": "current",
         }
+
+    def write(self, vals):
+        res = super().write(vals)
+        if self.env.context.get("skip_task_sync"):
+            return res
+        sync_fields = {"what", "date_deadline", "who_id", "why", "where", "how", "how_much"}
+        if sync_fields.intersection(vals.keys()):
+            for rec in self:
+                if rec.task_id:
+                    rec.task_id.with_context(skip_5w2h_sync=True).write(rec._task_vals())
+        return res
