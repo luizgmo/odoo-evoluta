@@ -1,6 +1,9 @@
-# Evoluta + AlphaMec — CRM para Prefeituras (Central do Munícipe)
+# Evoluta + AlphaMec — Evoluta Gestão (Odoo 19)
 
-Documento de maturação da ideia — v0.1 (29/09/2026)
+Documento de maturação — v0.2 (30/09/2026)
+
+> **Fonte oficial:** `Conversa_Estrategia_GovTech_Evoluta_Odoo_Community_19.md` e `docs/ESTRATEGIA-EVOLUTA-RESUMO.md`.
+> As seções 2-3 abaixo eram suposições iniciais da AlphaMec (Central do Munícipe) e foram **substituídas pela estratégia oficial da Evoluta**. Mantidas apenas como histórico.
 
 ## 1. Contexto
 - **AlphaMec (EJ - IFSP Araraquara):** gerente de projetos de tecnologias, responsável pelo desenvolvimento.
@@ -8,28 +11,22 @@ Documento de maturação da ideia — v0.1 (29/09/2026)
 - **Parceria:** Evoluta identifica dores em clientes públicos, AlphaMec desenvolve sistemas.
 - **Ideia inicial do parceiro:** CRM de prateleira, modelo freemium, usando Odoo (open source).
 
-## 2. Problema que queremos resolver
-Prefeituras diversas têm dores gerais em comum, não nichadas. Foco em **pessoas = munícipes/cidadãos**.
+## 2. Problema (atualizado pela Evoluta)
+Foco oficial: **gestão interna da prefeitura** (projetos estratégicos, demandas entre secretarias, aprovações, indicadores), não portal do cidadão.
 
-Dores candidatas (a validar com Evoluta):
-- Atendimento ao cidadão disperso (telefone, WhatsApp, balcão, sem histórico)
-- Solicitações sem rastreio (tapa-buraco, iluminação, poda, saúde)
-- Falta de visão do prefeito: quantas demandas, onde, tempo médio, qual secretaria gargala
-- Cadastro de munícipe duplicado e desatualizado
-- Ouvidoria e protocolo lentos, sem SLA
+[Histórico AlphaMec — suposição inicial desconsiderada: atendimento ao cidadão, tapa-buraco, ouvidoria, cadastro de munícipe. Ver doc oficial se precisar retomar no futuro.]
 
-Não vender como "CRM". Prefeitura compra "Central do Munícipe / Gestão de Demandas".
+## 3. Solução oficial — Evoluta Gestão (MVP feira)
+Ver `docs/ESTRATEGIA-EVOLUTA-RESUMO.md` para detalhe.
 
-## 3. Solução proposta — MVP para feira (20 dias)
-**Nome de trabalho:** Central do Munícipe Evoluta
+Fluxo demo: `Desafio > Diagnóstico (5 Porquês) > Plano (5W2H) > Projeto/Kanban > Indicadores`
+Módulos: `evoluta_core, evoluta_strategy, evoluta_management` + Odoo Project + OCA Helpdesk/Tier Validation/Auditlog/KPI.
 
-4 blocos, todos reaproveitando Odoo 19 Community:
-1. **Portal do Cidadão (Website Odoo):** abrir chamado por categoria + acompanhar status por protocolo
-2. **Kanban da Prefeitura (CRM/Helpdesk adaptado):** pipeline `Novo > Em análise > Em execução > Aguardando munícipe > Concluído`, com SLA por secretaria
-3. **Cadastro Único do Munícipe (Contacts customizado):** renomear Cliente→Munícipe, Lead→Solicitação. Campos extras: CPF, bairro, secretaria responsável, histórico
-4. **Dashboard do Prefeito:** pedidos por bairro/categoria, tempo médio de atendimento, taxa de resolução
-
-Customização prevista: 1 módulo `evoluta_citizen` apenas para tradução de termos, campos extras e identidade visual Evoluta/AlphaMec.
+[Histórico AlphaMec — 4 blocos Central do Munícipe abaixo desconsiderados:
+1. Portal do Cidadão
+2. Kanban Prefeitura CRM
+3. Cadastro Munícipe
+4. Dashboard Prefeito]
 
 ## 4. Por que Odoo 19?
 - Community é LGPL (open source), stack Python + Postgres — acessível para time Jr
@@ -81,10 +78,10 @@ O que levar na feira:
 7. Após feira, quem sustenta suporte nível 1?
 
 ## 9. Decisões tomadas
-- [29/09] Foco = munícipe/cidadão, não servidor. Código pausado até maturar ideia.
-- [29/09] MVP = Central do Munícipe em Odoo 19 Community, mira feira em ~20 dias.
+- [29/09] Suposição inicial AlphaMec: Central do Munícipe — DESCONSIDERADA em 30/09.
+- [30/09] Vale o documento oficial da Evoluta. MVP = Evoluta Gestão em Odoo 19 Community, mira feira em ~20 dias.
 - [29/09] Versão travada em 19.0 (não usar 20.0).
-- Pendente: validar categorias, usuários e modelo comercial pós-feira.
+- Pendente: travar lista OCA realmente compatível com 19.0 e recortar MVP da feira (só fluxo Desafio>5 Porquês>5W2H>Kanban).
 
 ---
 Responsáveis: AlphaMec (dev) + Evoluta (negócio/validação). Próxima revisão: após retorno da Evoluta sobre seção 8.
