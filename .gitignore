@@ -6,3 +6,5 @@ __pycache__/
 # OCA é clonado localmente, não versionar código OCA
 addons/oca/*
 !addons/oca/.gitkeep
+# Prompts locais de execução, nunca commitar
+docs/PROMPTS.md
