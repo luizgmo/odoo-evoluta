@@ -1,0 +1,8 @@
+# Odoo / Docker local
+pgdata/
+*.pyc
+__pycache__/
+*.log
+# OCA é clonado localmente, não versionar código OCA
+addons/oca/*
+!addons/oca/.gitkeep
