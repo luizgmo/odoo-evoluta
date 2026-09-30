@@ -8,6 +8,7 @@
     "data": [
         "security/ir.model.access.csv",
         "views/menus.xml",
+        "data/project_stages.xml",
     ],
     "installable": True,
     "application": False,

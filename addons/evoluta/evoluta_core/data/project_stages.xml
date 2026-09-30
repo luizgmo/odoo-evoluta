@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+  <record id="stage_nao_iniciado" model="project.task.type">
+    <field name="name">NÃO INICIADO</field>
+    <field name="sequence">1</field>
+  </record>
+  <record id="stage_planejado" model="project.task.type">
+    <field name="name">PLANEJADO</field>
+    <field name="sequence">2</field>
+  </record>
+  <record id="stage_em_execucao" model="project.task.type">
+    <field name="name">EM EXECUÇÃO</field>
+    <field name="sequence">3</field>
+  </record>
+  <record id="stage_aguardando_terceiro" model="project.task.type">
+    <field name="name">AGUARDANDO TERCEIRO</field>
+    <field name="sequence">4</field>
+  </record>
+  <record id="stage_validacao" model="project.task.type">
+    <field name="name">VALIDAÇÃO</field>
+    <field name="sequence">5</field>
+  </record>
+  <record id="stage_concluido" model="project.task.type">
+    <field name="name">CONCLUÍDO</field>
+    <field name="sequence">6</field>
+    <field name="fold" eval="True"/>
+  </record>
+</odoo>
