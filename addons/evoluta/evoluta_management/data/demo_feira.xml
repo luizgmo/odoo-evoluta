@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+  <record id="demo_project_lgpd" model="project.project">
+    <field name="name">Demo Feira - LGPD</field>
+  </record>
+
+  <record id="demo_task_01" model="project.task">
+    <field name="name">Levantar inventário de dados - Saúde</field>
+    <field name="project_id" ref="demo_project_lgpd"/>
+    <field name="description">Mapear planilhas e sistemas com dados pessoais.</field>
+  </record>
+  <record id="demo_task_02" model="project.task">
+    <field name="name">Reunião com TI sobre segurança</field>
+    <field name="project_id" ref="demo_project_lgpd"/>
+    <field name="description">Alinhar backups, acessos e logs.</field>
+  </record>
+  <record id="demo_task_03" model="project.task">
+    <field name="name">Validar minuta com Jurídico</field>
+    <field name="project_id" ref="demo_project_lgpd"/>
+    <field name="description">Revisar minuta da política de privacidade.</field>
+  </record>
+  <record id="demo_task_04" model="project.task">
+    <field name="name">Treinar atendentes do balcão</field>
+    <field name="project_id" ref="demo_project_lgpd"/>
+  </record>
+  <record id="demo_task_05" model="project.task">
+    <field name="name">Publicar aviso de privacidade no portal</field>
+    <field name="project_id" ref="demo_project_lgpd"/>
+  </record>
+  <record id="demo_task_06" model="project.task">
+    <field name="name">Mapear contratos com terceiros</field>
+    <field name="project_id" ref="demo_project_lgpd"/>
+  </record>
+  <record id="demo_task_07" model="project.task">
+    <field name="name">Definir encarregado de dados</field>
+    <field name="project_id" ref="demo_project_lgpd"/>
+  </record>
+  <record id="demo_task_08" model="project.task">
+    <field name="name">Criar canal de direitos do titular</field>
+    <field name="project_id" ref="demo_project_lgpd"/>
+  </record>
+  <record id="demo_task_09" model="project.task">
+    <field name="name">Apresentar plano ao Secretário</field>
+    <field name="project_id" ref="demo_project_lgpd"/>
+  </record>
+  <record id="demo_task_10" model="project.task">
+    <field name="name">Auditoria final LGPD</field>
+    <field name="project_id" ref="demo_project_lgpd"/>
+  </record>
+
+  <record id="demo_5w2h_01" model="evoluta.5w2h">
+    <field name="name">5W2H - Inventário Saúde</field>
+    <field name="project_id" ref="demo_project_lgpd"/>
+    <field name="task_id" ref="demo_task_01"/>
+    <field name="what">Levantar inventário de dados - Saúde</field>
+    <field name="why">Sem mapa de dados não há adequação</field>
+    <field name="where">Secretaria de Saúde</field>
+    <field name="how">Entrevista + planilha padrão</field>
+    <field name="how_much" eval="0"/>
+  </record>
+  <record id="demo_5w2h_02" model="evoluta.5w2h">
+    <field name="name">5W2H - Reunião TI</field>
+    <field name="project_id" ref="demo_project_lgpd"/>
+    <field name="task_id" ref="demo_task_02"/>
+    <field name="what">Reunião com TI sobre segurança</field>
+    <field name="why">Acessos sem controle geram risco</field>
+    <field name="where">TI da prefeitura</field>
+    <field name="how">Reunião 1h com checklist</field>
+  </record>
+  <record id="demo_5w2h_03" model="evoluta.5w2h">
+    <field name="name">5W2H - Minuta Jurídico</field>
+    <field name="project_id" ref="demo_project_lgpd"/>
+    <field name="task_id" ref="demo_task_03"/>
+    <field name="what">Validar minuta com Jurídico</field>
+    <field name="why">Documento sem validade trava o resto</field>
+    <field name="where">Procuradoria</field>
+    <field name="how">Revisão em 2 rodadas</field>
+  </record>
+  <record id="demo_5w2h_04" model="evoluta.5w2h">
+    <field name="name">5W2H - Treinamento balcão (demo botão)</field>
+    <field name="project_id" ref="demo_project_lgpd"/>
+    <field name="what">Treinar atendentes do balcão</field>
+    <field name="why">Atendente despreparado vaza dado</field>
+    <field name="where">Paço municipal</field>
+    <field name="how">Turma piloto 2h</field>
+  </record>
+</odoo>
