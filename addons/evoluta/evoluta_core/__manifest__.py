@@ -7,6 +7,7 @@
     "depends": ["base", "project"],
     "data": [
         "security/ir.model.access.csv",
+        "views/evoluta_geo_views.xml",
         "views/menus.xml",
         "data/project_stages.xml",
     ],

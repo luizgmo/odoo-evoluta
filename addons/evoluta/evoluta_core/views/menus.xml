@@ -2,4 +2,8 @@
 <odoo>
   <menuitem id="menu_evoluta_root" name="Evoluta" sequence="10"/>
   <menuitem id="menu_evoluta_config" name="Config" parent="menu_evoluta_root" sequence="10"/>
+  <menuitem id="menu_evoluta_cadastros" name="Cadastros" parent="menu_evoluta_root" sequence="20"/>
+  <menuitem id="menu_evoluta_municipio" name="Municípios" parent="menu_evoluta_cadastros" sequence="10" action="action_evoluta_municipio"/>
+  <menuitem id="menu_evoluta_secretaria" name="Secretarias" parent="menu_evoluta_cadastros" sequence="20" action="action_evoluta_secretaria"/>
+  <menuitem id="menu_evoluta_departamento" name="Departamentos" parent="menu_evoluta_cadastros" sequence="30" action="action_evoluta_departamento"/>
 </odoo>

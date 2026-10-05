@@ -1,2 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_evoluta_secretaria_user,access.evoluta.secretaria.user,model_evoluta_secretaria,,1,0,0,0
+access_evoluta_municipio_user,access.evoluta.municipio.user,model_evoluta_municipio,,1,1,1,0
+access_evoluta_secretaria_user,access.evoluta.secretaria.user,model_evoluta_secretaria,,1,1,1,0
+access_evoluta_departamento_user,access.evoluta.departamento.user,model_evoluta_departamento,,1,1,1,0

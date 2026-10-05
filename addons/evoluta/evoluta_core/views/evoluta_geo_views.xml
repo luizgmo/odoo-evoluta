@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_evoluta_municipio_list" model="ir.ui.view">
+    <field name="name">evoluta.municipio.list</field>
+    <field name="model">evoluta.municipio</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="codigo_ibge"/>
+        <field name="active"/>
+      </list>
+    </field>
+  </record>
+  <record id="view_evoluta_municipio_form" model="ir.ui.view">
+    <field name="name">evoluta.municipio.form</field>
+    <field name="model">evoluta.municipio</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="codigo_ibge"/>
+            <field name="active"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="action_evoluta_municipio" model="ir.actions.act_window">
+    <field name="name">Municípios</field>
+    <field name="res_model">evoluta.municipio</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <record id="view_evoluta_secretaria_list" model="ir.ui.view">
+    <field name="name">evoluta.secretaria.list</field>
+    <field name="model">evoluta.secretaria</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="municipio_id"/>
+        <field name="active"/>
+      </list>
+    </field>
+  </record>
+  <record id="view_evoluta_secretaria_form" model="ir.ui.view">
+    <field name="name">evoluta.secretaria.form</field>
+    <field name="model">evoluta.secretaria</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="municipio_id"/>
+            <field name="active"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="action_evoluta_secretaria" model="ir.actions.act_window">
+    <field name="name">Secretarias</field>
+    <field name="res_model">evoluta.secretaria</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <record id="view_evoluta_departamento_list" model="ir.ui.view">
+    <field name="name">evoluta.departamento.list</field>
+    <field name="model">evoluta.departamento</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="secretaria_id"/>
+        <field name="active"/>
+      </list>
+    </field>
+  </record>
+  <record id="view_evoluta_departamento_form" model="ir.ui.view">
+    <field name="name">evoluta.departamento.form</field>
+    <field name="model">evoluta.departamento</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="secretaria_id"/>
+            <field name="active"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="action_evoluta_departamento" model="ir.actions.act_window">
+    <field name="name">Departamentos</field>
+    <field name="res_model">evoluta.departamento</field>
+    <field name="view_mode">list,form</field>
+  </record>
+</odoo>
