@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+  <record id="onboarding_passo_1" model="evoluta.onboarding">
+    <field name="name">Passo 1 - Cadastrar município e secretarias</field>
+    <field name="sequence">1</field>
+    <field name="description">Evoluta &gt; Cadastros: crie o município, as secretarias e os departamentos.</field>
+  </record>
+  <record id="onboarding_passo_2" model="evoluta.onboarding">
+    <field name="name">Passo 2 - Criar usuários</field>
+    <field name="sequence">2</field>
+    <field name="description">Definições &gt; Usuários: crie secretário e atendentes com os grupos Evoluta.</field>
+  </record>
+  <record id="onboarding_passo_3" model="evoluta.onboarding">
+    <field name="name">Passo 3 - Criar projeto</field>
+    <field name="sequence">3</field>
+    <field name="description">Projeto: crie o projeto. As 6 etapas Evoluta nascem sozinhas.</field>
+  </record>
+  <record id="onboarding_passo_4" model="evoluta.onboarding">
+    <field name="name">Passo 4 - Diagnóstico e plano</field>
+    <field name="sequence">4</field>
+    <field name="description">Evoluta &gt; 5W2H: preencha o plano e clique Gerar Task.</field>
+  </record>
+  <record id="onboarding_passo_5" model="evoluta.onboarding">
+    <field name="name">Passo 5 - Acompanhar Kanban</field>
+    <field name="sequence">5</field>
+    <field name="description">Arraste as tasks pelas etapas até CONCLUÍDO e confira Indicadores.</field>
+  </record>
+</odoo>

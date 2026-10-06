@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
   <menuitem id="menu_evoluta_root" name="Evoluta" sequence="10"/>
-  <menuitem id="menu_evoluta_config" name="Config" parent="menu_evoluta_root" sequence="10"/>
-  <menuitem id="menu_evoluta_cadastros" name="Cadastros" parent="menu_evoluta_root" sequence="20"/>
+  <menuitem id="menu_evoluta_config" name="Config" parent="menu_evoluta_root" sequence="10" groups="evoluta_group_admin"/>
+  <menuitem id="menu_evoluta_cadastros" name="Cadastros" parent="menu_evoluta_root" sequence="20" groups="evoluta_group_admin,evoluta_group_secretario"/>
   <menuitem id="menu_evoluta_municipio" name="Municípios" parent="menu_evoluta_cadastros" sequence="10" action="action_evoluta_municipio"/>
   <menuitem id="menu_evoluta_secretaria" name="Secretarias" parent="menu_evoluta_cadastros" sequence="20" action="action_evoluta_secretaria"/>
   <menuitem id="menu_evoluta_departamento" name="Departamentos" parent="menu_evoluta_cadastros" sequence="30" action="action_evoluta_departamento"/>
+  <menuitem id="menu_evoluta_plano" name="Planos" parent="menu_evoluta_config" sequence="10" action="action_evoluta_plano"/>
+  <menuitem id="menu_evoluta_onboarding" name="Onboarding" parent="menu_evoluta_root" sequence="5" action="action_evoluta_onboarding"/>
 </odoo>
