@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_evoluta_porques_list" model="ir.ui.view">
+    <field name="name">evoluta.cinco_porques.list</field>
+    <field name="model">evoluta.cinco_porques</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="project_id"/>
+        <field name="causa_raiz"/>
+        <field name="task_id"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_evoluta_porques_form" model="ir.ui.view">
+    <field name="name">evoluta.cinco_porques.form</field>
+    <field name="model">evoluta.cinco_porques</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <button name="action_create_task" string="Criar ação" type="object" class="oe_highlight"/>
+        </header>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="project_id"/>
+            <field name="task_id"/>
+            <field name="five_w2h_id"/>
+          </group>
+          <group>
+            <field name="problema"/>
+            <field name="pq1"/>
+            <field name="pq2"/>
+            <field name="pq3"/>
+            <field name="pq4"/>
+            <field name="pq5"/>
+            <field name="causa_raiz"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_evoluta_porques" model="ir.actions.act_window">
+    <field name="name">5 Porquês</field>
+    <field name="res_model">evoluta.cinco_porques</field>
+    <field name="view_mode">list,form</field>
+  </record>
+</odoo>

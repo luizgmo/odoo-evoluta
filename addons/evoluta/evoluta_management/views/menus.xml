@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
   <menuitem id="menu_evoluta_5w2h" name="5W2H" parent="evoluta_core.menu_evoluta_root" sequence="20" action="action_evoluta_5w2h"/>
+  <menuitem id="menu_evoluta_porques" name="5 Porquês" parent="evoluta_core.menu_evoluta_root" sequence="30" action="action_evoluta_porques"/>
 </odoo>
