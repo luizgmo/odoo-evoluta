@@ -16,7 +16,7 @@ Aceite rígido:
 - [ ] Módulo sem branch 19.0 estável é cortado e registrado aqui como exceção, não trava a fase.
 Teste: instalar, abrir cada tela, Upgrade Core+Management, checar `docker-compose logs web` sem Traceback.
 
-## F2 — Core Município/Secretaria/Departamento
+## F2 — Core Município/Secretaria/Departamento [CONCLUÍDO 05/10]
 Objetivo: hierarquia oficial do §21.
 Modelos exatos: `evoluta.municipio` (name required, codigo_ibge char, active), `evoluta.secretaria` (estender atual: add municipio_id required Many2one, department refs), `evoluta.departamento` (name required, secretaria_id required Many2one). Menus: Evoluta > Cadastros > Municípios/Secretarias/Departamentos.
 Fora: permissões finas (F3), onboarding (F3).
@@ -26,7 +26,8 @@ Aceite:
 - [ ] Upgrade evoluta_core verde, dados existentes preservados.
 Teste: criar município X > secretaria Y ligada a X > departamento Z ligado a Y; tentar salvar secretaria sem município (deve bloquear).
 
-## F3 — Core Permissões/Plano/Onboarding
+## F3 — Core Permissões/Plano/Onboarding [CONCLUÍDO 05/10]
+Notas: Odoo 19 sem category_id em res.groups (grupos sem categoria, atribuir via tela do Grupo). Ícone Aplicativos visível a todos no 19 por padrão, instalação barrada sem admin — aceite ajustado.
 Objetivo: quem vê o quê + plano informativo.
 Exato: grupos `Evoluta Admin Municipal` (tudo), `Evoluta Secretário` (projetos+ferramentas, sem Apps/Config técnica), `Evoluta Atendente` (só tasks próprias + 5W2H). Modelo `evoluta.plano` (name, max_users int, max_projects int, apenas informativo na Fase 1). Checklist onboarding como página estática em Evoluta > Onboarding (5 passos texto).
 Aceite:
