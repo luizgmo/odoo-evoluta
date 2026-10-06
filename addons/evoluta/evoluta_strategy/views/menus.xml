@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <menuitem id="menu_evoluta_stakeholder" name="Stakeholders" parent="evoluta_core.menu_evoluta_root" sequence="40" action="action_evoluta_stakeholder"/>
+</odoo>
