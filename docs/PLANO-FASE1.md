@@ -45,7 +45,7 @@ Aceite:
 - [ ] Task criada aparece no Kanban do projeto.
 Teste: seguir docs/TESTE-5PORQUES (criar após implementar) nos moldes do TESTE-5W2H.
 
-## F5 — Stakeholders
+## F5 — Stakeholders [CONCLUÍDO 06/10]
 Objetivo: §18 (poder, interesse, posição, influência, estratégia).
 Modelo `evoluta.stakeholder`: name required, project_id required, organizacao char, poder selection (Baixo/Médio/Alto), interesse selection, posicao selection (Apoiador/Neutro/Opositor), influencia selection, estrategia text. Herdar nada de Contacts na Fase 1 (só campo texto organizacao).
 Aceite:
