@@ -36,7 +36,7 @@ Aceite:
 - [ ] Upgrade verde; access.csv cobre todos os modelos novos.
 Teste: criar 1 usuário por grupo, logar em janela anônima cada um, conferir menus.
 
-## F4 — 5 Porquês
+## F4 — 5 Porquês [CONCLUÍDO 06/10]
 Objetivo: §18 fiel (Problema > P1..P5 > Causa raiz + botão Criar ação).
 Modelo `evoluta.cinco_porques`: name required, project_id required, problema required text, pq1..pq5 text, causa_raiz text required para o botão, task_id readonly, five_w2h_id opcional. Botão `Criar ação`: sem task → cria project.task (name=causa_raiz[:80], project, descrição com cadeia); com task → atualiza, nunca duplica (mesmo padrão P1).
 Aceite:
