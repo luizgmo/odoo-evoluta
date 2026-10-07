@@ -111,3 +111,48 @@ Aceite:
 - [ ] Roteiro executado 2x sem erro e sem wifi (notebook local).
 - [ ] Staging abre no domínio com SSL válido.
 - [ ] F1–F11 todos com aceite marcado.
+
+# FASE 2 (§30 oficial + matriz §20) — escopo: Templates, Portal, BI/Dashboards, Workflows avançados, Assinatura, Jobs assíncronos, Teoria da Mudança. Fora: IA, API pública, automação preditiva (Fase 3).
+
+## F13 — evoluta_templates (biblioteca)
+Objetivo: §19 fiel — template gera Projeto + Tarefas + Responsáveis (+ checklist via descrição).
+Exato: `evoluta.template` (name required, descricao) + `evoluta.template.task` (template_id, name required, descricao, responsavel res.users opcional). Botão **Gerar projeto**: cria project.project (etapas auto via F2) + 1 task por linha + retorna Kanban do projeto. Seed `noupdate=1`: template "Implantação LGPD" com 5 tasks.
+Fora: checklist/indicadores/cronograma automáticos (viram descrição).
+Aceite:
+- [ ] Gerar projeto cria 1 projeto + N tasks (contar). 2º clique no mesmo template cria OUTRO projeto (não duplica no mesmo).
+- [ ] Tasks aparecem no Kanban com etapas Evoluta.
+Teste: gerar LGPD a partir do seed e conferir 5 tasks.
+
+## F14 — Portal
+Objetivo: gestor externo acompanha sem login interno.
+Exato: portal Odoo nativo (my/home) + tasks do projeto compartilhadas via follow/portal. Share do Demo LGPD com usuário portal fake.
+Fora: Website público/portal do cidadão (era ideia antiga descartada).
+Aceite:
+- [ ] Usuário portal vê só seus projetos/tasks, sem menus internos.
+Teste: login portal em anônima.
+
+## F15 — BI/Dashboards
+Objetivo: efetivar o que foi pilotado.
+Exato: instalar MIS Builder e/ou BI SQL Editor (branch 19.0, mesmo ritual F1); 1 relatório "Tasks por etapa por projeto" + dashboard no menu Evoluta.
+Fora: preditiva (Fase 3).
+Aceite:
+- [ ] Relatório abre com números iguais aos Indicadores F11.
+Exceção permitida: sem branch 19 estável → corta e registra.
+
+## F16 — Workflows avançados
+Objetivo: aprovações + SLA vivos.
+Exato: Tier Validation aplicado a 5W2H (2 níveis: Secretário > Gabinete) + SLA no Helpdesk (helpdesk_mgmt_sla já baixado). 1 fluxo demo fim-a-fim.
+Aceite:
+- [ ] 5W2H precisa das 2 aprovações para Gerar Task; SLA conta prazo no ticket demo.
+
+## F17 — Assinatura + Jobs + Teoria da Mudança
+Objetivo: fechar itens Fase 2 restantes.
+Exato: sign_oca instalado (branch 19.0) com 1 modelo de termo demo; queue_job instalado para geração de projeto via template em background (F13 vira job); `evoluta.teoria.mudanca` (projeto, contexto, insumos, atividades, produtos, resultados) CRUD simples.
+Aceite:
+- [ ] Termo assinável abre; job executa sem travar UI; CRUD teoria salva.
+
+## F18 — Feira final (ex-F12 ampliado)
+Objetivo: demo com tudo.
+Exato: roteiro 5 min cobrindo template→projeto→5 Porquês→5W2H→Kanban→indicadores→BI; staging atualizado; tema aplicado.
+Aceite:
+- [ ] Roteiro 2x offline sem erro. Staging SSL válido.
