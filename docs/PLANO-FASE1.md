@@ -123,7 +123,8 @@ Aceite:
 - [ ] Tasks aparecem no Kanban com etapas Evoluta.
 Teste: gerar LGPD a partir do seed e conferir 5 tasks.
 
-## F14 — Portal
+## F14 — Portal [CONCLUÍDO 07/10]
+Nota: só config, sem código. Portal vê projeto/tasks compartilhados via Share; tasks exigem Share por task (portal não é atribuível). Contatos precisa do módulo `contacts`.
 Objetivo: gestor externo acompanha sem login interno.
 Exato: portal Odoo nativo (my/home) + tasks do projeto compartilhadas via follow/portal. Share do Demo LGPD com usuário portal fake.
 Fora: Website público/portal do cidadão (era ideia antiga descartada).
