@@ -27,6 +27,8 @@ import Formulario from "@/pages/Formulario";
 import Documento from "@/pages/Documento";
 import Agenda from "@/pages/Agenda";
 import Paineis from "@/pages/Paineis";
+import Templates from "@/pages/Templates";
+import Chamados from "@/pages/Chamados";
 import EmConstrucao from "@/pages/EmConstrucao";
 
 export default function App() {
@@ -64,7 +66,8 @@ export default function App() {
             <Route path="/library" element={<EmConstrucao titulo="Biblioteca" />} />
             <Route path="/planta" element={<EmConstrucao titulo="Quem está com o quê" />} />
             <Route path="/livro-gestao" element={<EmConstrucao titulo="Projetos do período" />} />
-            <Route path="/templates" element={<EmConstrucao titulo="Modelos do município" />} />
+            <Route path="/templates" element={<Templates />} />
+            <Route path="/chamados" element={<Chamados />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

@@ -15,6 +15,7 @@ import {
   FolderOpen,
   Home,
   LayoutGrid,
+  LifeBuoy,
   Settings,
   type LucideIcon,
 } from "lucide-react";
@@ -55,6 +56,7 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
     titulo: "Consulta",
     itens: [
       { caminho: "/library", rotulo: "Biblioteca", icone: BookOpen },
+      { caminho: "/chamados", rotulo: "Chamados", icone: LifeBuoy },
       { caminho: "/metrics", rotulo: MARCA.campos.paineisTrilha, icone: BarChart3, perfis: ["gestor", "admin", "master"] },
     ],
   },
