@@ -70,7 +70,7 @@ Aceite:
 - [ ] Visível dentro da task (aba RACI via _inherit view) + menu próprio.
 Teste: 1 RACI na task 01 do demo.
 
-## F8 — Ishikawa
+## F8 — Ishikawa [CONCLUÍDO 07/10]
 Objetivo: §18 com 6 categorias fixas, versão feira sem grafos.
 Modelo `evoluta.ishikawa` (name, project_id, problema required) + linhas `evoluta.ishikawa.causa` (ishikawa_id, categoria selection fixa das 6, descricao required). Botão Definir causa raiz (copia 1 causa marcada como principal para campo causa_raiz) + botão Gerar ação.
 Aceite:
