@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_evoluta_ishikawa_list" model="ir.ui.view">
+    <field name="name">evoluta.ishikawa.list</field>
+    <field name="model">evoluta.ishikawa</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="project_id"/>
+        <field name="causa_raiz"/>
+        <field name="task_id"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_evoluta_ishikawa_form" model="ir.ui.view">
+    <field name="name">evoluta.ishikawa.form</field>
+    <field name="model">evoluta.ishikawa</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <button name="action_define_causa_raiz" string="Definir causa raiz" type="object"/>
+          <button name="action_create_task" string="Gerar ação" type="object" class="oe_highlight"/>
+        </header>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="project_id"/>
+            <field name="task_id"/>
+            <field name="problema"/>
+            <field name="causa_raiz"/>
+          </group>
+          <field name="causa_ids"/>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_evoluta_ishikawa_causa_list" model="ir.ui.view">
+    <field name="name">evoluta.ishikawa.causa.list</field>
+    <field name="model">evoluta.ishikawa.causa</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="categoria"/>
+        <field name="descricao"/>
+        <field name="eh_principal"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="action_evoluta_ishikawa" model="ir.actions.act_window">
+    <field name="name">Ishikawa</field>
+    <field name="res_model">evoluta.ishikawa</field>
+    <field name="view_mode">list,form</field>
+  </record>
+</odoo>
