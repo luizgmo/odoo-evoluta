@@ -61,7 +61,8 @@ Aceite:
 - [ ] Kanban de riscos por projeto abre.
 Teste: 2 riscos no demo, 1 com ação gerada.
 
-## F7 — RACI
+## F7 — RACI [CONCLUÍDO 07/10]
+Nota: M2M duplo p/ res.users exige `relation` explícita. Trava R!=A valida no Salvar (aba da task) e na hora (tela RACI).
 Objetivo: matriz por task.
 Modelo `evoluta.raci`: task_id required, responsible res.users required, accountable res.users required, consulted_ids Many2many res.users, informed_ids Many2many. Constraint: responsible != accountable (aviso/erro).
 Aceite:
