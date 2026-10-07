@@ -11,6 +11,31 @@
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import type { Process } from "@/types/process";
 import { MARCA } from "@/config/marca";
+import { apiGet } from "@/services/api/client";
+
+interface ProjetoApi {
+  id: number;
+  name: unknown;
+  total_tasks: number;
+}
+
+const paraProcesso = (r: ProjetoApi): Process => ({
+  id: r.id,
+  code: `EVG-${String(r.id).padStart(5, "0")}`,
+  description: "",
+  modality: { id: 0, name: "", description: "" },
+  object: typeof r.name === "string" ? r.name : JSON.stringify(r.name),
+  estimated_value: "0.00",
+  publication_date: "",
+  responsible: "",
+  opening_date: null,
+  opening_time: null,
+  status: r.total_tasks > 0 ? "EM_ANDAMENTO" : "ABERTO",
+  author: 1,
+  company: null,
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString(),
+});
 
 // EXEMPLO DE DOMÍNIO — troque: agrupamentos inventados (hoje: secretarias).
 const SAUDE = { id: 1, name: "Secretaria de Saúde", description: "" };
@@ -91,8 +116,21 @@ export function adicionarProcesso(dados: Partial<Process>): Process {
 }
 
 export function useProcessosDaMesa() {
-  const processos = useSyncExternalStore(assinar, lerArmazem);
-  return { processos, data: processos, isLoading: false, isError: false, refetch: () => {} };
+  const [processos, setProcessos] = useState<Process[]>([]);
+  const [carregando, setCarregando] = useState(true);
+  const [erro, setErro] = useState<unknown>(null);
+  const buscar = useCallback(() => {
+    setCarregando(true);
+    setErro(null);
+    apiGet<{ records: ProjetoApi[] }>("/api/projetos")
+      .then((d) => setProcessos(d.records.map(paraProcesso)))
+      .catch((e) => setErro(e))
+      .finally(() => setCarregando(false));
+  }, []);
+  useEffect(() => {
+    buscar();
+  }, [buscar]);
+  return { processos, data: processos, isLoading: carregando, isError: !!erro, refetch: buscar };
 }
 
 export function useProcessoDaMesa(id: string | undefined) {
