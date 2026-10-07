@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_evoluta_template_user,access.evoluta.template.user,model_evoluta_template,,1,1,1,1
+access_evoluta_template_task_user,access.evoluta.template.task.user,model_evoluta_template_task,,1,1,1,1

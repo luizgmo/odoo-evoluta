@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+  <record id="template_lgpd" model="evoluta.template">
+    <field name="name">Implantação LGPD</field>
+    <field name="descricao">Roteiro padrão de adequação à LGPD para secretarias.</field>
+  </record>
+  <record id="template_lgpd_t1" model="evoluta.template.task">
+    <field name="template_id" ref="template_lgpd"/>
+    <field name="name">Levantar inventário de dados</field>
+    <field name="descricao">Mapear planilhas e sistemas com dados pessoais.</field>
+  </record>
+  <record id="template_lgpd_t2" model="evoluta.template.task">
+    <field name="template_id" ref="template_lgpd"/>
+    <field name="name">Reunião com TI sobre segurança</field>
+    <field name="descricao">Alinhar backups, acessos e logs.</field>
+  </record>
+  <record id="template_lgpd_t3" model="evoluta.template.task">
+    <field name="template_id" ref="template_lgpd"/>
+    <field name="name">Validar minuta com Jurídico</field>
+    <field name="descricao">Revisar política de privacidade.</field>
+  </record>
+  <record id="template_lgpd_t4" model="evoluta.template.task">
+    <field name="template_id" ref="template_lgpd"/>
+    <field name="name">Treinar atendentes</field>
+    <field name="descricao">Turma piloto de 2h no paço municipal.</field>
+  </record>
+  <record id="template_lgpd_t5" model="evoluta.template.task">
+    <field name="template_id" ref="template_lgpd"/>
+    <field name="name">Auditoria final LGPD</field>
+    <field name="descricao">Checklist de conformidade e evidências.</field>
+  </record>
+</odoo>
