@@ -78,7 +78,8 @@ Aceite:
 - [ ] Sem causa marcada, botão causa raiz avisa. Ação não duplica.
 Teste: 1 Ishikawa com 6 causas (uma por categoria) no demo.
 
-## F9 — Matriz de Decisão
+## F9 — Matriz de Decisão [CONCLUÍDO 07/10]
+Nota: inline One2many só aparece em dropdown após Salvar (padrão Odoo). Unlink liberado nos modelos management para gestão dos rascunhos.
 Objetivo: §18 (critérios do gestor).
 Modelos: `evoluta.matriz` (name, project_id) + `evoluta.matriz.criterio` (peso float) + `evoluta.matriz.alternativa` (name) + notas `evoluta.matriz.nota` (alternativa, criterio, nota float). Total = soma(nota*peso) calculado; vencedor = maior total (campo compute). Botão Gerar 5W2H (cria evoluta.5w2h com what=vencedor).
 Aceite:
