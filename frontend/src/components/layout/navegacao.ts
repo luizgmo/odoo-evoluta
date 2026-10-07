@@ -59,15 +59,15 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
     ],
   },
   {
-    titulo: "Repartição",
+    titulo: "Prefeitura",
     itens: [
       { caminho: "/planta", rotulo: "Quem está com o quê", icone: LayoutGrid },
-      { caminho: "/livro-gestao", rotulo: "Processos do período", icone: BookMarked },
+      { caminho: "/livro-gestao", rotulo: "Projetos do período", icone: BookMarked },
     ],
   },
   {
     titulo: "Administração",
-    itens: [{ caminho: "/templates", rotulo: "Modelos do órgão", icone: Settings, perfis: ["admin"] }],
+    itens: [{ caminho: "/templates", rotulo: "Modelos do município", icone: Settings, perfis: ["admin"] }],
   },
 ];
 

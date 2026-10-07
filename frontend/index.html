@@ -5,7 +5,7 @@
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- TROCAR: nome do sistema -->
-    <title>Meu Sistema Evoluta</title>
+    <title>Evoluta Gestão</title>
     <!-- Anti-flash: pinta o fundo antes de o CSS do app carregar. Os dois valores repetem
          --background (claro #F8F5EE, escuro #141A2A) de src/index.css: a única exceção à regra
          "cor só por token", porque aqui os tokens ainda não existem. Se mudar um, mude o outro. -->
@@ -14,11 +14,11 @@
       html.dark { background-color: #141A2A; color-scheme: dark; }
     </style>
     <!-- Anti-FOUC: aplica o tema antes do primeiro desenho (mesma lógica do ThemeContext).
-         TROCAR: "meu-sistema.tema" = MARCA.prefixoDeArmazenamento + ".tema" (ver config/marca.ts) -->
+         TROCAR: "evoluta-gestao.tema" = MARCA.prefixoDeArmazenamento + ".tema" (ver config/marca.ts) -->
     <script>
       (function () {
         try {
-          var t = localStorage.getItem("meu-sistema.tema");
+          var t = localStorage.getItem("evoluta-gestao.tema");
           if (t !== "light" && t !== "dark") {
             t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
           }

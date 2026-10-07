@@ -63,8 +63,8 @@ export default function App() {
             <Route path="/arquivo" element={<EmConstrucao titulo={MARCA.campos.arquivo} />} />
             <Route path="/library" element={<EmConstrucao titulo="Biblioteca" />} />
             <Route path="/planta" element={<EmConstrucao titulo="Quem está com o quê" />} />
-            <Route path="/livro-gestao" element={<EmConstrucao titulo="Processos do período" />} />
-            <Route path="/templates" element={<EmConstrucao titulo="Modelos do órgão" />} />
+            <Route path="/livro-gestao" element={<EmConstrucao titulo="Projetos do período" />} />
+            <Route path="/templates" element={<EmConstrucao titulo="Modelos do município" />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFound />} />

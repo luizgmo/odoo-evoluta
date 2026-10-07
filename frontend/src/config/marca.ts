@@ -8,18 +8,18 @@
 /** Rota da tela inicial: um só lugar, lido por `rotaInicial` e por `destinosDoCelular`. */
 const ROTA_INICIAL = "/dashboard";
 /** Rota da lista do objeto principal: App.tsx a registra; o menu, a busca, os atalhos e as pastas a leem daqui. A rota do item é `${ROTA_DA_LISTA}/:id`. */
-export const ROTA_DA_LISTA = "/processes";
+export const ROTA_DA_LISTA = "/projetos";
 
 export const MARCA = {
   /** Nome curto do produto: "Meu Sistema", "Contratos"… */
-  nome: "Meu Sistema",
+  nome: "Evoluta Gestão",
   /**
    * Logo do produto, em public/: PNG com fundo transparente, pensado para o azul-noite
    * (texto claro), com proporção entre 2:1 e 4:1 de largura por altura (o logo-produto-modelo.svg é 4:1; o PNG de exemplo, 857x435, é ≈2:1; o da Evoluta, 480x120).
    * Aparece com altura h-9 (celular), h-12 (sm) e h-14 (md+); a largura segue a proporção.
    * O modelo genérico abaixo é trocado pelo logo do produto.
    */
-  logo: "/logo-produto-modelo.svg",
+  logo: "/logo-gestao.svg",
   /** Nome da tela inicial, usado no texto alternativo do logo. */
   inicio: "Minha Mesa",
   /** Nome da tela inicial na barra do celular e no menu recolhido (cabe em ~90px). */
@@ -31,29 +31,29 @@ export const MARCA = {
   /** Alt + esta letra abre a lista. Evite colidir com `acaoPrincipal.atalho` (preferencias.ts avisa no console em dev). */
   atalhoDaLista: "P",
   /** Frase grande do painel azul da tela de entrada. */
-  frase: "A mesa de trabalho da sua equipe.",
+  frase: "A mesa de trabalho da gestão municipal.",
   /** Parágrafo abaixo da frase. */
-  apoio: "Tudo o que a equipe precisa para trabalhar, num só lugar, com cada coisa na sua pasta.",
+  apoio: "Projetos, planos e prazos da prefeitura num só lugar, cada coisa na sua pasta.",
   /** Três marcadores do painel azul. */
   marcadores: [
-    "Cada item do trabalho em uma pasta",
-    "Prazos e avisos sempre à vista",
-    "Documentos prontos para baixar",
+    "Cada projeto em uma pasta",
+    "5W2H e aprovações no fluxo",
+    "Indicadores sempre à vista",
   ],
   /** Linha pequena no pé do painel azul (antes dos direitos). */
   rodape: "",
   /** Texto do pé da tela de entrada: quem dá o convite. */
-  quemConvida: "o administrador do sistema",
+  quemConvida: "o administrador do município",
   /** Endereços dos documentos citados no pé da entrada. Vazios = a frase "Ao entrar, você concorda…" não aparece. */
   links: { termos: "" as string, privacidade: "" as string },
   /** Cartão marfim da tela de entrada. */
   entrada: {
     /** Linha pequena acima do título. EXEMPLO DE DOMÍNIO — troque ("servidor" = servidor público; ex.: "Acesso da equipe"). */
-    rotulo: "Acesso do servidor",
-    subtitulo: "Use o usuário e a senha que o seu órgão cadastrou.",
+    rotulo: "Acesso da equipe",
+    subtitulo: "Use o usuário e a senha que a sua prefeitura cadastrou.",
     /** Carimbo no canto do cartão: ato em cima, quem pode embaixo. */
     carimbo: "Uso restrito",
-    carimboRodape: "servidores autorizados", // EXEMPLO DE DOMÍNIO — troque (ex.: "pessoas autorizadas")
+    carimboRodape: "pessoas autorizadas",
   },
 
   /**
@@ -65,22 +65,22 @@ export const MARCA = {
   leiAoLado: false,
 
   /** Quem o usuário avisa quando algo falha: "avise {equipeDeSuporte}". */
-  equipeDeSuporte: "a equipe do sistema",
+  equipeDeSuporte: "a equipe Evoluta",
 
   /** Como o sistema chama o objeto principal do trabalho (a pasta). */
   objeto: {
-    singular: "processo",
-    plural: "processos",
+    singular: "projeto",
+    plural: "projetos",
     /** Gênero gramatical do singular: "m" (o processo) ou "f" (a ordem de serviço). Os textos concordam por ele (veja `GEN`). */
     genero: "m",
     /** Linha pequena acima do número, na capa completa da pasta ("Processo licitatório", "Contrato", "Chamado"…). */
-    rotuloDaCapa: "Processo",
+    rotuloDaCapa: "Projeto",
     /** Título da pasta quando o item não tem objeto/descrição preenchido. */
-    semDescricao: "Processo sem objeto descrito",
+    semDescricao: "Projeto sem objeto descrito",
     /** Quando o item não tem número/código. */
     semNumero: "Sem número",
     /** Quando a pasta não traz o agrupamento principal (modalidade, categoria, tipo…). */
-    semAgrupamento: "Sem modalidade", // EXEMPLO DE DOMÍNIO — troque (ex.: "Sem categoria")
+    semAgrupamento: "Sem secretaria",
   },
 
   /**
@@ -97,32 +97,32 @@ export const MARCA = {
     /** Rótulo do texto do objeto (a descrição que o usuário digita): formulário, ficha e busca da lista. */
     objeto: "Objeto",
     /** Agrupamento principal do item (modalidade, categoria, tipo…). */
-    agrupamento: "Modalidade",
+    agrupamento: "Secretaria",
     /** Data principal do item. */
-    data: "Abertura",
+    data: "Prazo final",
     /** Item sem a data principal (aba da lista, painel, agenda). */
-    semData: "Sem data de abertura",
+    semData: "Sem prazo",
     /** Aviso amarelo na pasta da gaveta. */
-    faltaData: "Falta a data de abertura",
+    faltaData: "Falta o prazo",
     /** Valor do item. */
-    valor: "Valor estimado",
+    valor: "Orçamento",
     responsavel: "Responsável",
     /** Etapa em que o item está. */
-    fase: "Fase atual",
+    fase: "Etapa",
     /** Nome da etapa no marcador de progresso: "Fase 3 de 7: Julgamento" (FasesEmBolinhas). */
-    faseRotulo: "Fase",
+    faseRotulo: "Etapa",
     /** Frase abaixo das fases na capa; segue "do/da {singular}. {explicação}". */
     faseEstimada: "Fase estimada pelas datas",
     /** Quando o item não passa pelas fases (caso especial do fluxo) e a nota que explica. */
-    contratacaoDireta: "Contratação direta",
-    contratacaoDiretaNota: "não passa pelas fases de disputa. As etapas estão na linha do tempo, abaixo.",
+    contratacaoDireta: "Acompanhamento direto",
+    contratacaoDiretaNota: "não passa pelas etapas. As fases estão na linha do tempo, abaixo.",
     /** Título do quadro dos documentos concluídos, na capa. */
     documentos: "Documentos principais",
     /** Carimbo datado da capa (quando o item foi criado). */
-    criadoEm: "Autuado",
+    criadoEm: "Aberto",
     /** Ordenações da lista. */
-    ordemPorData: "Próxima abertura",
-    ordemPorValor: "Maior valor",
+    ordemPorData: "Prazo mais próximo",
+    ordemPorValor: "Maior orçamento",
     /** Legenda dos compromissos da agenda: o que tem consequência e o que só marca o dia. */
     prazo: "Prazo",
     evento: "Evento",
@@ -148,8 +148,8 @@ export const MARCA = {
     /** Rótulo acessível do marcador de fases (aria-label da lista de fases da pasta). */
     fases: "Fases",
     /** Prefixo do código dos itens de demonstração e responsável padrão (useMesaDados.ts). */
-    prefixoDoCodigo: "PROC-2026-",
-    responsavelPadrao: "Equipe de exemplo",
+    prefixoDoCodigo: "EVG-2026-",
+    responsavelPadrao: "Equipe gestora",
     /** Linha de assinatura sob os documentos (Rubrica, em components/mesa/PecasDosAutos.tsx). */
     rubrica: "Nome e matrícula",
     /**
@@ -175,7 +175,7 @@ export const MARCA = {
    * `atalho` que colida com M, P ou A (início, lista, agenda): ver preferencias.ts.
    */
   acaoPrincipal: {
-    rotulo: "Novo processo",
+    rotulo: "Novo plano",
     /** Rótulo curto da barra do celular (cabe em ~90px). */
     curto: "Novo",
     caminho: `${ROTA_DA_LISTA}/new`,
@@ -193,14 +193,14 @@ export const MARCA = {
    * que já bateram). Troque por sistema para que dois sistemas na mesma máquina e no
    * mesmo endereço não pisem nas escolhas um do outro.
    */
-  prefixoDeArmazenamento: "meu-sistema",
+  prefixoDeArmazenamento: "evoluta-gestao",
 
   /** Agenda exportada (.ics). */
   agenda: {
     /** Domínio do UID de cada evento. */
-    dominio: "meu-sistema.exemplo",
+    dominio: "evoluta-gestao.exemplo",
     /** Aparece em PRODID e na descrição dos eventos. */
-    produto: "Meu Sistema",
+    produto: "Evoluta Gestão",
   },
 } as const;
 
@@ -239,5 +239,5 @@ export const GEN = {
   fim: feminino ? "a" : "o",
 } as const;
 
-/** Chave de armazenamento do sistema: `chave("menu-lateral")` → "meu-sistema.menu-lateral". */
+/** Chave de armazenamento do sistema: `chave("menu-lateral")` → "evoluta-gestao.menu-lateral". */
 export const chaveDoSistema = (nome: string) => `${MARCA.prefixoDeArmazenamento}.${nome}`;
