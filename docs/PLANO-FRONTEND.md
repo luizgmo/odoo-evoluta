@@ -21,7 +21,7 @@ Aceite:
 - [ ] Rota digitada sem perfil cai em `/unauthorized`, inexistente em 404 (R-ROT-02, R-TEL-19).
 Teste: build + navegar menu admin/operador + URLs inválidas.
 
-## G3 — Telas mock (dados em memória)
+## G3 — Telas mock (dados em memória) [G3a CONCLUÍDO 07/10]
 Objetivo: fluxo clicável sem backend (R-TEL-01/02, R-EST-01, R-TXT).
 Exato:
 - **G3a (núcleo)**: Minha Mesa (saudação+resumo), Lista Projetos (gaveta+divisórias), Projeto (pasta), 5W2H (MesaPagina formulário), Indicadores (livro + barras CSS), resto EmConstrucao.
