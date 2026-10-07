@@ -40,11 +40,28 @@
     <field name="name">evoluta.ishikawa.causa.list</field>
     <field name="model">evoluta.ishikawa.causa</field>
     <field name="arch" type="xml">
-      <list>
+      <list editable="bottom">
         <field name="categoria"/>
         <field name="descricao"/>
         <field name="eh_principal"/>
       </list>
+    </field>
+  </record>
+
+  <record id="view_evoluta_ishikawa_causa_form" model="ir.ui.view">
+    <field name="name">evoluta.ishikawa.causa.form</field>
+    <field name="model">evoluta.ishikawa.causa</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="ishikawa_id" invisible="1"/>
+            <field name="categoria"/>
+            <field name="descricao"/>
+            <field name="eh_principal"/>
+          </group>
+        </sheet>
+      </form>
     </field>
   </record>
 
