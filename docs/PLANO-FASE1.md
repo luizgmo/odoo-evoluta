@@ -95,7 +95,8 @@ Aceite:
 - [ ] Campos required bloqueiam sem texto.
 Teste: 1 triângulo + 1 árvore convertida no demo.
 
-## F11 — Indicadores mínimos
+## F11 — Indicadores mínimos [CONCLUÍDO 07/10]
+Nota: `project.task.date_deadline` é Datetime no 19 — comparar com `.date()`.
 Objetivo: fluxo §29 até Indicadores (KPI/MIS só pilotar).
 Exato: dashboard em Evoluta > Indicadores com 4 contadores por projeto (total tasks, por etapa via search_count, atrasadas date_deadline<hoje, concluídas fold). Sem MIS na Fase 1 a menos que F1 tenha instalado.
 Aceite:
