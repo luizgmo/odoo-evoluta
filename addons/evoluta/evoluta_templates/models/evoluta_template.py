@@ -12,12 +12,13 @@ class EvolutaTemplate(models.Model):
 
     def action_gerar_projeto(self):
         self.ensure_one()
-        self.with_delay(
+        job = self.with_delay(
             description=f"Gerar projeto do template {self.name}"
         )._gerar_projeto_job()
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
+            "job_id": job.uuid,
             "params": {
                 "title": "Projeto na fila",
                 "message": "Geração em background, confira em Projetos em instantes.",
@@ -40,6 +41,8 @@ class EvolutaTemplate(models.Model):
                 }
             )
         return {
+            "project_id": project.id,
+            "project_name": project.name,
             "type": "ir.actions.act_window",
             "name": project.name,
             "res_model": "project.task",
