@@ -53,7 +53,7 @@ Aceite:
 - [ ] Upgrade verde.
 Teste: 3 stakeholders no Demo LGPD com posições distintas.
 
-## F6 — Riscos
+## F6 — Riscos [CONCLUÍDO 06/10]
 Objetivo: risco ligado a projeto + ação.
 Modelo `evoluta.risco`: name required, project_id required, probabilidade selection (Baixa/Média/Alta), impacto selection, mitigacao text, responsavel res.users, task_id readonly + botão Gerar ação (mesmo padrão anti-duplicação).
 Aceite:
