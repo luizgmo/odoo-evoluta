@@ -10,6 +10,7 @@
         "security/ir.model.access.csv",
         "views/evoluta_geo_views.xml",
         "views/evoluta_plano_views.xml",
+        "views/evoluta_indicadores_views.xml",
         "views/menus.xml",
         "data/project_stages.xml",
         "data/onboarding.xml",

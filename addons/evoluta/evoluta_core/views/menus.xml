@@ -8,4 +8,5 @@
   <menuitem id="menu_evoluta_departamento" name="Departamentos" parent="menu_evoluta_cadastros" sequence="30" action="action_evoluta_departamento"/>
   <menuitem id="menu_evoluta_plano" name="Planos" parent="menu_evoluta_config" sequence="10" action="action_evoluta_plano"/>
   <menuitem id="menu_evoluta_onboarding" name="Onboarding" parent="menu_evoluta_root" sequence="5" action="action_evoluta_onboarding"/>
+  <menuitem id="menu_evoluta_indicadores" name="Indicadores" parent="menu_evoluta_root" sequence="120" action="action_evoluta_indicadores"/>
 </odoo>

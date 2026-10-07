@@ -1,3 +1,5 @@
+from datetime import date
+
 from odoo import api, fields, models
 
 DEFAULT_STAGES = [
@@ -12,6 +14,31 @@ DEFAULT_STAGES = [
 
 class ProjectProject(models.Model):
     _inherit = "project.project"
+
+    evoluta_total_tasks = fields.Integer(
+        string="Total tasks", compute="_compute_evoluta_indicadores"
+    )
+    evoluta_done_tasks = fields.Integer(
+        string="Concluídas", compute="_compute_evoluta_indicadores"
+    )
+    evoluta_overdue_tasks = fields.Integer(
+        string="Atrasadas", compute="_compute_evoluta_indicadores"
+    )
+
+    @api.depends()
+    def _compute_evoluta_indicadores(self):
+        today = date.today()
+        for project in self:
+            tasks = self.env["project.task"].search([("project_id", "=", project.id)])
+            done = tasks.filtered(lambda t: t.stage_id.fold)
+            overdue = tasks.filtered(
+                lambda t: t.date_deadline
+                and t.date_deadline.date() < today
+                and not t.stage_id.fold
+            )
+            project.evoluta_total_tasks = len(tasks)
+            project.evoluta_done_tasks = len(done)
+            project.evoluta_overdue_tasks = len(overdue)
 
     @api.model_create_multi
     def create(self, vals_list):
