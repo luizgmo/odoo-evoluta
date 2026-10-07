@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- TROCAR: nome do sistema -->
+    <title>Meu Sistema Evoluta</title>
+    <!-- Anti-flash: pinta o fundo antes de o CSS do app carregar. Os dois valores repetem
+         --background (claro #F8F5EE, escuro #141A2A) de src/index.css: a única exceção à regra
+         "cor só por token", porque aqui os tokens ainda não existem. Se mudar um, mude o outro. -->
+    <style>
+      html { background-color: #F8F5EE; color-scheme: light; }
+      html.dark { background-color: #141A2A; color-scheme: dark; }
+    </style>
+    <!-- Anti-FOUC: aplica o tema antes do primeiro desenho (mesma lógica do ThemeContext).
+         TROCAR: "meu-sistema.tema" = MARCA.prefixoDeArmazenamento + ".tema" (ver config/marca.ts) -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("meu-sistema.tema");
+          if (t !== "light" && t !== "dark") {
+            t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          }
+          if (t === "dark") document.documentElement.classList.add("dark");
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
