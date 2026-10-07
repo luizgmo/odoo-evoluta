@@ -148,7 +148,8 @@ Exato: Tier Validation aplicado a 5W2H (2 níveis: Secretário > Gabinete) + SLA
 Aceite:
 - [ ] 5W2H precisa das 2 aprovações para Gerar Task; SLA conta prazo no ticket demo.
 
-## F17 — Assinatura + Jobs + Teoria da Mudança
+## F17 — Assinatura + Jobs + Teoria da Mudança [CONCLUÍDO 07/10]
+Notas: cron-runner OCA `installable: False` → executor próprio `evoluta.job.runner` (cron 1min, usa API pública queue_job). CSV de acesso tem que se chamar `ir.model.access.csv`. Sign exige grupo `Todos os Documentos` no admin.
 Objetivo: fechar itens Fase 2 restantes.
 Exato: sign_oca instalado (branch 19.0) com 1 modelo de termo demo; queue_job instalado para geração de projeto via template em background (F13 vira job); `evoluta.teoria.mudanca` (projeto, contexto, insumos, atividades, produtos, resultados) CRUD simples.
 Aceite:
