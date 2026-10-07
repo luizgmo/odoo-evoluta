@@ -17,18 +17,17 @@ export interface AbaDaPasta {
 }
 
 export const DIVISORIAS_DO_PROCESSO: AbaDaPasta[] = [
-  { caminho: "", curto: "Linha do tempo", rotulo: "Linha do tempo" },
-  { caminho: "documentos", curto: "Documentos", rotulo: "Documentos do processo" },
-  { caminho: "autos", curto: "Autos", rotulo: "Autos para imprimir" },
-  { caminho: "prazos", curto: "Prazos", rotulo: "Simular prazos" },
-  { caminho: "historico", curto: "Histórico", rotulo: "Histórico do processo" },
-  { caminho: "edit", curto: "Ficha", rotulo: "Ficha do processo" },
+  { caminho: "", curto: "Capa", rotulo: "Capa do projeto" },
+  { caminho: "porques", curto: "5 Porquês", rotulo: "5 Porquês" },
+  { caminho: "w2h", curto: "5W2H", rotulo: "5W2H" },
+  { caminho: "ishikawa", curto: "Ishikawa", rotulo: "Ishikawa" },
+  { caminho: "matriz", curto: "Matriz", rotulo: "Matriz de Decisão" },
+  { caminho: "raci", curto: "RACI", rotulo: "RACI" },
+  { caminho: "riscos", curto: "Riscos", rotulo: "Riscos" },
+  { caminho: "estrategia", curto: "Estratégia", rotulo: "Estratégia" },
 ];
 
-export const FERRAMENTAS_DO_PROCESSO: AbaDaPasta[] = [
-  { caminho: "diario", curto: "Diário", rotulo: "Prévia no Diário" },
-  { caminho: "repetir", curto: "Repetir", rotulo: "Repetir contratação" },
-];
+export const FERRAMENTAS_DO_PROCESSO: AbaDaPasta[] = [];
 
 
 export const caminhoDaAba = (processoId: string | number, aba: AbaDaPasta) =>

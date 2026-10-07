@@ -10,6 +10,15 @@ import { Button } from "@/components/ui/button";
 import { ProcessoNaMesa } from "@/components/mesa/ProcessoNaMesa";
 import { DIVISORIAS_DO_PROCESSO, FERRAMENTAS_DO_PROCESSO, caminhoDaAba } from "@/components/mesa/ferramentas";
 import { BaixarDocumento } from "@/components/documents/BaixarDocumento";
+import {
+  TelaEstrategia,
+  TelaIshikawa,
+  TelaMatriz,
+  TelaPorques,
+  TelaRaci,
+  TelaRiscos,
+  TelaW2H,
+} from "./ferramentas/Ferramentas";
 import { formatBRLComCentavos } from "@/features/dashboard/formatos";
 import { GEN, MARCA } from "@/config/marca";
 import { blocosDoItem, nomeDoDocumentoDoItem } from "@/utils/blocosDoItem";
@@ -72,6 +81,13 @@ const Item: React.FC = () => {
       {(p) => {
         if (!aba) return <AbaEmConstrucao rotulo="Divisória não encontrada" voltarPara={`${MARCA.rotaDaLista}/${p.id}`} />;
         if (aba.caminho === "") return <Ficha objeto={p.object} valor={formatBRLComCentavos(p.estimated_value)} />;
+        if (aba.caminho === "porques") return <TelaPorques />;
+        if (aba.caminho === "w2h") return <TelaW2H />;
+        if (aba.caminho === "ishikawa") return <TelaIshikawa />;
+        if (aba.caminho === "matriz") return <TelaMatriz />;
+        if (aba.caminho === "raci") return <TelaRaci />;
+        if (aba.caminho === "riscos") return <TelaRiscos />;
+        if (aba.caminho === "estrategia") return <TelaEstrategia />;
         return <AbaEmConstrucao rotulo={aba.rotulo} voltarPara={caminhoDaAba(p.id, DIVISORIAS_DO_PROCESSO[0])} />;
       }}
     </ProcessoNaMesa>
