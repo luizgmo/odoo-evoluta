@@ -17,7 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CAMPO_DE_ENTRADA, MolduraDeEntrada } from "./MolduraDeEntrada";
 import { Loader2, Lock, Mail, AlertCircle, CheckCircle2 } from "lucide-react";
-import { apiClient, CLIENTE_DE_DEMONSTRACAO } from "@/services/api/client";
+import { apiPost, CLIENTE_DE_DEMONSTRACAO } from "@/services/api/client";
 
 const fieldClass = CAMPO_DE_ENTRADA;
 const submitClass = "h-11 w-full text-base font-semibold";
@@ -40,7 +40,12 @@ const ResetPassword: React.FC = () => {
     setError("");
     setInfo("");
     try {
-      await apiClient.post("/auth/password-reset/request/", { email });
+      if (CLIENTE_DE_DEMONSTRACAO) {
+        setInfo("Demonstração: nenhum e-mail é enviado. Em um ambiente real, esta ação enviaria o link de recuperação.");
+        setEmail("");
+        return;
+      }
+      await apiPost("/auth/password-reset/request/", { email });
       // Backend é anti-enumeration — sempre retorna 200. Mostramos mensagem neutra.
       setInfo(
         "Se o email estiver cadastrado, enviaremos um link para redefinir a senha. Verifique a caixa de entrada e o spam."
@@ -82,7 +87,11 @@ const ResetPassword: React.FC = () => {
       return;
     }
     try {
-      await apiClient.post("/auth/password-reset/confirm/", {
+      if (CLIENTE_DE_DEMONSTRACAO) {
+        setInfo("Demonstração: a senha não é alterada e nenhum acesso é modificado.");
+        return;
+      }
+      await apiPost("/auth/password-reset/confirm/", {
         token,
         password,
         password_confirm: passwordConfirm,

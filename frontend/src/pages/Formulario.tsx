@@ -6,6 +6,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { FolhaDaTela } from "@/components/mesa/FolhaDaTela";
@@ -19,6 +20,7 @@ const Formulario: React.FC = () => {
   const navigate = useNavigate();
   const { avisar } = useAvisoDeResultado();
   const [objeto, setObjeto] = useState("");
+  const [valor, setValor] = useState("");
   const [erro, setErro] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
 
@@ -30,6 +32,7 @@ const Formulario: React.FC = () => {
     try {
       const criado = await apiPost<{ record: { id: number; name: string } }>("/api/projetos", {
         name: objeto.trim(),
+        orcamento: Number(valor.replace(/\./g, "").replace(",", ".")) || 0,
       });
       avisar({ texto: `${GEN.O} ${MARCA.objeto.singular} "${criado.record.name}" foi criad${GEN.fim}.` });
       navigate(`${MARCA.rotaDaLista}/${criado.record.id}`);
@@ -55,6 +58,10 @@ const Formulario: React.FC = () => {
           {/* EXEMPLO DE DOMÍNIO — o rótulo vem de MARCA.campos.objeto */}
           <Label htmlFor="objeto">{MARCA.campos.objeto}</Label>
           <Textarea id="objeto" value={objeto} onChange={(e) => setObjeto(e.target.value)} required rows={3} />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="valor">{MARCA.campos.valor} (R$)</Label>
+          <Input id="valor" inputMode="decimal" value={valor} onChange={(e) => setValor(e.target.value)} />
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <Button type="submit" disabled={enviando}>

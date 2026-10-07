@@ -8,25 +8,75 @@
 export const CLIENTE_DE_DEMONSTRACAO = true;
 
 const BANCO_ODOO = "demo";
+const TEMPO_LIMITE_MS = 15_000;
 
-async function lerJson(res: Response) {
-  const texto = await res.text();
-  try {
-    return JSON.parse(texto);
-  } catch {
-    throw new Error("Resposta inválida do servidor.");
+type CorpoJson = Record<string, unknown> | null;
+
+export class ApiError extends Error {
+  readonly status: number;
+  readonly caminho: string;
+
+  constructor(message: string, status: number, caminho: string) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+    this.caminho = caminho;
   }
 }
 
-/** GET autenticado pela sessão. Fora da sessão, o Odoo devolve o login (HTML). */
-export async function apiGet<T>(caminho: string): Promise<T> {
-  const res = await fetch(caminho, { credentials: "include" });
-  if (!res.ok) throw new Error(`Falha ao buscar ${caminho}.`);
-  const dados = await lerJson(res);
-  if (dados && typeof dados === "object" && "error" in (dados as Record<string, unknown>)) {
-    throw new Error("Registro não encontrado.");
+async function lerJson(res: Response, caminho: string): Promise<CorpoJson> {
+  const texto = await res.text();
+  try {
+    return JSON.parse(texto) as CorpoJson;
+  } catch {
+    throw new ApiError(
+      res.status === 401 || res.status === 403
+        ? "Sua sessão não está mais disponível. Entre novamente para continuar."
+        : "O servidor respondeu em um formato inválido. Tente de novo em instantes.",
+      res.status || 500,
+      caminho,
+    );
   }
-  return dados as T;
+}
+
+function mensagemDoServidor(dados: CorpoJson, fallback: string): string {
+  if (dados && typeof dados.error === "string" && dados.error.trim()) return dados.error;
+  return fallback;
+}
+
+async function requisicaoJson<T>(caminho: string, init: RequestInit = {}): Promise<T> {
+  const controlador = new AbortController();
+  const timer = globalThis.setTimeout(() => controlador.abort(), TEMPO_LIMITE_MS);
+  try {
+    const res = await fetch(caminho, { ...init, credentials: "include", signal: controlador.signal });
+    const dados = await lerJson(res, caminho);
+    if (!res.ok) {
+      throw new ApiError(
+        mensagemDoServidor(dados, `Não foi possível concluir a solicitação (${res.status}).`),
+        res.status,
+        caminho,
+      );
+    }
+    return dados as T;
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    if (error instanceof DOMException && error.name === "AbortError") {
+      throw new ApiError("A conexão demorou. Tente de novo em instantes.", 408, caminho);
+    }
+    throw new ApiError("Não foi possível conectar ao servidor. Tente de novo em instantes.", 0, caminho);
+  } finally {
+    globalThis.clearTimeout(timer);
+  }
+}
+
+/** GET autenticado pela sessão. Fora da sessão, o Odoo devolve erro tratável. */
+export async function apiGet<T>(caminho: string): Promise<T> {
+  const dados = await requisicaoJson<T>(caminho);
+  if (dados && typeof dados === "object" && "error" in (dados as Record<string, unknown>)) {
+    const corpo = dados as Record<string, unknown>;
+    throw new ApiError(typeof corpo.error === "string" ? corpo.error : "Registro não encontrado.", 404, caminho);
+  }
+  return dados;
 }
 
 export interface SessaoOdoo {
@@ -37,9 +87,8 @@ export interface SessaoOdoo {
 
 /** Login real no Odoo (cria a sessão em cookie). */
 export async function loginOdoo(login: string, password: string): Promise<SessaoOdoo> {
-  const res = await fetch("/web/session/authenticate", {
+  const dados = await requisicaoJson<{ result?: SessaoOdoo }>("/web/session/authenticate", {
     method: "POST",
-    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       jsonrpc: "2.0",
@@ -47,8 +96,7 @@ export async function loginOdoo(login: string, password: string): Promise<Sessao
       params: { db: BANCO_ODOO, login, password },
     }),
   });
-  const dados = await lerJson(res);
-  const resultado = (dados as { result?: SessaoOdoo }).result;
+  const resultado = dados.result;
   if (!resultado || !resultado.uid) throw new Error("Usuário ou senha incorretos.");
   return resultado;
 }
@@ -56,14 +104,12 @@ export async function loginOdoo(login: string, password: string): Promise<Sessao
 /** Quem está na sessão atual (restaura o login ao recarregar). */
 export async function sessaoAtual(): Promise<SessaoOdoo | null> {
   try {
-    const res = await fetch("/web/session/get_session_info", {
+    const dados = await requisicaoJson<{ result?: SessaoOdoo }>("/web/session/get_session_info", {
       method: "POST",
-      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ jsonrpc: "2.0", method: "call", params: {} }),
     });
-    const dados = await lerJson(res);
-    const resultado = (dados as { result?: SessaoOdoo }).result;
+    const resultado = dados.result;
     return resultado && resultado.uid ? resultado : null;
   } catch {
     return null;
@@ -73,9 +119,8 @@ export async function sessaoAtual(): Promise<SessaoOdoo | null> {
 /** Encerra a sessão no Odoo (sem falhar se já caiu). */
 export async function logoutOdoo(): Promise<void> {
   try {
-    await fetch("/web/session/destroy", {
+    await requisicaoJson("/web/session/destroy", {
       method: "POST",
-      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ jsonrpc: "2.0", method: "call", params: {} }),
     });
@@ -84,22 +129,11 @@ export async function logoutOdoo(): Promise<void> {
   }
 }
 
-/** POST JSON autenticado (rotas com csrf=False). Erro do servidor vira Error com a mensagem. */
+/** POST JSON autenticado (rotas com csrf=False). */
 export async function apiPost<T>(caminho: string, corpo: unknown): Promise<T> {
-  const res = await fetch(caminho, {
+  return requisicaoJson<T>(caminho, {
     method: "POST",
-    credentials: "include",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(corpo ?? {}),
   });
-  if (!res.ok) throw new Error("Falha de conexão. Confira e tente de novo.");
-  const dados = (await lerJson(res)) as { error?: string } & Record<string, unknown>;
-  if (dados && typeof dados.error === "string" && dados.error) throw new Error(dados.error);
-  return dados as T;
 }
-export const apiClient = {
-  async post(_url: string, _corpo?: unknown): Promise<{ data: Record<string, unknown> }> {
-    await new Promise((r) => setTimeout(r, 300));
-    return { data: {} };
-  },
-};

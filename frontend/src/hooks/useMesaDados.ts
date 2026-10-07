@@ -1,31 +1,46 @@
-/**
- * SUBSTITUÍVEL: dados de demonstração para a busca rápida e a pasta do
- * processo. São INVENTADOS e ficam na memória, sem servidor. Em um sistema
- * real, troque o corpo destes dois hooks por consultas ao servidor (react-query,
- * SWR, fetch…), mantendo o que cada um devolve:
- *   useProcessosDaMesa() → { processos, data, isLoading, isError, refetch }
- *   useProcessoDaMesa(id) → { data, isLoading, error, refetch }
- * `adicionarProcesso` (só da demonstração) é o que o Formulario chama ao salvar; no sistema
- * real vira o POST ao servidor, seguido de invalidar a consulta da lista.
- */
-import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+/** Consultas reais da Mesa ao Odoo. O servidor é a fonte da verdade; não há fallback local. */
+import { useCallback, useEffect, useState } from "react";
 import type { Process } from "@/types/process";
-import { MARCA } from "@/config/marca";
+
 import { apiGet } from "@/services/api/client";
 
 interface ProjetoApi {
   id: number;
   name: unknown;
   total_tasks: number;
+  orcamento?: number;
 }
+
+interface TaskApi {
+  id: number;
+  name: unknown;
+  stage_id: number | false;
+  date_deadline?: string | false;
+}
+
+interface StageApi {
+  id: number;
+  name: unknown;
+  fold: boolean;
+}
+
+interface ProjetoDetalheApi {
+  id: number;
+  name: unknown;
+  orcamento?: number;
+  stages: StageApi[];
+  tasks: TaskApi[];
+}
+
+const texto = (v: unknown): string => (typeof v === "string" ? v : "");
 
 const paraProcesso = (r: ProjetoApi): Process => ({
   id: r.id,
   code: `EVG-${String(r.id).padStart(5, "0")}`,
   description: "",
   modality: { id: 0, name: "", description: "" },
-  object: typeof r.name === "string" ? r.name : JSON.stringify(r.name),
-  estimated_value: "0.00",
+  object: texto(r.name),
+  estimated_value: String(Number(r.orcamento ?? 0).toFixed(2)),
   publication_date: "",
   responsible: "",
   opening_date: null,
@@ -37,83 +52,38 @@ const paraProcesso = (r: ProjetoApi): Process => ({
   updated_at: new Date().toISOString(),
 });
 
-// EXEMPLO DE DOMÍNIO — troque: agrupamentos inventados (hoje: secretarias).
-const SAUDE = { id: 1, name: "Secretaria de Saúde", description: "" };
-const EDUCACAO = { id: 2, name: "Secretaria de Educação", description: "" };
-
-/** Data ISO (AAAA-MM-DD) daqui a n dias: a demonstração sempre tem prazos no mês corrente. */
-const emDias = (n: number) => {
-  const d = new Date();
-  d.setDate(d.getDate() + n);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-};
-
-const base = (n: number, o: Partial<Process>): Process => ({
-  id: n,
-  code: `${MARCA.campos.prefixoDoCodigo}${String(n).padStart(5, "0")}`,
-  description: "",
-  modality: SAUDE,
-  object: "",
-  estimated_value: "0.00",
-  publication_date: emDias(-10),
-  responsible: MARCA.campos.responsavelPadrao,
-  opening_date: null,
-  opening_time: null,
-  status: "EM_ANDAMENTO",
-  author: 1,
-  company: null,
-  created_at: "2026-08-01T10:00:00Z",
-  updated_at: "2026-08-20T10:00:00Z",
-  ...o,
-});
-
-export const PROCESSOS_DE_EXEMPLO: Process[] = [
-  base(1, {
-    object: "Implantação da LGPD na Saúde",
-    estimated_value: "48500.00",
-    opening_date: emDias(12),
-    opening_time: "10:00:00",
-  }),
-  base(2, {
-    object: "Plano de manutenção das escolas",
-    modality: EDUCACAO,
-    estimated_value: "312000.00",
-    opening_date: emDias(20),
-    opening_time: "14:00:00",
-  }),
-  base(3, { object: "Inventário de dados da Educação", modality: EDUCACAO, estimated_value: "29900.00", status: "ABERTO", opening_date: emDias(7), opening_time: "09:30:00" }),
-  base(4, { object: "Treinamento de atendentes do balcão", estimated_value: "17800.00", status: "CONCLUIDO" }),
-  base(5, { object: "Auditoria final LGPD", estimated_value: "86400.00", status: "ABERTO" }),
-];
-
-/**
- * Armazém em memória da demonstração (useSyncExternalStore): o que o Formulario cria aparece na
- * Lista, na busca e na agenda, e abre no Item — até recarregar a página, quando volta ao exemplo.
- * Em um sistema real isto some: o servidor é a fonte e o cache da consulta faz este papel.
- */
-let armazem: Process[] = [...PROCESSOS_DE_EXEMPLO];
-const ouvintes = new Set<() => void>();
-const assinar = (avisar: () => void) => {
-  ouvintes.add(avisar);
-  return () => {
-    ouvintes.delete(avisar);
+const paraProcessoDetalhe = (r: ProjetoDetalheApi): Process => {
+  const porEtapa = new Map<number, number>();
+  for (const t of r.tasks) {
+    if (typeof t.stage_id === "number") porEtapa.set(t.stage_id, (porEtapa.get(t.stage_id) ?? 0) + 1);
+  }
+  const prazos = r.tasks
+    .map((t) => (typeof t.date_deadline === "string" ? t.date_deadline.slice(0, 10) : ""))
+    .filter(Boolean)
+    .sort();
+  const todasFeitas = r.tasks.length > 0 && r.tasks.every((t) => {
+    const st = r.stages.find((s) => s.id === t.stage_id);
+    return st ? st.fold : false;
+  });
+  return {
+    id: r.id,
+    code: `EVG-${String(r.id).padStart(5, "0")}`,
+    description: "",
+    modality: { id: 0, name: "", description: "" },
+    object: texto(r.name),
+    estimated_value: String(Number(r.orcamento ?? 0).toFixed(2)),
+    publication_date: "",
+    responsible: "",
+    opening_date: prazos.length > 0 ? prazos[0] : null,
+    opening_time: null,
+    status: todasFeitas ? "CONCLUIDO" : r.tasks.length > 0 ? "EM_ANDAMENTO" : "ABERTO",
+    author: 1,
+    company: null,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   };
 };
-const lerArmazem = () => armazem;
 
-/**
- * Acrescenta um item ao armazém da demonstração e devolve o criado (com id e código novos).
- * O item novo nasce sem agrupamento e sem datas (o formulário só pede o essencial): cai na
- * primeira fase e na aba "sem data", em vez de herdar o agrupamento e as datas do exemplo.
- */
-export function adicionarProcesso(dados: Partial<Process>): Process {
-  const n = armazem.reduce((maior, p) => Math.max(maior, Number(p.id) || 0), 0) + 1;
-  const agora = new Date().toISOString(); // o carimbo "criado em" da capa mostra a data de hoje, não a do exemplo
-  const novo = base(n, { status: "ABERTO", modality: { id: 0, name: "", description: "" }, publication_date: "", created_at: agora, updated_at: agora, ...dados });
-  armazem = [...armazem, novo];
-  ouvintes.forEach((avisar) => avisar());
-  return novo;
-}
 
 export function useProcessosDaMesa() {
   const [processos, setProcessos] = useState<Process[]>([]);
@@ -134,7 +104,6 @@ export function useProcessosDaMesa() {
 }
 
 export function useProcessoDaMesa(id: string | undefined) {
-  const processosMock = useSyncExternalStore(assinar, lerArmazem);
   const [carregando, setCarregando] = useState(true);
   const [data, setData] = useState<Process | undefined>(undefined);
   const [error, setError] = useState<{ status: number } | null>(null);
@@ -147,24 +116,14 @@ export function useProcessoDaMesa(id: string | undefined) {
     }
     setCarregando(true);
     setError(null);
-    apiGet<{ records: ProjetoApi[] }>("/api/projetos")
+    apiGet<{ record?: ProjetoDetalheApi; error?: string }>(`/api/projetos/${id}`)
       .then((d) => {
-        const achado = d.records.find((r) => String(r.id) === String(id));
-        if (achado) {
-          setData(paraProcesso(achado));
-        } else {
-          const mock = processosMock.find((p) => String(p.id) === String(id));
-          if (mock) setData(mock);
-          else setError({ status: 404 });
-        }
+        if (d.record) setData(paraProcessoDetalhe(d.record));
+        else setError({ status: 404 });
       })
-      .catch(() => {
-        const mock = processosMock.find((p) => String(p.id) === String(id));
-        if (mock) setData(mock);
-        else setError({ status: 500 });
-      })
+      .catch(() => setError({ status: 500 }))
       .finally(() => setCarregando(false));
-  }, [id, processosMock]);
+  }, [id]);
   useEffect(() => {
     buscar();
   }, [buscar]);

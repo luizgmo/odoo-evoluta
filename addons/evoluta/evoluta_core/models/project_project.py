@@ -24,6 +24,7 @@ class ProjectProject(models.Model):
     evoluta_overdue_tasks = fields.Integer(
         string="Atrasadas", compute="_compute_evoluta_indicadores"
     )
+    evoluta_orcamento = fields.Float(string="Orçamento (R$)")
 
     @api.depends()
     def _compute_evoluta_indicadores(self):
