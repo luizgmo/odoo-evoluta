@@ -21,6 +21,7 @@ import {
   TelaW2H,
 } from "./ferramentas/Ferramentas";
 import { KanbanProjeto } from "./KanbanProjeto";
+import { MatrizProjeto } from "./MatrizProjeto";
 import { TelaIshikawaReal, TelaPorquesReal, TelaRaciReal, TelaRiscosReal } from "./ferramentas/FerramentasReais";
 import { formatBRLComCentavos } from "@/features/dashboard/formatos";
 import { GEN, MARCA } from "@/config/marca";
@@ -88,7 +89,7 @@ const Item: React.FC = () => {
         if (aba.caminho === "porques") return <TelaPorquesReal />;
         if (aba.caminho === "w2h") return <TelaW2H />;
         if (aba.caminho === "ishikawa") return <TelaIshikawaReal />;
-        if (aba.caminho === "matriz") return <TelaMatriz />;
+        if (aba.caminho === "matriz") return <MatrizProjeto />;
         if (aba.caminho === "raci") return <TelaRaciReal />;
         if (aba.caminho === "riscos") return <TelaRiscosReal />;
         if (aba.caminho === "estrategia") return <TelaEstrategia />;
