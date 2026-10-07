@@ -10,18 +10,10 @@ import { Button } from "@/components/ui/button";
 import { ProcessoNaMesa } from "@/components/mesa/ProcessoNaMesa";
 import { DIVISORIAS_DO_PROCESSO, FERRAMENTAS_DO_PROCESSO, caminhoDaAba } from "@/components/mesa/ferramentas";
 import { BaixarDocumento } from "@/components/documents/BaixarDocumento";
-import {
-  TelaEstrategia,
-  TelaIshikawa,
-  TelaMatriz,
-  TelaPorques,
-  TelaRaci,
-  TelaRiscos,
-  TelaStakeholders,
-  TelaW2H,
-} from "./ferramentas/Ferramentas";
+import { TelaStakeholders, TelaW2H } from "./ferramentas/Ferramentas";
 import { KanbanProjeto } from "./KanbanProjeto";
 import { MatrizProjeto } from "./MatrizProjeto";
+import { EstrategiaProjeto } from "./EstrategiaProjeto";
 import { TelaIshikawaReal, TelaPorquesReal, TelaRaciReal, TelaRiscosReal } from "./ferramentas/FerramentasReais";
 import { formatBRLComCentavos } from "@/features/dashboard/formatos";
 import { GEN, MARCA } from "@/config/marca";
@@ -92,7 +84,7 @@ const Item: React.FC = () => {
         if (aba.caminho === "matriz") return <MatrizProjeto />;
         if (aba.caminho === "raci") return <TelaRaciReal />;
         if (aba.caminho === "riscos") return <TelaRiscosReal />;
-        if (aba.caminho === "estrategia") return <TelaEstrategia />;
+        if (aba.caminho === "estrategia") return <EstrategiaProjeto />;
         if (aba.caminho === "stakeholders") return <TelaStakeholders />;
         return <AbaEmConstrucao rotulo={aba.rotulo} voltarPara={caminhoDaAba(p.id, DIVISORIAS_DO_PROCESSO[0])} />;
       }}
