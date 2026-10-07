@@ -4,7 +4,7 @@
     "summary": "Endpoints JSON da Mesa (leitura)",
     "author": "AlphaMec + Evoluta",
     "license": "LGPL-3",
-    "depends": ["base", "project", "evoluta_core", "evoluta_management"],
+    "depends": ["base", "project", "evoluta_core", "evoluta_management", "evoluta_strategy"],
     "data": [],
     "installable": True,
     "application": False,

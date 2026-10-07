@@ -25,6 +25,7 @@ export const DIVISORIAS_DO_PROCESSO: AbaDaPasta[] = [
   { caminho: "raci", curto: "RACI", rotulo: "RACI" },
   { caminho: "riscos", curto: "Riscos", rotulo: "Riscos" },
   { caminho: "estrategia", curto: "Estratégia", rotulo: "Estratégia" },
+  { caminho: "stakeholders", curto: "Stakeholders", rotulo: "Stakeholders" },
 ];
 
 export const FERRAMENTAS_DO_PROCESSO: AbaDaPasta[] = [];

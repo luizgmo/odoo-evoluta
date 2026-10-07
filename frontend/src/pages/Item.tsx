@@ -17,8 +17,10 @@ import {
   TelaPorques,
   TelaRaci,
   TelaRiscos,
+  TelaStakeholders,
   TelaW2H,
 } from "./ferramentas/Ferramentas";
+import { TelaIshikawaReal, TelaPorquesReal, TelaRaciReal, TelaRiscosReal } from "./ferramentas/FerramentasReais";
 import { formatBRLComCentavos } from "@/features/dashboard/formatos";
 import { GEN, MARCA } from "@/config/marca";
 import { blocosDoItem, nomeDoDocumentoDoItem } from "@/utils/blocosDoItem";
@@ -81,13 +83,14 @@ const Item: React.FC = () => {
       {(p) => {
         if (!aba) return <AbaEmConstrucao rotulo="Divisória não encontrada" voltarPara={`${MARCA.rotaDaLista}/${p.id}`} />;
         if (aba.caminho === "") return <Ficha objeto={p.object} valor={formatBRLComCentavos(p.estimated_value)} />;
-        if (aba.caminho === "porques") return <TelaPorques />;
+        if (aba.caminho === "porques") return <TelaPorquesReal />;
         if (aba.caminho === "w2h") return <TelaW2H />;
-        if (aba.caminho === "ishikawa") return <TelaIshikawa />;
+        if (aba.caminho === "ishikawa") return <TelaIshikawaReal />;
         if (aba.caminho === "matriz") return <TelaMatriz />;
-        if (aba.caminho === "raci") return <TelaRaci />;
-        if (aba.caminho === "riscos") return <TelaRiscos />;
+        if (aba.caminho === "raci") return <TelaRaciReal />;
+        if (aba.caminho === "riscos") return <TelaRiscosReal />;
         if (aba.caminho === "estrategia") return <TelaEstrategia />;
+        if (aba.caminho === "stakeholders") return <TelaStakeholders />;
         return <AbaEmConstrucao rotulo={aba.rotulo} voltarPara={caminhoDaAba(p.id, DIVISORIAS_DO_PROCESSO[0])} />;
       }}
     </ProcessoNaMesa>
