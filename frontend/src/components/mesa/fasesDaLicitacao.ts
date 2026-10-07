@@ -29,13 +29,12 @@ const inicial = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
 const OBJETO = inicial(MARCA.objeto.singular);
 
 export const FASES_DA_LICITACAO = [
-  "Preparatória",
-  "Divulgação do edital",
-  "Propostas e lances",
-  "Julgamento",
-  "Habilitação",
-  "Recursos",
-  "Homologação",
+  "Não iniciado",
+  "Planejado",
+  "Em execução",
+  "Aguardando terceiro",
+  "Validação",
+  "Concluído",
 ] as const;
 
 export type EstadoDaFase = "feita" | "atual" | "por vir";
@@ -61,12 +60,11 @@ const dia = (iso?: string | null): Date | null => {
   return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
 };
 
-/** Dispensa e inexigibilidade: contratação direta, sem edital, sessão nem prazos de disputa. */
-export const ehContratacaoDireta = (modalidade?: string | null) => /dispensa|inexigib/i.test(modalidade ?? "");
+/** Acompanhamento direto (não passa pelas etapas): reservado, `false` fixo no mock. */
+export const ehContratacaoDireta = (_modalidade?: string | null) => false;
 
 export function situacaoDasFases(processo: Pick<Process, "status" | "publication_date" | "opening_date" | "modality">, hoje: Date = new Date()): SituacaoDasFases {
   const hojeDia = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
-  const publicacao = dia(processo.publication_date);
   const abertura = dia(processo.opening_date);
   // Quais situações encerram (e quais concluem o fluxo) vem da tabela de constants/process-status.ts
   const concluida = ehSituacaoConcluida(processo.status);
@@ -80,18 +78,18 @@ export function situacaoDasFases(processo: Pick<Process, "status" | "publication
     // Encerrado sem concluir: não está em fase nenhuma, e as datas não dizem mais nada
     atual = -1;
     explicacao = `${OBJETO} encerrad${GEN.fim} sem concluir.`;
-  } else if (!publicacao || publicacao > hojeDia) {
+  } else if (!abertura) {
     atual = ate(0);
-    explicacao = publicacao ? "O edital ainda não foi publicado." : "Ainda sem data de publicação do edital.";
-  } else if (!abertura || abertura > hojeDia) {
-    atual = ate(1);
-    explicacao = "Edital publicado; a sessão pública ainda não aconteceu.";
-  } else if (abertura.getTime() === hojeDia.getTime()) {
+    explicacao = "Ainda sem prazo final.";
+  } else if (abertura > hojeDia) {
     atual = ate(2);
-    explicacao = "A sessão pública é hoje.";
+    explicacao = "Prazo futuro; em execução.";
+  } else if (abertura.getTime() === hojeDia.getTime()) {
+    atual = ate(4);
+    explicacao = "Prazo é hoje; em validação.";
   } else {
     atual = ate(3);
-    explicacao = `A sessão já aconteceu. O sistema ainda não registra se ${GEN.o} ${MARCA.objeto.singular} está em julgamento, habilitação ou recursos.`;
+    explicacao = `Prazo passou. O sistema ainda não registra se ${GEN.o} ${MARCA.objeto.singular} está aguardando terceiro ou em validação.`;
   }
 
   return {

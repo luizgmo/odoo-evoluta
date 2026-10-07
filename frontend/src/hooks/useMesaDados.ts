@@ -12,9 +12,9 @@ import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import type { Process } from "@/types/process";
 import { MARCA } from "@/config/marca";
 
-// EXEMPLO DE DOMÍNIO — troque: agrupamentos inventados (hoje: modalidades de licitação).
-const PREGAO = { id: 1, name: "Pregão Eletrônico", description: "" };
-const DISPENSA = { id: 2, name: "Dispensa de Licitação", description: "" };
+// EXEMPLO DE DOMÍNIO — troque: agrupamentos inventados (hoje: secretarias).
+const SAUDE = { id: 1, name: "Secretaria de Saúde", description: "" };
+const EDUCACAO = { id: 2, name: "Secretaria de Educação", description: "" };
 
 /** Data ISO (AAAA-MM-DD) daqui a n dias: a demonstração sempre tem prazos no mês corrente. */
 const emDias = (n: number) => {
@@ -27,7 +27,7 @@ const base = (n: number, o: Partial<Process>): Process => ({
   id: n,
   code: `${MARCA.campos.prefixoDoCodigo}${String(n).padStart(5, "0")}`,
   description: "",
-  modality: PREGAO,
+  modality: SAUDE,
   object: "",
   estimated_value: "0.00",
   publication_date: emDias(-10),
@@ -44,20 +44,21 @@ const base = (n: number, o: Partial<Process>): Process => ({
 
 export const PROCESSOS_DE_EXEMPLO: Process[] = [
   base(1, {
-    object: "Aquisição de material de escritório",
+    object: "Implantação da LGPD na Saúde",
     estimated_value: "48500.00",
     opening_date: emDias(12),
     opening_time: "10:00:00",
   }),
   base(2, {
-    object: "Contratação de serviço de limpeza predial",
+    object: "Plano de manutenção das escolas",
+    modality: EDUCACAO,
     estimated_value: "312000.00",
     opening_date: emDias(20),
     opening_time: "14:00:00",
   }),
-  base(3, { object: "Compra de equipamentos de informática", estimated_value: "129900.00", status: "ABERTO", opening_date: emDias(7), opening_time: "09:30:00" }),
-  base(4, { object: "Manutenção de veículos da frota", modality: DISPENSA, estimated_value: "17800.00", status: "CONCLUIDO" }),
-  base(5, { object: "Registro de preços de material de limpeza", estimated_value: "86400.00", status: "ABERTO" }),
+  base(3, { object: "Inventário de dados da Educação", modality: EDUCACAO, estimated_value: "29900.00", status: "ABERTO", opening_date: emDias(7), opening_time: "09:30:00" }),
+  base(4, { object: "Treinamento de atendentes do balcão", estimated_value: "17800.00", status: "CONCLUIDO" }),
+  base(5, { object: "Auditoria final LGPD", estimated_value: "86400.00", status: "ABERTO" }),
 ];
 
 /**
