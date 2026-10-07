@@ -4,7 +4,7 @@
     "summary": "Biblioteca de templates que gera projetos",
     "author": "AlphaMec + Evoluta",
     "license": "LGPL-3",
-    "depends": ["base", "project", "evoluta_core"],
+    "depends": ["base", "project", "evoluta_core", "queue_job"],
     "data": [
         "security/ir.model.access.csv",
         "views/evoluta_template_views.xml",

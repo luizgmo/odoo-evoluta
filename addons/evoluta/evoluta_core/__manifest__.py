@@ -14,6 +14,7 @@
         "views/menus.xml",
         "data/project_stages.xml",
         "data/onboarding.xml",
+        "data/queue_runner_cron.xml",
     ],
     "installable": True,
     "application": False,

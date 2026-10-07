@@ -13,3 +13,4 @@ access_evoluta_plano_sec,access.evoluta.plano.sec,model_evoluta_plano,evoluta_gr
 access_evoluta_onboarding_admin,access.evoluta.onboarding.admin,model_evoluta_onboarding,evoluta_group_admin,1,1,1,1
 access_evoluta_onboarding_sec,access.evoluta.onboarding.sec,model_evoluta_onboarding,evoluta_group_secretario,1,1,0,0
 access_evoluta_onboarding_ate,access.evoluta.onboarding.ate,model_evoluta_onboarding,evoluta_group_atendente,1,1,0,0
+access_evoluta_job_runner_admin,access.evoluta.job.runner.admin,model_evoluta_job_runner,evoluta_group_admin,1,0,0,0
