@@ -35,7 +35,8 @@ Aceite:
 - [ ] Buscas R-DOM-05 zeradas em texto de tela (código pode manter `processo`).
 Teste: manual por tela (relato seção E) + `tsc --noEmit`.
 
-## G4 — Ponte API leitura
+## G4 — Ponte API leitura [CONCLUÍDO 07/10]
+Notas: controllers JSON plain (type http + GET; type json do Odoo só atende POST); auth por sessão mesmo domínio (sem CORS); login via /web/session/authenticate; perfis continuam pelo nome no mock (servidor manda no acesso).
 Objetivo: telas lendo o banco demo (fim do mock de leitura).
 Exato: `base_rest` no Odoo (endpoints GET projeto/task/5w2h + ferramentas G3b: porques/ishikawa/matriz/riscos/raci/stakeholders/estrategia/teoria + templates/chamados) ou JSON-RPC + CORS; `services/api/client.ts` real com `CLIENTE_DE_DEMONSTRACAO=false` para leitura; login por sessão Odoo (trocar AuthContext demo, R-AUTH-01); erro de API vira `MesaErroBusca` com "Tentar de novo", nunca tela em branco (R-EST-01/02); token/cookie fora do git.
 Fora: escrita (G5).
