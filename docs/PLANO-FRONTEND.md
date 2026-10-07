@@ -64,6 +64,26 @@ Teste: smoke manual + build de prod servido local antes.
 ## G7 — Relato final
 Objetivo: formato seção E da skill (onde, temas, 400px, diferenças vs LicitarsAI, o que ficou simulado, o que não foi conferido). Sem G7 nada se declara pronto (R-VER-04/06).
 
+# FASE H — tudo do backend (F1–F17) com dado real na Mesa
+Regra: cada ferramenta tem GET lista + POST criar (+ ação) na API e tela ligada. Mock restante é falha, não pendência.
+
+| Fase | Backend | Tela Mesa | API que falta |
+|---|---|---|---|
+| H1 | F5 Stakeholders | divisória nova + lista/criar | GET/POST `/api/stakeholders` |
+| H2 | F4 5 Porquês | divisória existe, ligar | GET/POST `/api/porques` + Criar ação |
+| H3 | F8 Ishikawa | divisória existe, ligar | GET/POST `/api/ishikawa` (+causas) |
+| H4 | F9 Matriz | divisória existe, ligar | GET/POST `/api/matriz` (+notas, total, gerar 5W2H) |
+| H5 | F7 RACI | aba da task existe no Odoo; na Mesa: ver/criar por task | GET/POST `/api/raci?task=` |
+| H6 | F6 Riscos | divisória existe, ligar | GET/POST `/api/riscos` + Gerar ação |
+| H7 | F10/F17 Estratégia+Teoria | divisória existe, ligar | GET/POST `/api/estrategia` (+converter, teoria) |
+| H8 | F13 Templates | tela existe, ligar | GET `/api/templates` + Gerar (job, com espera) |
+| H9 | F1/F16 Chamados+SLA | tela existe, ligar leitura; criar ticket | GET `/api/chamados` + POST ticket |
+| H10 | F11/F15 Indicadores | Paineis mock → números reais | reaproveita `/api/projetos` (+BI pronto no Odoo) |
+| H11 | F16 Aprovações | ver status + Aprovar na Mesa | POST aprovar (validate_tier) |
+| H12 | F2/F3 | Cadastros e usuários ficam no Odoo (decisão) | — |
+
+Ordem: H1 → H2 → H6 → H3 → H4 → H5 → H7 → H8 → H9 → H10 → H11. Cada H: endpoints + tela + teste ida-volta + commit.
+
 ## Testes automatizados (o que é auto e o que é manual)
 - Front auto: `tsc --noEmit` + `vite build` (toda fase) + **vitest novo** p/ `client.ts`, `GEN`, totais da matriz de decisão e `process-status` (a base não traz; criar em G3).
 - Back auto (novo): `tests/` TransactionCase por módulo Evoluta (CRUD, required, anti-duplicação de task, trava R!=A, gate de aprovação) rodando via `odoo -u ... --test-tags`.
