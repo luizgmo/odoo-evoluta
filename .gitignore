@@ -8,3 +8,7 @@ addons/oca/*
 !addons/oca/.gitkeep
 # Prompts locais de execução, nunca commitar
 docs/PROMPTS.md
+
+# Frontend
+frontend/node_modules/
+frontend/dist/

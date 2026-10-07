@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 120" width="480" height="120" role="img" aria-label="Meu Sistema">
+  <title>Meu Sistema</title>
+  <!-- Logo-modelo genérico para a faixa azul-noite do alto: marca à esquerda, nome à direita, sem fundo (4:1). Troque pelo logo do produto: PNG (ou SVG com texto em formas) de fundo transparente, texto claro, proporção de 2:1 a 4:1. Dentro de <img> o SVG não carrega fontes da página, por isso o nome usa fontes do sistema. Hex é aceitável aqui: é arte, não tela. -->
+  <rect x="8" y="20" width="80" height="80" rx="16" fill="#E0B24A"/>
+  <path d="M26 40h20l6 8h22a4 4 0 0 1 4 4v28a4 4 0 0 1-4 4H30a4 4 0 0 1-4-4z" fill="#0E1A33"/>
+  <text x="108" y="75" font-family="'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="40" font-weight="700" fill="#FFFFFF">Meu Sistema</text>
+</svg>

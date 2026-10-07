@@ -1,0 +1,1565 @@
+/* Pesos que o main.tsx não carrega: título fino e números em negrito */
+@import "@fontsource/plus-jakarta-sans/300.css";
+@import "@fontsource/barlow-semi-condensed/700.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ================================================================
+       Workspace Evoluta (LIGHT — padrão)
+       Moldura azul-noite (o azul do fundo do logo Evoluta) e folhas marfim
+       por cima. Dark equivalente vive em .dark.
+       ================================================================ */
+    --background: 42 42% 95%; /* marfim de papel #F8F5EE */
+    --foreground: 226 38% 16%; /* noite #192038 */
+
+    --card: 0 0% 100%; /* branco */
+    --card-foreground: 226 38% 16%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 226 38% 16%;
+
+    --primary: 220 50% 28%; /* institucional #243C6B */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 217 49% 35%; /* medio #2E4F85 */
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 40 28% 89%; /* papel pardo claro #EDE8DD */
+    --muted-foreground: 224 17% 43%; /* cinzaMedio #5A6480 (AA em fundo claro) */
+
+    --accent: 210 42% 46%; /* acento #4475A7 — realce/ring; texto branco sobre ele = 4,8:1 (AA) */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 59% 27%; /* erT #6E1C1C */
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 41 22% 81%; /* fio de papel #D9D2C3 */
+    --input: 224 13% 54%; /* borda de campo e trilha do interruptor: #7A8399 = 3,46:1 sobre o marfim e 3,79:1 sobre o branco (WCAG 1.4.11 ≥ 3:1); o --border (fio de papel) continua suave */
+    --ring: 210 42% 46%; /* acento */
+
+    /* Sidebar */
+    --sidebar-background: 0 0% 100%; /* branco */
+    --sidebar-foreground: 226 38% 16%; /* noite */
+    --sidebar-primary: 220 50% 28%; /* institucional */
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 42 42% 95%; /* marfim */
+    --sidebar-accent-foreground: 226 38% 16%;
+    --sidebar-border: 41 22% 81%; /* fio */
+    --sidebar-ring: 210 42% 46%; /* acento */
+
+    /* Moldura (faixa do alto e abas) — azul do fundo do logo Evoluta */
+    --moldura: 227 42% 19%; /* #1C2545 */
+    --moldura-2: 225 43% 24%; /* #233057 barra de abas */
+    --moldura-foreground: 0 0% 100%;
+
+    /* Ouro — só fill/ícone/texto-sobre-escuro (nunca texto/borda em claro: WCAG < 3) */
+    --gold: 39 44% 51%; /* ouro #B8924A */
+    --cta: 211 45% 45%; /* azul de ação #3F72A8 — texto branco AA */
+
+    /* ===== Escalas var-backed (canais crus HSL) — LIGHT ===== */
+    /* navy = superfície/borda (perola -> branco -> card elevado -> nevoa) */
+    --navy-500: 41 22% 81%; /* fio (borda) */
+    --navy-600: 43 57% 98%; /* #FDFCF9 card elevado (separa do bg) */
+    --navy-700: 0 0% 100%; /* branco (sidebar/header) */
+    --navy-800: 42 42% 95%; /* marfim (bg principal) */
+    --navy-900: 40 32% 91%; /* #EFEAE0 */
+    /* platinum = texto (INVERTIDO: claro -> escuro) */
+    --platinum-50: 228 25% 8%; /* preto */
+    --platinum-100: 226 38% 16%; /* noite */
+    --platinum-200: 226 38% 16%; /* noite */
+    --platinum-300: 224 25% 30%; /* ardosia */
+    --platinum-400: 224 17% 43%; /* cinzaMedio */
+    --platinum-500: 224 17% 43%; /* cinzaMedio */
+    /* steel = texto/ring/badge */
+    --steel-300: 224 25% 30%; /* ardosia */
+    --steel-400: 224 17% 43%; /* cinzaMedio */
+    --steel-500: 224 17% 43%; /* cinzaMedio (branco-sobre ~5:1 AA) */
+
+    /* ===== --color-* (LIGHT) — byte-idêntico aos triplets navy p/ a cascata do @layer utilities ===== */
+    --color-bg-primary: #f8f5ee;   /* = navy-800 marfim */
+    --color-bg-sidebar: #ffffff;   /* = navy-700 branco */
+    --color-bg-card: #fdfcf9;      /* = navy-600 elevado */
+    --color-bg-hover: #efeae0;
+    --color-bg-input: #ffffff;
+    --color-border-primary: #d9d2c3; /* fio = navy-500 */
+    --color-border-card: #d9d2c3;
+    --color-border-input: #7a8399;   /* = --input (WCAG 1.4.11) */
+    --color-accent-primary: #243c6b; /* institucional */
+    --color-accent-dark: #192038;    /* noite */
+    --color-accent-light: #4475A7;   /* acento (= --accent) */
+    --color-accent-hover: #2e4f85;   /* medio */
+    --color-text-primary: #192038;   /* noite */
+    --color-text-secondary: #5a6480; /* cinzaMedio (AA) */
+    --color-text-muted: #5a6480;     /* cinzaMedio — NÃO cinzaSuave (reprova AA no claro) */
+    --color-text-light: #243c6b;
+    --color-text-silver: #5a6480;
+    --color-status-success: #1a5c38;
+    --color-status-warning: #7a4a10;
+    --color-status-error: #6e1c1c;
+    --color-status-info: #1a3870;
+
+    /* Legacy variable names (for backward compatibility) — resolvem via --color-* */
+    --main-bg: var(--color-bg-primary);
+    --sidebar-bg: var(--color-bg-sidebar);
+    --card-bg: var(--color-bg-card);
+    --border-color: var(--color-border-primary);
+    --accent-blue: var(--color-accent-primary);
+    --accent-blue-dark: var(--color-accent-dark);
+    --accent-blue-light: var(--color-accent-light);
+    --text-primary: var(--color-text-primary);
+    --text-secondary: var(--color-text-secondary);
+    --text-silver: var(--color-text-silver);
+    --text-light: var(--color-text-light);
+
+    --radius: 0.5rem;
+
+    /* Evoluta typography roles (independente de tema) */
+    --font-body: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-display: "Cormorant Garamond", ui-serif, Georgia, Cambria, serif;
+    --font-ui: "Barlow Semi Condensed", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    /* Glass (LIGHT) — tint escuro sobre fundo claro */
+    --glass-bg: rgba(25, 32, 56, 0.04);
+    --glass-border: rgba(25, 32, 56, 0.08);
+
+    /* Scrollbar (LIGHT) */
+    --scrollbar-track: 40 28% 89%; /* papel */
+    --scrollbar-thumb: 224 17% 43%; /* cinzaMedio */
+  }
+
+  .dark {
+    /* ================================================================
+       Workspace Evoluta (DARK): moldura noite profunda, folhas
+       azul-ardósia por cima (em vez do preto neutro antigo)
+       ================================================================ */
+    --background: 224 35% 12%; /* #141A2A */
+    --foreground: 40 10% 96%; /* #f5f5f0 */
+
+    --card: 224 33% 16%; /* #1B2236 */
+    --card-foreground: 40 10% 96%;
+
+    --popover: 224 33% 16%;
+    --popover-foreground: 40 10% 96%;
+
+    --primary: 211 47% 45%; /* institucional clareado #3D72A9 (branco-sobre AA) */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 225 28% 28%;
+    --secondary-foreground: 40 10% 96%;
+
+    --muted: 226 30% 21%;
+    --muted-foreground: 222 20% 70%; /* #A5AEC4 */
+
+    --accent: 210 55% 62%; /* #6A9DD0 realce/link sobre folha escura */
+    --accent-foreground: 227 44% 8%; /* noite: texto sobre o realce */
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 40 10% 96%;
+
+    --border: 227 30% 24%; /* #2B3350 */
+    --input: 222 16% 46%; /* borda de campo e trilha do interruptor: #636E88 = 3,40:1 sobre o fundo e 3,07:1 sobre o card (WCAG 1.4.11) */
+    --ring: 210 55% 62%; /* #6A9DD0 */
+
+    --sidebar-background: 225 34% 14%; /* #171D2F */
+    --sidebar-foreground: 40 10% 96%;
+    --sidebar-primary: 211 47% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 227 30% 24%;
+    --sidebar-accent-foreground: 40 10% 96%;
+    --sidebar-border: 227 30% 24%;
+    --sidebar-ring: 210 55% 62%;
+
+    --gold: 39 44% 51%; /* ouro */
+    --cta: 211 45% 45%; /* azul de ação #3F72A8 — texto branco AA */
+
+    --moldura: 227 44% 8%; /* #0B0F1C */
+    --moldura-2: 225 36% 15%; /* #181F34 */
+    --moldura-foreground: 0 0% 100%;
+
+    /* ===== Escalas var-backed (canais crus) — DARK ===== */
+    --navy-500: 227 30% 24%; /* #2B3350 borda */
+    --navy-600: 224 33% 16%; /* #1B2236 card */
+    --navy-700: 225 34% 14%; /* #171D2F sidebar */
+    --navy-800: 224 35% 12%; /* #141A2A bg */
+    --navy-900: 223 39% 9%;  /* #0E1320 */
+    --platinum-50: 0 0% 97%;   /* #f8f8f8 */
+    --platinum-100: 0 0% 94%;  /* #f0f0f0 */
+    --platinum-200: 0 0% 88%;  /* #e0e0e0 */
+    --platinum-300: 0 0% 78%;  /* #c8c8c8 */
+    --platinum-400: 0 0% 72%;  /* #b8b8b8 */
+    --platinum-500: 260 2% 63%; /* #9f9ea1 */
+    --steel-300: 210 30% 68%;  /* #96aec6 */
+    --steel-400: 210 30% 58%;  /* #7393b3 */
+    --steel-500: 222 16% 58%;  /* #8990A8 */
+
+    /* ===== --color-* (DARK) ===== */
+    --color-bg-primary: #141a2a;
+    --color-bg-sidebar: #171d2f;
+    --color-bg-card: #1b2236;
+    --color-bg-hover: #222a40;
+    --color-bg-input: #141a2a;
+    --color-border-primary: #2b3350;
+    --color-border-card: #2b3350;
+    --color-border-input: #636e88;   /* = --input (WCAG 1.4.11) */
+    --color-accent-primary: #3d72a9;
+    --color-accent-dark: #243c6b;
+    --color-accent-light: #6a9dd0;
+    --color-accent-hover: #8bb4dd;
+    --color-text-primary: #f5f5f0;
+    --color-text-secondary: #a5aec4;
+    --color-text-muted: #8990a8;
+    --color-text-light: #e2e8f0;
+    --color-text-silver: #cbd5e1;
+    --color-status-success: #10b981;
+    --color-status-warning: #f59e0b;
+    --color-status-error: #ef4444;
+    --color-status-info: #3b82f6;
+
+    /* Glass (DARK) — tint claro sobre fundo escuro */
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+
+    /* Scrollbar (DARK) */
+    --scrollbar-track: 226 30% 21%;
+    --scrollbar-thumb: 227 25% 34%;
+  }
+
+  /* Custom Scrollbar — per-tema via vars (aplica em light e dark) */
+  ::-webkit-scrollbar {
+    width: 10px;
+    background: hsl(var(--scrollbar-track));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--scrollbar-thumb));
+    border-radius: 8px;
+    border: 2px solid hsl(var(--background));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary));
+  }
+  ::-webkit-scrollbar-corner {
+    background: hsl(var(--background));
+  }
+  /* Sem as setas ▲▼ das pontas (o Chrome/Windows as mostra na barra padrão) */
+  ::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  /* Firefox (que não conhece ::-webkit-scrollbar): barra fina e nas cores do tema. No Chrome/Edge/Safari
+     estas duas propriedades NÃO podem valer: o Chrome 121+ ignora os ::-webkit-scrollbar acima (inclusive
+     o que esconde as setas) quando `scrollbar-color` está definido. `scrollbar-width` não herda, por isso
+     vale em todo elemento que rola. */
+  @supports not selector(::-webkit-scrollbar) {
+    html {
+      scrollbar-color: hsl(var(--scrollbar-thumb)) hsl(var(--scrollbar-track));
+    }
+    * {
+      scrollbar-width: thin;
+    }
+  }
+
+  /* Fix for Select dropdown visibility */
+  [data-radix-popper-content-wrapper] {
+    z-index: 99999 !important;
+  }
+
+  .radix-select-content {
+    z-index: 99999 !important;
+    position: fixed !important;
+  }
+
+  /* Ensure SelectContent is visible */
+  [data-radix-select-content] {
+    z-index: 99999 !important;
+    position: fixed !important;
+    background-color: hsl(var(--popover)) !important;
+    color: hsl(var(--popover-foreground)) !important;
+    border: 1px solid hsl(var(--border)) !important;
+    border-radius: 6px !important;
+    box-shadow:
+      0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+    min-width: 8rem !important;
+    max-height: 24rem !important;
+    overflow: hidden !important;
+  }
+
+  /* Ensure portal is rendered in body */
+  body > [data-radix-portal] {
+    z-index: 99999 !important;
+  }
+
+  /* Specific fix for chat8 containers - only for select dropdowns */
+  .chat8-root [data-radix-select-content],
+  .chat8-page-container [data-radix-select-content],
+  .chat8-content [data-radix-select-content],
+  .chat8-conversation [data-radix-select-content] {
+    overflow: visible !important;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+
+  /* Headings em Cormorant Garamond — só nos níveis grandes (>=20px) p/ preservar
+     legibilidade da serifa de alto contraste. h5/h6 pequenos seguem no corpo. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+  }
+
+  /* A Cormorant desenha números "antigos" (1 parece I, 0 parece o): em número
+     de processo, data e valor, os algarismos precisam ficar alinhados. */
+  h1,
+  h2,
+  h3,
+  h4,
+  .font-display,
+  .font-serif {
+    font-variant-numeric: lining-nums;
+  }
+
+  /* Foco dos links sem classe própria (ex.: "Ver todos", códigos na lista): o mesmo anel
+     da moldura (--ring), em vez do `outline: auto` do navegador. Quem já define
+     `focus-visible:outline-none` + `ring` continua mandando (utilities vencem o @layer base). */
+  a:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* Eyebrows/labels em CAIXA ALTA → Barlow Semi Condensed (papel "ui" da Evoluta),
+     com tracking. Também evita serifa de alto contraste em título pequeno uppercase
+     (ex.: h3 text-sm uppercase de seção). Aplica-se a headings uppercase e a
+     qualquer elemento com .font-ui/.eyebrow. */
+  h1.uppercase,
+  h2.uppercase,
+  h3.uppercase,
+  h4.uppercase,
+  h5.uppercase,
+  h6.uppercase,
+  .eyebrow {
+    font-family: var(--font-ui);
+    letter-spacing: 0.06em;
+  }
+}
+
+@layer components {
+  .card-dashboard {
+    @apply bg-card rounded-lg p-5 border-[1px] border-border shadow-lg transition-all hover:shadow-accent/10 hover:-translate-y-1;
+  }
+
+  .card-process {
+    @apply bg-card rounded-lg p-6 border-[1px] border-border shadow-md transition-all hover:shadow-accent/20;
+  }
+
+  .nav-link {
+    @apply flex items-center gap-2 px-3 py-2 text-sidebar-foreground rounded-md hover:bg-sidebar-accent/50 transition-colors;
+  }
+
+  .nav-link.active {
+    @apply bg-sidebar-primary/10 text-sidebar-primary font-medium;
+  }
+
+  .status-badge {
+    @apply text-xs font-medium px-2.5 py-1 rounded-full;
+  }
+}
+
+/* Loading spinner */
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.lds-ellipsis div {
+  position: absolute;
+  top: 33px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: hsl(var(--primary));
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.chat4-main {
+  display: flex;
+  height: 100vh;
+  background: #0f0f23;
+  color: #e2e8f0;
+}
+
+.chat4-sidebar {
+  width: 300px;
+  background: #1e293b;
+  border-right: 1px solid #334155;
+  overflow-y: auto;
+}
+
+.chat4-history {
+  padding: 20px;
+}
+
+.chat4-history__title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #f1f5f9;
+}
+
+.chat4-history__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chat4-chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #0f0f23;
+}
+
+.chat4-chat__list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.chat4-chat__input-row {
+  display: flex;
+  gap: 12px;
+  padding: 20px;
+  background: #1e293b;
+  border-top: 1px solid #334155;
+}
+
+.chat4-chat__input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  background: #0f0f23;
+  color: #e2e8f0;
+  font-size: 14px;
+  resize: none;
+  min-height: 44px;
+  max-height: 120px;
+}
+
+.chat4-chat__send-btn {
+  padding: 12px 24px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.chat4-chat__send-btn:hover {
+  background: #2563eb;
+}
+
+.chat4-chat__send-btn:disabled {
+  background: #64748b;
+  cursor: not-allowed;
+}
+
+/* Glassmorphism Utilities */
+@layer utilities {
+  /* Workspace: o "vidro" antigo vira folha (papel sólido, sem desfoque) */
+  .glass-card {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+  }
+
+  .glass-card-strong {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+  }
+
+  .glass-sidebar {
+    background: hsl(var(--sidebar-background) / 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .gradient-navy-blue {
+    background: hsl(var(--primary));
+  }
+
+  .gradient-silver {
+    background: linear-gradient(135deg, #b8b8b8 0%, #c8c8c8 100%);
+  }
+
+  .text-silver {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .text-platinum {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .border-navy {
+    border-color: hsl(var(--border));
+  }
+
+  .shadow-navy {
+    box-shadow: 0 4px 6px -1px rgba(30, 40, 53, 0.3), 0 2px 4px -1px rgba(30, 40, 53, 0.2);
+  }
+
+  .shadow-blue-glow {
+    box-shadow: none;
+  }
+
+  /* ============================================
+     UTILITY CLASSES
+     Common component patterns
+     ============================================ */
+
+  /* Gradient Utilities */
+  /* Workspace: botões e avatares em azul institucional sólido, sem degradê */
+  .gradient-primary {
+    background: hsl(var(--primary));
+  }
+
+  .gradient-primary-br {
+    background: hsl(var(--primary));
+  }
+
+  .gradient-primary-subtle {
+    background: linear-gradient(to bottom right, rgba(30, 58, 138, 0.2), rgba(37, 99, 235, 0.1));
+  }
+
+  .text-gradient-blue {
+    background: linear-gradient(to right, var(--color-accent-primary), var(--color-accent-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Card & Container Utilities */
+  .card-navy {
+    background-color: var(--color-bg-card);
+    border-color: var(--color-border-primary);
+  }
+
+  .card-navy-glass {
+    background-color: hsl(var(--card));
+    border-color: hsl(var(--border));
+  }
+
+  .card-hover-navy {
+    transition: all 0.2s ease;
+  }
+
+  .card-hover-navy:hover {
+    border-color: var(--color-accent-primary);
+  }
+
+  /* Background Utilities */
+  .bg-navy-800 {
+    background-color: var(--color-bg-primary); /* #0a0e13 */
+  }
+
+  .bg-navy-700 {
+    background-color: var(--color-bg-sidebar); /* #0f1419 */
+  }
+
+  .bg-navy-600 {
+    background-color: var(--color-bg-card); /* #151b23 */
+  }
+
+  /* Button/Interactive Utilities */
+  .hover-bg-navy {
+    transition: background-color 0.2s ease;
+  }
+
+  .hover-bg-navy:hover {
+    background-color: var(--color-bg-card);
+  }
+
+  .hover-bg-navy-600 {
+    transition: background-color 0.2s ease;
+  }
+
+  .hover-bg-navy-600:hover {
+    background-color: var(--color-bg-card);
+  }
+
+  /* Shadow Utilities */
+  .shadow-accent {
+    box-shadow: 0 2px 4px -2px rgb(0 0 0 / 0.2);
+  }
+
+  .shadow-accent-lg {
+    box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.3), 0 4px 6px -4px rgba(30, 58, 138, 0.3);
+  }
+}
+
+.chat4-chat__timeout-error {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* ============================================
+   CHAT8 CUSTOM SCROLLBAR STYLES
+   ============================================ */
+
+/* Firefox */
+.chat8-perguntas-content {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--scrollbar-thumb)) hsl(var(--scrollbar-track));
+}
+
+/* Webkit browsers (Chrome, Safari, Edge) */
+.chat8-perguntas-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat8-perguntas-content::-webkit-scrollbar-track {
+  background: hsl(var(--scrollbar-track));
+  border-radius: 4px;
+}
+
+.chat8-perguntas-content::-webkit-scrollbar-thumb {
+  background: hsl(var(--scrollbar-thumb));
+  border-radius: 4px;
+  transition: background 0.2s ease;
+}
+
+.chat8-perguntas-content::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--accent));
+}
+
+.chat8-perguntas-content::-webkit-scrollbar-thumb:active {
+  background: hsl(var(--primary));
+}
+
+/* ============================================
+   ::selection + print (achados da reanálise de acessibilidade)
+   ============================================ */
+/* Logo adaptativo por tema — JPEG opaco (marca clara sobre navy).
+   Claro: inverte o brilho preservando o matiz → marca escura sobre fundo claro,
+   funde com a sidebar/card brancos. Escuro: sem filtro (arte natural). */
+.logo-adaptive {
+  filter: invert(1) hue-rotate(180deg);
+}
+.dark .logo-adaptive {
+  filter: none;
+}
+
+::selection {
+  background: hsl(var(--accent) / 0.25);
+  color: hsl(var(--foreground));
+}
+
+@media print {
+  /* Impressão sempre em fundo claro p/ economizar tinta e garantir legibilidade */
+  html.dark {
+    --background: 0 0% 100%;
+    --foreground: 226 38% 16%;
+    --card: 0 0% 100%;
+    --card-foreground: 226 38% 16%;
+    --muted-foreground: 224 17% 43%;
+    --border: 222 20% 81%;
+    /* Realces e superfícies também voltam aos valores claros: sem isto, `dark:text-accent` (#6A9DD0)
+       sairia com ~2,8:1 sobre o papel branco e o "✓" da bolinha ficaria branco sobre verde claro */
+    --accent: 210 42% 46%;
+    --accent-foreground: 0 0% 100%;
+    --primary: 220 50% 28%;
+    --primary-foreground: 0 0% 100%;
+    --muted: 40 28% 89%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 226 38% 16%;
+    --color-status-success: #1a5c38;
+    --color-status-warning: #7a4a10;
+    --color-status-error: #6e1c1c;
+    --color-status-info: #1a3870;
+  }
+  body {
+    background: #fff !important;
+    color: #192038 !important;
+  }
+}
+
+/* =====================================================================
+   MESA DE TRABALHO — linguagem visual da mesa de repartição: faixa
+   azul-noite, folhas empilhadas, carimbos, folhinhas e etiquetas de pasta.
+   Usada em todas as telas do sistema (inicial, listas, agenda, painéis,
+   item aberto, documento). Cores em variáveis, par claro/escuro.
+   ===================================================================== */
+@layer base {
+  /* Workspace Evoluta: a mesa é a própria folha marfim da moldura; o cabeçalho
+     da ferramenta deixa de ser uma faixa azul (a faixa azul agora é a do alto). */
+  :root {
+    --mesa-tampo: 42 42% 95%;       /* marfim = --background */
+    --mesa-papel: 0 0% 100%;        /* folha branca */
+    --mesa-papel2: 43 57% 98%;      /* #FDFCF9 folha de baixo */
+    --mesa-linha: 41 22% 81%;       /* fio #D9D2C3 */
+    --mesa-linha2: 40 25% 89%;      /* #E8E3D8 */
+    --mesa-texto2: 223 20% 36%;     /* #4A5570 */
+    --mesa-noite: 42 42% 95%;       /* cabeçalho da ferramenta no marfim */
+    --mesa-noite-texto: 226 38% 16%;/* noite */
+    --mesa-noite-apoio: 224 17% 43%;/* cinzaMedio */
+    --tinta-azul: 232 51% 42%;      /* #3442A0 */
+    --tinta-verde: 150 55% 27%;     /* #1F6B45 */
+    --tinta-carmim: 354 66% 38%;    /* #A3212E */
+    --tinta-ocre: 36 77% 31%;       /* #8A5A12 */
+    --tinta-violeta: 268 43% 44%;   /* #6B3FA0 */
+    --mesa-gaveta: 41 28% 88%;      /* fundo da gaveta de arquivo #ECE6D8 */
+    --mesa-contorno: 40 20% 72%;    /* borda de pasta e de folha solta #C9C0AB */
+    --mesa-pauta: 221 50% 87%;      /* linha de caderno #CFD8EC */
+    --mesa-metal: 224 15% 55%;      /* espiral e clipe */
+    --mesa-sombra: 226 38% 16%;     /* sombra das folhas */
+    --mesa-bilhete: 50 85% 82%;     /* bilhete autoadesivo #F7E9A8 */
+    --mesa-bilhete-texto: 44 80% 15%;
+  }
+  .dark {
+    --mesa-gaveta: 224 38% 9%;
+    --mesa-contorno: 227 28% 32%;
+    --mesa-pauta: 225 22% 27%;
+    --mesa-metal: 222 15% 62%;
+    --mesa-sombra: 0 0% 0%;
+    --mesa-bilhete: 48 40% 28%;
+    --mesa-bilhete-texto: 48 60% 90%;
+    --mesa-tampo: 224 35% 12%;      /* = --background */
+    --mesa-papel: 224 33% 16%;      /* = --card */
+    --mesa-papel2: 225 31% 19%;
+    --mesa-linha: 227 30% 24%;
+    --mesa-linha2: 226 30% 21%;
+    --mesa-texto2: 221 22% 72%;
+    --mesa-noite: 224 35% 12%;
+    --mesa-noite-texto: 40 10% 96%;
+    --mesa-noite-apoio: 222 20% 70%;
+    --tinta-azul: 234 83% 83%;
+    --tinta-verde: 145 47% 68%;
+    --tinta-carmim: 354 76% 78%;
+    --tinta-ocre: 40 72% 67%;
+    --tinta-violeta: 266 69% 81%;
+  }
+}
+
+@layer components {
+  .mesa {
+    background: hsl(var(--mesa-tampo));
+    color: hsl(var(--foreground));
+  }
+  .mesa-faixa {
+    background: hsl(var(--mesa-noite));
+    color: hsl(var(--mesa-noite-texto));
+  }
+  .mesa-faixa-apoio { color: hsl(var(--mesa-noite-apoio)); }
+  .mesa-apoio { color: hsl(var(--mesa-texto2)); }
+  .mesa-linha { border-color: hsl(var(--mesa-linha2)); }
+  /* Rótulo de campo/coluna: letra de ficha (condensada), em caixa normal */
+  .mesa-rotulo {
+    font-family: "Barlow Semi Condensed", ui-sans-serif, system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    letter-spacing: 0.01em;
+  }
+  /* Título de seção: a mesma letra de ficha, em tamanho de título */
+  .mesa-secao {
+    font-family: "Barlow Semi Condensed", ui-sans-serif, system-ui, sans-serif;
+    font-weight: 500;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    letter-spacing: 0;
+    color: hsl(var(--foreground));
+  }
+  /* Texto que vai para o processo (termos, aviso, ata, justificativa): serifa de documento */
+  .documento-oficial {
+    font-family: "Cormorant Garamond", ui-serif, Georgia, serif;
+    font-weight: 500;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: hsl(var(--foreground));
+    /* Quantidades, valores e datas legíveis: sem algarismos "de estilo antigo" */
+    font-variant-numeric: lining-nums;
+  }
+  /* Markdown de documento como sai no papel (modelos, documento pronto, exemplares) */
+  .texto-do-documento {
+    font-family: "Cormorant Garamond", ui-serif, Georgia, serif;
+    font-weight: 500;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: hsl(var(--foreground));
+    overflow-wrap: anywhere;
+    font-variant-numeric: lining-nums;
+  }
+  .texto-do-documento > * + * { margin-top: 0.75em; }
+  .texto-do-documento h1,
+  .texto-do-documento h2,
+  .texto-do-documento h3,
+  .texto-do-documento h4,
+  .texto-do-documento h5,
+  .texto-do-documento h6 {
+    font-weight: 600;
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+  .texto-do-documento h1 { font-size: 1.625rem; text-align: center; }
+  .texto-do-documento h2 { font-size: 1.3rem; margin-top: 1.25em; }
+  .texto-do-documento h3 { font-size: 1.15rem; margin-top: 1em; }
+  .texto-do-documento h4,
+  .texto-do-documento h5,
+  .texto-do-documento h6 { font-size: 1.05rem; margin-top: 1em; }
+  .texto-do-documento ul { list-style: disc; padding-left: 1.5em; }
+  .texto-do-documento ol { list-style: decimal; padding-left: 1.5em; }
+  .texto-do-documento strong { font-weight: 700; }
+  .texto-do-documento blockquote {
+    border-left: 3px solid hsl(var(--mesa-linha));
+    padding-left: 1em;
+    color: hsl(var(--muted-foreground));
+  }
+  .texto-do-documento hr { border: 0; border-top: 1px solid hsl(var(--mesa-linha)); }
+  /* Parágrafo recuado com 4 espaços (ou bloco entre crases) vira <pre>: quebra como
+     texto, em vez de manter a linha inteira e estourar a folha no celular */
+  .texto-do-documento pre {
+    white-space: pre-wrap;
+    max-width: 100%;
+    overflow-x: auto;
+    font-family: inherit;
+  }
+  .texto-do-documento table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    font-size: 1rem;
+  }
+  .texto-do-documento th,
+  .texto-do-documento td {
+    border: 1px solid hsl(var(--mesa-linha));
+    padding: 0.25em 0.5em;
+    text-align: left;
+    vertical-align: top;
+  }
+  .texto-do-documento th { background: hsl(var(--mesa-papel2)); font-weight: 700; }
+  .mesa-titulo {
+    /* Workspace: título da ferramenta em serifa, como a saudação e a capa */
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.08;
+  }
+  /* Folha de papel com as bordas das folhas de baixo aparecendo */
+  .folha {
+    position: relative;
+    background: hsl(var(--mesa-papel));
+    border: 1px solid hsl(var(--mesa-linha));
+    border-radius: 4px 10px 10px 10px;
+    box-shadow:
+      0 5px 0 -1px hsl(var(--mesa-papel2)),
+      0 5px 0 0 hsl(var(--mesa-linha2)),
+      0 10px 0 -2px hsl(var(--mesa-papel2)),
+      0 10px 0 -1px hsl(var(--mesa-linha2)),
+      0 18px 40px -24px hsl(var(--mesa-sombra) / 0.55);
+  }
+  .folha-simples {
+    background: hsl(var(--mesa-papel));
+    border: 1px solid hsl(var(--mesa-linha));
+    border-radius: 10px;
+  }
+  /* Furos de pasta na margem esquerda da folha. Duas classes: vence o p-5/p-6
+     das utilities, que viria depois e poria o texto por baixo dos furos. */
+  .folha.folha-furada { padding-left: 2.75rem; }
+  .folha-furada::before {
+    content: "";
+    position: absolute;
+    left: 14px;
+    top: 24px;
+    bottom: 24px;
+    width: 13px;
+    background: radial-gradient(circle, hsl(var(--mesa-tampo)) 6px, transparent 6.5px) center / 13px 33.3% repeat-y;
+  }
+  /* Carimbo: borda dupla, levemente torto, com falhas de tinta */
+  .carimbo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    border: 3px double currentColor;
+    border-radius: 4px;
+    padding: 3px 9px 2px;
+    font-family: "Barlow Semi Condensed", ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    line-height: 1.25;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-align: center;
+    max-width: 100%;
+    transform: rotate(var(--giro, -2deg));
+    opacity: 0.92;
+    -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='70'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='7'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 2.35'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='70'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' seed='7'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 2.35'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    -webkit-mask-size: 140px 70px;
+    mask-size: 140px 70px;
+  }
+  .carimbo-grande {
+    font-size: 0.9375rem;
+    padding: 6px 14px 5px;
+    border-width: 4px;
+    letter-spacing: 0.18em;
+    /* Tinta de verdade: borda irregular e falhas (filtro SVG do próprio carimbo),
+       e a tinta se mistura ao papel em vez de pousar por cima dele */
+    filter: var(--filtro-tinta, none);
+    mix-blend-mode: multiply;
+  }
+  .dark .carimbo-grande { mix-blend-mode: screen; }
+  /* Carimbo datador de protocolo: contorno de fora e de dentro, data no meio */
+  .carimbo-datado {
+    border-style: solid;
+    border-width: 3px;
+    padding: 3px;
+  }
+  .carimbo-datado-miolo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    border: 1px solid currentColor;
+    border-radius: 3px;
+    padding: 6px 14px 5px;
+  }
+  .carimbo-datado-data {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+  }
+  .carimbo-datado-rodape {
+    font-size: 0.7em;
+    letter-spacing: 0.08em;
+  }
+  /* O carimbo bate quando algo acontece (conferência completa, entrega registrada),
+     nunca ao abrir a tela: numa ferramenta de todo dia, animação de abertura cansa. */
+  .carimbo-bate {
+    animation: carimbo-bate 520ms cubic-bezier(0.2, 0.9, 0.3, 1) 150ms both;
+  }
+  /* O único movimento da tela: o carimbo principal desce e "bate" no papel */
+  /* Desce girando um pouco, amassa no papel e assenta: como a mão que carimba */
+  @keyframes carimbo-bate {
+    0% { opacity: 0; transform: rotate(calc(var(--giro, -2deg) + 5deg)) scale(1.8); }
+    55% { opacity: 0.95; transform: rotate(var(--giro, -2deg)) scale(0.93); }
+    72% { transform: rotate(var(--giro, -2deg)) scale(1.03); }
+    100% { opacity: 0.92; transform: rotate(var(--giro, -2deg)) scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .carimbo-bate { animation: none; }
+  }
+  /* Carimbo pequeno (situação na lista, na planta, nas ferramentas): continua
+     sendo carimbo — contorno duplo, caixa alta e leve inclinação —, só menor.
+     Sem as falhas de tinta, que em letra pequena atrapalham a leitura. */
+  .carimbo:not(.carimbo-grande) {
+    border-width: 3px;
+    padding: 1px 7px 0;
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    opacity: 1;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .borda-tinta-ocre { border-color: hsl(var(--tinta-ocre)); }
+  .borda-tinta-carmim { border-color: hsl(var(--tinta-carmim)); }
+  /* Folhinha de calendário: faixa carmim com o mês, dia grande embaixo */
+  .folhinha {
+    display: block;
+    width: 52px;
+    flex-shrink: 0;
+    border: 1px solid hsl(var(--mesa-linha));
+    border-radius: 5px;
+    background: hsl(var(--mesa-papel));
+    overflow: hidden;
+    text-align: center;
+    box-shadow: 0 1px 0 hsl(var(--mesa-linha2));
+  }
+  .folhinha > b {
+    display: block;
+    background: hsl(var(--tinta-carmim));
+    color: hsl(var(--mesa-papel));
+    font-family: "Barlow Semi Condensed", ui-sans-serif, sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    padding: 2px 0 1px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .folhinha > span {
+    display: block;
+    font-weight: 300;
+    font-size: 22px;
+    line-height: 1.15;
+    padding-top: 1px;
+  }
+  .folhinha > small {
+    display: block;
+    font-size: 11px;
+    color: hsl(var(--mesa-texto2));
+    padding-bottom: 3px;
+  }
+  /* Etiqueta de pasta, com a borda de cima colorida */
+  .etiqueta-pasta {
+    display: inline-block;
+    border: 1px solid hsl(var(--mesa-linha));
+    border-top: 3px solid hsl(var(--tinta-azul));
+    border-radius: 2px 2px 3px 3px;
+    padding: 2px 8px 3px;
+    background: hsl(var(--mesa-papel));
+    box-shadow: 0 1px 0 hsl(var(--mesa-linha2));
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 0.8125rem;
+  }
+  /* Margem vermelha de livro de registro */
+  .margem-registro {
+    border-left: 1px solid hsl(var(--tinta-carmim) / 0.45);
+    box-shadow: -3px 0 0 -2px hsl(var(--tinta-carmim) / 0.45);
+  }
+
+  /* ===== Mesa em todas as telas: gaveta de arquivo, pasta com orelha, bloco de espiral ===== */
+  .gaveta {
+    display: grid;
+    gap: 2.1rem;
+    padding: 1.5rem 1rem 2rem;
+    background: hsl(var(--mesa-gaveta));
+    border: 1px solid hsl(var(--mesa-linha));
+    border-radius: 10px;
+    box-shadow: inset 0 3px 12px -4px hsl(var(--mesa-sombra) / 0.3);
+  }
+  @media (min-width: 640px) {
+    .gaveta { padding: 1.6rem 1.6rem 2.2rem; }
+  }
+  .pasta-gaveta {
+    position: relative;
+    padding-top: 30px;
+    --larg-orelha: 11rem;
+  }
+  /* A orelha é parte da capa: some a linha de baixo e sobe um pouco, como na prancheta */
+  .pasta-orelha {
+    position: absolute;
+    top: 0;
+    left: 1.75rem;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    height: 31px;
+    max-width: calc(100% - 2.5rem);
+    padding: 6px 12px 0;
+    background: hsl(var(--mesa-papel));
+    border: 1px solid hsl(var(--mesa-contorno));
+    border-bottom: 0;
+    border-radius: 9px 9px 0 0;
+  }
+  .pasta-orelha::after {
+    content: "";
+    position: absolute;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    height: 2px;
+    background: hsl(var(--mesa-papel));
+  }
+  @media (min-width: 640px) {
+    .pasta-orelha {
+      /* O escalonamento nunca empurra a orelha para além da pasta: em pasta estreita ela se aproxima da borda esquerda */
+      --desloc: min(calc(var(--pos, 0) * (var(--larg-orelha) + 0.6rem) + 1.75rem), calc(100% - 7rem));
+      left: var(--desloc);
+      max-width: calc(100% - var(--desloc) - 1rem);
+    }
+  }
+  .pasta-corpo {
+    position: relative;
+    padding: 1.25rem 1.25rem 1.1rem 2.4rem;
+    background: hsl(var(--mesa-papel));
+    border: 1px solid hsl(var(--mesa-contorno));
+    border-radius: 6px 10px 10px 10px;
+    box-shadow:
+      0 calc(var(--espessura, 1) * 3px) 0 -1px hsl(var(--mesa-papel)),
+      0 calc(var(--espessura, 1) * 3px) 0 0 hsl(var(--mesa-contorno)),
+      0 18px 28px -22px hsl(var(--mesa-sombra) / 0.5);
+  }
+  @media (min-width: 640px) {
+    .pasta-corpo { padding: 1.25rem 1.6rem 1.1rem 2.4rem; }
+  }
+  .pasta-lombada {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 12px;
+    border-right: 1px solid hsl(var(--mesa-linha));
+    border-radius: 6px 0 0 10px;
+    background: repeating-linear-gradient(180deg, transparent 0 5px, hsl(var(--mesa-linha)) 5px 6px);
+    pointer-events: none;
+  }
+
+  /* Bloco de espiral: calendário e caderno de notas ficam presos por argolas */
+  .bloco-espiral {
+    position: relative;
+    margin-top: 0.75rem;
+    background: hsl(var(--mesa-papel));
+    border: 1px solid hsl(var(--mesa-linha));
+    border-radius: 4px 4px 10px 10px;
+    box-shadow:
+      0 5px 0 -1px hsl(var(--mesa-papel2)),
+      0 5px 0 0 hsl(var(--mesa-linha2)),
+      0 10px 0 -2px hsl(var(--mesa-papel2)),
+      0 10px 0 -1px hsl(var(--mesa-linha2)),
+      0 18px 40px -24px hsl(var(--mesa-sombra) / 0.55);
+  }
+  .espiral {
+    position: absolute;
+    top: -12px;
+    left: 18px;
+    right: 18px;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    height: 26px;
+    pointer-events: none;
+  }
+  .espiral i {
+    position: relative;
+    display: block;
+    width: 11px;
+    height: 26px;
+    border: 2px solid hsl(var(--mesa-metal));
+    border-radius: 6px;
+    background: linear-gradient(90deg, rgb(255 255 255 / 0.5), transparent);
+  }
+  .espiral i::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -6px;
+    width: 7px;
+    height: 7px;
+    border: 1px solid hsl(var(--mesa-linha));
+    border-radius: 50%;
+    background: hsl(var(--mesa-tampo));
+    transform: translateX(-50%);
+  }
+  /* Caderno de notas: margem vermelha à esquerda; o título cobre a margem no alto */
+  .bloco-notas {
+    --recuo: 2.4rem;
+    padding: 0 1.25rem 1.25rem var(--recuo);
+  }
+  @media (min-width: 640px) {
+    .bloco-notas { --recuo: 4.6rem; padding-right: 1.75rem; }
+  }
+  .bloco-notas::before {
+    content: "";
+    position: absolute;
+    left: calc(var(--recuo) - 1rem);
+    top: 0;
+    bottom: 0;
+    border-left: 1px solid hsl(var(--tinta-carmim) / 0.45);
+    box-shadow: -3px 0 0 -2px hsl(var(--tinta-carmim) / 0.45);
+    pointer-events: none;
+  }
+  .bloco-notas-titulo {
+    margin: 0 -1.25rem 0 calc(var(--recuo) * -1);
+    padding: 2.25rem 1.25rem 0 var(--recuo);
+    min-height: 4.5rem;
+    background: hsl(var(--mesa-papel));
+    border-radius: 4px 10px 0 0;
+  }
+  @media (min-width: 640px) {
+    .bloco-notas-titulo { margin-right: -1.75rem; }
+  }
+  .linha-de-caderno { border-bottom: 1px solid hsl(var(--mesa-pauta)); }
+
+  /* Calendário de mesa: o dia importante é circulado (prazo) ou emoldurado (sessão) em tinta */
+  .cal-marca {
+    position: absolute;
+    inset: 5px 4px;
+    border: 2.5px solid currentColor;
+    border-radius: 50%;
+    opacity: 0.85;
+    pointer-events: none;
+    transform: rotate(var(--giro, -4deg));
+  }
+  .cal-marca-quadro {
+    inset: 7px 4px;
+    border-style: double;
+    border-width: 3px;
+    border-radius: 4px;
+  }
+
+  /* Ficha do fichário: cabeçalho vermelho, furo e linhas de caderno */
+  .ficha {
+    position: relative;
+    min-height: 13rem;
+    padding: 2.25rem 1rem 0.75rem;
+    background-color: hsl(var(--mesa-papel));
+    background-image: repeating-linear-gradient(180deg, transparent 0 25px, hsl(var(--mesa-pauta)) 25px 26px);
+    background-position: 0 3.6rem;
+    border: 1px solid hsl(var(--mesa-linha));
+    border-radius: 3px;
+    box-shadow: 0 2px 0 hsl(var(--mesa-linha2)), 0 12px 18px -14px hsl(var(--mesa-sombra) / 0.6);
+    transform: rotate(var(--giro, 0deg));
+  }
+  .ficha::before {
+    content: "";
+    position: absolute;
+    inset: 1.875rem 0 auto 0;
+    height: 1px;
+    background: hsl(var(--tinta-carmim) / 0.5);
+  }
+  .ficha::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 9px;
+    width: 12px;
+    height: 12px;
+    border: 1px solid hsl(var(--mesa-contorno));
+    border-radius: 50%;
+    background: hsl(var(--mesa-tampo));
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.18);
+    transform: translateX(-50%);
+  }
+  .bilhete {
+    position: relative;
+    padding: 0.75rem 1rem 0.9rem;
+    background: hsl(var(--mesa-bilhete));
+    color: hsl(var(--mesa-bilhete-texto));
+    box-shadow: 0 6px 12px -8px rgb(0 0 0 / 0.45);
+    transform: rotate(-1deg);
+  }
+  .bilhete::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: -6px;
+    width: 44px;
+    height: 12px;
+    border: 1px solid rgb(0 0 0 / 0.06);
+    background: rgb(255 255 255 / 0.5);
+    transform: translateX(-50%) rotate(2deg);
+  }
+
+  /* Planta: o tampo visto de cima, com uma mesa por responsável */
+  .tampo-vista {
+    padding: 1.25rem;
+    background: hsl(var(--mesa-gaveta));
+    border: 1px solid hsl(var(--mesa-linha));
+    border-radius: 10px;
+    box-shadow: inset 0 2px 10px -4px hsl(var(--mesa-sombra) / 0.25);
+  }
+  .mesa-un {
+    background: hsl(var(--mesa-papel));
+    border: 1px solid hsl(var(--mesa-linha));
+    border-radius: 8px;
+    box-shadow: 0 2px 0 hsl(var(--mesa-linha2)), 0 16px 26px -20px hsl(var(--mesa-sombra) / 0.6);
+  }
+  .pilha-folha {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    background: hsl(var(--mesa-papel));
+    border: 1px solid hsl(var(--mesa-contorno));
+    border-radius: 3px 7px 5px 5px;
+    box-shadow: 0 1px 0 hsl(var(--mesa-sombra) / 0.12);
+  }
+
+  /* Livro de registro aberto: duas páginas pautadas e a dobra no meio */
+  .livro-aberto {
+    position: relative;
+    background: hsl(var(--mesa-papel));
+    border: 1px solid hsl(var(--mesa-linha));
+    border-radius: 6px 12px 12px 6px;
+    box-shadow:
+      0 6px 0 -1px hsl(var(--mesa-papel2)), 0 6px 0 0 hsl(var(--mesa-linha2)),
+      0 12px 0 -2px hsl(var(--mesa-papel2)), 0 12px 0 -1px hsl(var(--mesa-linha2)),
+      0 24px 44px -26px hsl(var(--mesa-sombra) / 0.6);
+  }
+  @media (min-width: 1024px) {
+    .livro-aberto::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 44px;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, transparent, hsl(var(--mesa-sombra) / 0.07) 45%, hsl(var(--mesa-sombra) / 0.12) 50%, hsl(var(--mesa-sombra) / 0.07) 55%, transparent);
+      pointer-events: none;
+    }
+    .livro-pagina-esq { border-right: 1px solid hsl(var(--mesa-linha)); }
+  }
+  .livro-pagina { padding: 1.5rem 1.25rem 1.75rem; }
+  @media (min-width: 640px) {
+    .livro-pagina { padding: 1.75rem 2.25rem 2rem; }
+  }
+}
+
+/* Tintas dos carimbos FORA do @layer: o Tailwind descarta regra de @layer cujo nome
+   não aparece por extenso no código, e o carimbo monta o nome na hora
+   (`tinta-${tinta}`) — sem isto, verde e violeta saíam na cor do texto. */
+.tinta-azul { color: hsl(var(--tinta-azul)); }
+.tinta-verde { color: hsl(var(--tinta-verde)); }
+.tinta-carmim { color: hsl(var(--tinta-carmim)); }
+.tinta-ocre { color: hsl(var(--tinta-ocre)); }
+.tinta-violeta { color: hsl(var(--tinta-violeta)); }
+.tinta-grafite { color: hsl(var(--mesa-texto2)); }
+/* Na faixa do cabeçalho da ferramenta (marfim no claro, ardósia no escuro) o carimbo
+   vai sobre papel, como a etiqueta do processo: a tinta não depende da cor da faixa. */
+.mesa-faixa .carimbo { background: hsl(var(--mesa-papel)); }
+
+/* Pasta do processo: folhas empilhadas por baixo da capa e o clipe de metal */
+.pasta-capa {
+  box-shadow:
+    0 3px 0 -1px hsl(var(--card)),
+    0 3px 0 0 hsl(var(--border)),
+    0 7px 0 -2px hsl(var(--card)),
+    0 7px 0 -1px hsl(var(--border)),
+    0 24px 40px -28px rgb(0 0 0 / 0.45);
+  /* O carimbo girado (AUTUADO) passa da folha alguns px, sobretudo com "texto maior" a 400px: sem isto a folha ganha rolagem lateral. `clip` só corta no eixo x, o clipe de papel (que sobe) continua à vista. */
+  overflow-x: clip;
+}
+.clipe-de-papel {
+  position: absolute;
+  left: 1.25rem;
+  top: -0.9rem;
+  width: 0.8rem;
+  height: 2.4rem;
+  border: 2px solid hsl(var(--muted-foreground) / 0.7);
+  border-radius: 999px;
+  transform: rotate(8deg);
+  pointer-events: none;
+}
+.clipe-de-papel::after {
+  content: "";
+  position: absolute;
+  left: 0.12rem;
+  top: 0.45rem;
+  width: 0.28rem;
+  height: 1.3rem;
+  border: 2px solid hsl(var(--muted-foreground) / 0.7);
+  border-bottom: 0;
+  border-radius: 999px 999px 0 0;
+}
+/* Abaixo de md o respiro de cima da capa (1rem/1.25rem) é menor que o clipe (que desce 1,5rem): sem isto ele pousa sobre o título */
+@media (max-width: 767px) {
+  .pasta-capa { padding-top: 2.25rem; }
+}
+/* Clipe na capa de uma pasta da gaveta: fora do @layer, senão perde para .clipe-de-papel */
+.pasta-corpo > .clipe-de-papel { left: auto; right: 1.5rem; top: -1rem; z-index: 2; }
+@media (min-width: 640px) {
+  .pasta-corpo > .clipe-de-papel { right: 11rem; }
+}
+@media print {
+  .area-impressao .pasta-capa { box-shadow: none; border: none; padding: 0; }
+}
+
+
+/* Impressão das ferramentas: só a folha sai no papel, sem menu nem cabeçalho */
+@media print {
+  body:has(.area-impressao) aside,
+  body:has(.area-impressao) [data-moldura-faixa],
+  body:has(.area-impressao) footer,
+  body:has(.area-impressao) .nao-imprimir {
+    display: none !important;
+  }
+  /* Com "gráficos de segundo plano" ligado, a margem da página sairia escura se o tema fosse o escuro */
+  html:has(.area-impressao),
+  body:has(.area-impressao) {
+    background: #fff !important;
+  }
+  body:has(.area-impressao) #root,
+  body:has(.area-impressao) #root div:has(main),
+  body:has(.area-impressao) main,
+  body:has(.area-impressao) main > * {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+  }
+  .area-impressao .folha,
+  .area-impressao .folha-simples {
+    box-shadow: none;
+    border: none;
+    padding-left: 0;
+    background: #fff;
+  }
+  /* No tema escuro o papel sai com as cores do tema claro, em QUALQUER tela (com ou sem .area-impressao):
+     as sobreposições valem no html, no body e no div com a classe .dark que o App repete em volta das telas */
+  html { background: #fff !important; }
+  html.dark,
+  html.dark body,
+  html.dark .dark {
+    color-scheme: light;
+    --background: 42 42% 95%;
+    --foreground: 226 38% 16%;
+    --card: 0 0% 100%;
+    --card-foreground: 226 38% 16%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 226 38% 16%;
+    --muted: 40 28% 89%;
+    --muted-foreground: 224 17% 43%;
+    --primary: 220 50% 28%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 210 42% 46%;
+    --accent-foreground: 0 0% 100%;
+    --border: 41 22% 81%;
+    --input: 224 13% 54%;
+    --mesa-tampo: 42 42% 95%;
+    --mesa-papel: 0 0% 100%;
+    --mesa-papel2: 43 57% 98%;
+    --mesa-linha: 41 22% 81%;
+    --mesa-linha2: 40 25% 89%;
+    --mesa-texto2: 223 20% 36%;
+    --mesa-noite: 42 42% 95%;
+    --mesa-noite-texto: 226 38% 16%;
+    --mesa-noite-apoio: 224 17% 43%;
+    --mesa-gaveta: 41 28% 88%;
+    --mesa-contorno: 40 20% 72%;
+    --mesa-pauta: 221 50% 87%;
+    --mesa-sombra: 226 38% 16%;
+    --tinta-azul: 232 51% 42%;
+    --tinta-verde: 150 55% 27%;
+    --tinta-carmim: 354 66% 38%;
+    --tinta-ocre: 36 77% 31%;
+    --tinta-violeta: 268 43% 44%;
+  }
+  .area-impressao .folha-furada::before { display: none; }
+  .quebra-pagina { break-before: page; }
+  .sem-quebra { break-inside: avoid; }
+}
+
+/* Campos nativos (data, rolagem) acompanham o tema escuro */
+.dark { color-scheme: dark; }
+
+/* Preferências de leitura (tela Acessibilidade e preferências). O Tailwind mede
+   em rem, então mudar o tamanho da raiz aumenta ou diminui tudo junto. */
+html.pref-texto-menor { font-size: 93.75%; }
+html.pref-texto-maior { font-size: 112.5%; }
+html.pref-texto-grande { font-size: 125%; }
+/* Texto aumentado no celular: o botão padrão (h-10/h-9, sem quebra) com rótulo longo
+   passaria da largura da tela; ali ele quebra o rótulo e cresce na altura */
+@media (max-width: 639px) {
+  html.pref-texto-maior :is(button, a).whitespace-nowrap:is(.h-10, .h-9),
+  html.pref-texto-grande :is(button, a).whitespace-nowrap:is(.h-10, .h-9) {
+    white-space: normal;
+    height: auto;
+    min-height: 2.5rem;
+    text-align: left;
+  }
+}
+html.pref-links a { text-decoration: underline; text-underline-offset: 2px; }
+html.pref-entrelinha body { line-height: 1.8; }
+html.pref-entrelinha p, html.pref-entrelinha li { line-height: 1.8; }
+html.pref-sem-movimento .carimbo-bate,
+html.pref-sem-movimento .animate-fade-in { animation: none !important; }
+html.pref-sem-movimento * { transition-duration: 0s !important; }
+/* Alto contraste: texto de apoio e fios mais escuros (no claro) ou mais claros (no escuro) */
+html.pref-alto-contraste {
+  --muted-foreground: 224 30% 22%;
+  --border: 224 25% 45%;
+  --input: 224 25% 45%;
+}
+/* O App repete a classe do tema num div em volta das telas: a regra vale lá também,
+   senão as variáveis do .dark desse div vencem as do html */
+html.pref-alto-contraste.dark,
+html.pref-alto-contraste .dark {
+  --muted-foreground: 222 30% 88%;
+  --border: 222 20% 70%;
+  --input: 222 20% 70%;
+}
+html.pref-alto-contraste .carimbo { opacity: 1; -webkit-mask-image: none; mask-image: none; filter: none; }
+
+/* Rolagem do menu lateral e da gaveta do celular (fundo azul-noite): trilha transparente e
+   polegar claro, em vez do marfim/ardósia do restante. Fora do @layer, para vencer o padrão. */
+.rolagem-moldura::-webkit-scrollbar { background: transparent; }
+.rolagem-moldura::-webkit-scrollbar-track { background: transparent; }
+.rolagem-moldura::-webkit-scrollbar-thumb { background: hsl(var(--moldura-foreground) / 0.35); border-color: transparent; }
+.rolagem-moldura::-webkit-scrollbar-thumb:hover { background: hsl(var(--moldura-foreground) / 0.55); }
+@supports not selector(::-webkit-scrollbar) {
+  .rolagem-moldura {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--moldura-foreground) / 0.35) transparent;
+  }
+}
