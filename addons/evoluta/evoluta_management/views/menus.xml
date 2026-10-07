@@ -5,4 +5,5 @@
   <menuitem id="menu_evoluta_risco" name="Riscos" parent="evoluta_core.menu_evoluta_root" sequence="50" action="action_evoluta_risco"/>
   <menuitem id="menu_evoluta_raci" name="RACI" parent="evoluta_core.menu_evoluta_root" sequence="60" action="action_evoluta_raci"/>
   <menuitem id="menu_evoluta_ishikawa" name="Ishikawa" parent="evoluta_core.menu_evoluta_root" sequence="70" action="action_evoluta_ishikawa"/>
+  <menuitem id="menu_evoluta_matriz" name="Matriz de Decisão" parent="evoluta_core.menu_evoluta_root" sequence="80" action="action_evoluta_matriz"/>
 </odoo>

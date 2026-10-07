@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_evoluta_matriz_list" model="ir.ui.view">
+    <field name="name">evoluta.matriz.list</field>
+    <field name="model">evoluta.matriz</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="project_id"/>
+        <field name="vencedor_id"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_evoluta_matriz_form" model="ir.ui.view">
+    <field name="name">evoluta.matriz.form</field>
+    <field name="model">evoluta.matriz</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <button name="action_gerar_5w2h" string="Gerar 5W2H" type="object" class="oe_highlight"/>
+        </header>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="project_id"/>
+            <field name="vencedor_id" readonly="1"/>
+          </group>
+          <group string="Critérios">
+            <field name="criterio_ids" nolabel="1"/>
+          </group>
+          <group string="Alternativas">
+            <field name="alternativa_ids" nolabel="1"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_evoluta_matriz_alternativa_list" model="ir.ui.view">
+    <field name="name">evoluta.matriz.alternativa.list</field>
+    <field name="model">evoluta.matriz.alternativa</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="total"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_evoluta_matriz_alternativa_form" model="ir.ui.view">
+    <field name="name">evoluta.matriz.alternativa.form</field>
+    <field name="model">evoluta.matriz.alternativa</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="total" readonly="1"/>
+          </group>
+          <field name="nota_ids">
+            <list editable="bottom">
+              <field name="criterio_id"/>
+              <field name="nota"/>
+            </list>
+          </field>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_evoluta_matriz" model="ir.actions.act_window">
+    <field name="name">Matriz de Decisão</field>
+    <field name="res_model">evoluta.matriz</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <record id="view_evoluta_matriz_criterio_form" model="ir.ui.view">
+    <field name="name">evoluta.matriz.criterio.form</field>
+    <field name="model">evoluta.matriz.criterio</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="matriz_id" invisible="1"/>
+            <field name="name"/>
+            <field name="peso"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_evoluta_matriz_nota_list" model="ir.ui.view">
+    <field name="name">evoluta.matriz.nota.list</field>
+    <field name="model">evoluta.matriz.nota</field>
+    <field name="arch" type="xml">
+      <list editable="bottom">
+        <field name="criterio_id"/>
+        <field name="nota"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_evoluta_matriz_nota_form" model="ir.ui.view">
+    <field name="name">evoluta.matriz.nota.form</field>
+    <field name="model">evoluta.matriz.nota</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="alternativa_id" invisible="1"/>
+            <field name="criterio_id"/>
+            <field name="nota"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+</odoo>

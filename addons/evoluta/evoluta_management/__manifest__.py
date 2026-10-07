@@ -12,6 +12,7 @@
         "views/evoluta_risco_views.xml",
         "views/evoluta_raci_views.xml",
         "views/evoluta_ishikawa_views.xml",
+        "views/evoluta_matriz_views.xml",
         "views/menus.xml",
         "data/demo_feira.xml",
     ],
