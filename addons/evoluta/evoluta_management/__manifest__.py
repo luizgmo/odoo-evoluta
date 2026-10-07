@@ -9,6 +9,7 @@
         "security/ir.model.access.csv",
         "views/evoluta_5w2h_views.xml",
         "views/evoluta_porques_views.xml",
+        "views/evoluta_risco_views.xml",
         "views/menus.xml",
         "data/demo_feira.xml",
     ],

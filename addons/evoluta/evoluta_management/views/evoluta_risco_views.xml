@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_evoluta_risco_kanban" model="ir.ui.view">
+    <field name="name">evoluta.risco.kanban</field>
+    <field name="model">evoluta.risco</field>
+    <field name="arch" type="xml">
+      <kanban>
+        <field name="name"/>
+        <field name="probabilidade"/>
+        <field name="impacto"/>
+        <templates>
+          <t t-name="card">
+            <div class="oe_kanban_card">
+              <strong><field name="name"/></strong>
+              <div>Prob: <field name="probabilidade"/> | Impacto: <field name="impacto"/></div>
+            </div>
+          </t>
+        </templates>
+      </kanban>
+    </field>
+  </record>
+
+  <record id="view_evoluta_risco_list" model="ir.ui.view">
+    <field name="name">evoluta.risco.list</field>
+    <field name="model">evoluta.risco</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="project_id"/>
+        <field name="probabilidade"/>
+        <field name="impacto"/>
+        <field name="responsavel_id"/>
+        <field name="task_id"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_evoluta_risco_form" model="ir.ui.view">
+    <field name="name">evoluta.risco.form</field>
+    <field name="model">evoluta.risco</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <button name="action_create_task" string="Gerar ação" type="object" class="oe_highlight"/>
+        </header>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="project_id"/>
+            <field name="task_id"/>
+          </group>
+          <group>
+            <field name="probabilidade"/>
+            <field name="impacto"/>
+            <field name="responsavel_id"/>
+            <field name="mitigacao"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_evoluta_risco" model="ir.actions.act_window">
+    <field name="name">Riscos</field>
+    <field name="res_model">evoluta.risco</field>
+    <field name="view_mode">kanban,list,form</field>
+  </record>
+</odoo>
