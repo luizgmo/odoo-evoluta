@@ -114,7 +114,7 @@ Aceite:
 
 # FASE 2 (§30 oficial + matriz §20) — escopo: Templates, Portal, BI/Dashboards, Workflows avançados, Assinatura, Jobs assíncronos, Teoria da Mudança. Fora: IA, API pública, automação preditiva (Fase 3).
 
-## F13 — evoluta_templates (biblioteca)
+## F13 — evoluta_templates (biblioteca) [CONCLUÍDO 07/10]
 Objetivo: §19 fiel — template gera Projeto + Tarefas + Responsáveis (+ checklist via descrição).
 Exato: `evoluta.template` (name required, descricao) + `evoluta.template.task` (template_id, name required, descricao, responsavel res.users opcional). Botão **Gerar projeto**: cria project.project (etapas auto via F2) + 1 task por linha + retorna Kanban do projeto. Seed `noupdate=1`: template "Implantação LGPD" com 5 tasks.
 Fora: checklist/indicadores/cronograma automáticos (viram descrição).
