@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_evoluta_raci_list" model="ir.ui.view">
+    <field name="name">evoluta.raci.list</field>
+    <field name="model">evoluta.raci</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="task_id"/>
+        <field name="responsible_id"/>
+        <field name="accountable_id"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_evoluta_raci_form" model="ir.ui.view">
+    <field name="name">evoluta.raci.form</field>
+    <field name="model">evoluta.raci</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="task_id"/>
+          </group>
+          <group>
+            <field name="responsible_id"/>
+            <field name="accountable_id"/>
+            <field name="consulted_ids" widget="many2many_tags"/>
+            <field name="informed_ids" widget="many2many_tags"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_evoluta_raci" model="ir.actions.act_window">
+    <field name="name">RACI</field>
+    <field name="res_model">evoluta.raci</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <record id="view_task_form_inherit_raci" model="ir.ui.view">
+    <field name="name">project.task.form.inherit.raci</field>
+    <field name="model">project.task</field>
+    <field name="inherit_id" ref="project.view_task_form2"/>
+    <field name="arch" type="xml">
+      <xpath expr="//notebook" position="inside">
+        <page string="RACI">
+          <field name="raci_ids"/>
+        </page>
+      </xpath>
+    </field>
+  </record>
+</odoo>

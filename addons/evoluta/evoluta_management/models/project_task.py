@@ -5,6 +5,7 @@ class ProjectTask(models.Model):
     _inherit = "project.task"
 
     five_w2h_ids = fields.One2many("evoluta.5w2h", "task_id", string="Planos 5W2H")
+    raci_ids = fields.One2many("evoluta.raci", "task_id", string="RACI")
 
     def write(self, vals):
         res = super().write(vals)
