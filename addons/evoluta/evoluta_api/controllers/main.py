@@ -1,4 +1,5 @@
 import json
+from typing import Any
 
 from odoo import http
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -209,26 +210,38 @@ class EvolutaApi(http.Controller):
         except AccessError:
             return self._json({"error": "Você não tem permissão para consultar os indicadores."}, status=403)
 
+    def _plan_vals(self, plan):
+        return {
+            "id": plan.id,
+            "name": plan.name,
+            "project_id": plan.project_id.id if plan.project_id else False,
+            "what": plan.what,
+            "why": plan.why or "",
+            "where": plan.where or "",
+            "date_deadline": plan.date_deadline.isoformat() if plan.date_deadline else False,
+            "how": plan.how or "",
+            "how_much": plan.how_much,
+            "state": plan.state,
+            "validation_status": plan.validation_status,
+            "can_request_validation": bool(plan.state == "draft" and plan.need_validation and not plan.review_ids),
+            "can_validate": bool(plan.state == "draft" and plan.can_review),
+            "can_restart_validation": bool(plan.state == "draft" and plan.review_ids),
+            "task_id": plan.task_id.id if plan.task_id else False,
+            "reviews": [
+                {"id": review.id, "name": review.name, "status": review.status, "can_review": review.can_review}
+                for review in plan.review_ids
+            ],
+        }
+
     @http.route("/api/planos", auth="user", type="http", methods=["GET"])
     def list_plans(self, project_id=None):
-        domain = []
-        if project_id:
-            domain.append(("project_id", "=", int(project_id)))
-        plans = request.env["evoluta.5w2h"].search(domain)
-        return self._json(
-            {
-                "records": [
-                    {
-                        "id": pl.id,
-                        "name": pl.name,
-                        "project_id": pl.project_id.id if pl.project_id else False,
-                        "what": pl.what,
-                        "task_id": pl.task_id.id if pl.task_id else False,
-                    }
-                    for pl in plans
-                ]
-            }
-        )
+        project_id = self._inteiro(project_id or request.httprequest.args.get("project_id"))
+        domain = [("project_id", "=", project_id)] if project_id else []
+        try:
+            plans = request.env["evoluta.5w2h"].search(domain, order="id desc")
+            return self._json({"records": [self._plan_vals(plan) for plan in plans]})
+        except AccessError:
+            return self._json({"error": "Você não tem permissão para consultar planos 5W2H."}, status=403)
 
     @http.route("/api/projetos", auth="user", type="http", methods=["POST"], csrf=False)
     def create_project(self):
@@ -243,8 +256,10 @@ class EvolutaApi(http.Controller):
             {"record": {"id": project.id, "name": project.name}}
         )
 
-    @http.route("/api/5w2h", auth="user", type="http", methods=["POST"], csrf=False)
-    def create_plan(self):
+    @http.route("/api/5w2h", auth="user", type="http", methods=["GET", "POST"], csrf=False)
+    def create_plan(self, project_id=None):
+        if request.httprequest.method == "GET":
+            return self.list_plans(project_id=project_id or request.httprequest.args.get("project_id"))
         from odoo.exceptions import ValidationError
 
         dados = request.get_json_data() or {}
@@ -273,7 +288,59 @@ class EvolutaApi(http.Controller):
             )
         except ValidationError as err:
             return self._json({"error": str(err)}, status=400)
-        return self._json({"record": {"id": plan.id, "name": plan.name}}, status=201)
+        return self._json({"record": self._plan_vals(plan)}, status=201)
+
+    def _plan_for_action(self, plan_id: int) -> tuple[Any, Response | None]:
+        plan = request.env["evoluta.5w2h"].browse(plan_id).exists()
+        if not plan:
+            return None, self._json({"error": "Plano 5W2H não encontrado."}, status=404)
+        return plan, None
+
+    @http.route("/api/5w2h/<int:plan_id>/solicitar-validacao", auth="user", type="http", methods=["POST"], csrf=False)
+    def request_plan_validation(self, plan_id):
+        plan, response = self._plan_for_action(plan_id)
+        if response:
+            return response
+        try:
+            plan.request_validation()
+            return self._json({"record": self._plan_vals(plan)})
+        except (AccessError, UserError, ValidationError) as error:
+            return self._json({"error": str(error)}, status=403 if isinstance(error, AccessError) else 400)
+
+    @http.route("/api/5w2h/<int:plan_id>/aprovar", auth="user", type="http", methods=["POST"], csrf=False)
+    def approve_plan(self, plan_id):
+        plan, response = self._plan_for_action(plan_id)
+        if response:
+            return response
+        try:
+            action = plan.validate_tier()
+            if isinstance(action, dict) and action.get("res_model") == "comment.wizard":
+                return self._json({"error": "Odoo exige um comentário para concluir esta aprovação."}, status=400)
+            return self._json({"record": self._plan_vals(plan)})
+        except (AccessError, UserError, ValidationError) as error:
+            return self._json({"error": str(error)}, status=403 if isinstance(error, AccessError) else 400)
+
+    @http.route("/api/5w2h/<int:plan_id>/reiniciar-validacao", auth="user", type="http", methods=["POST"], csrf=False)
+    def restart_plan_validation(self, plan_id):
+        plan, response = self._plan_for_action(plan_id)
+        if response:
+            return response
+        try:
+            plan.restart_validation()
+            return self._json({"record": self._plan_vals(plan)})
+        except (AccessError, UserError, ValidationError) as error:
+            return self._json({"error": str(error)}, status=403 if isinstance(error, AccessError) else 400)
+
+    @http.route("/api/5w2h/<int:plan_id>/gerar-task", auth="user", type="http", methods=["POST"], csrf=False)
+    def generate_plan_task(self, plan_id):
+        plan, response = self._plan_for_action(plan_id)
+        if response:
+            return response
+        try:
+            plan.action_create_task()
+            return self._json({"record": self._plan_vals(plan)})
+        except (AccessError, UserError, ValidationError) as error:
+            return self._json({"error": str(error)}, status=403 if isinstance(error, AccessError) else 400)
 
     @http.route(
         "/api/tasks/<int:task_id>/mover",
