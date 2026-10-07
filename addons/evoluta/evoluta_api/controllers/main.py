@@ -119,6 +119,34 @@ class EvolutaApi(http.Controller):
         except ValidationError as err:
             return self._json({"error": str(err)}, status=400)
 
+    def _indicadores_vals(self, project):
+        tasks = request.env["project.task"].search([("project_id", "=", project.id)])
+        stages = request.env["project.task.type"].search(
+            [("project_ids", "in", project.id)], order="sequence"
+        )
+        counts = {stage.id: 0 for stage in stages}
+        sem_etapa = 0
+        for task in tasks:
+            if task.stage_id:
+                counts[task.stage_id.id] = counts.get(task.stage_id.id, 0) + 1
+            else:
+                sem_etapa += 1
+        by_stage = [
+            {"stage_id": stage.id, "stage_name": stage.name, "total": counts.get(stage.id, 0)}
+            for stage in stages
+            if counts.get(stage.id, 0)
+        ]
+        if sem_etapa:
+            by_stage.append({"stage_id": False, "stage_name": "Sem etapa", "total": sem_etapa})
+        return {
+            "project_id": project.id,
+            "total_tasks": project.evoluta_total_tasks,
+            "done_tasks": project.evoluta_done_tasks,
+            "overdue_tasks": project.evoluta_overdue_tasks,
+            "open_tasks": max(project.evoluta_total_tasks - project.evoluta_done_tasks, 0),
+            "by_stage": by_stage,
+        }
+
     def _project_vals(self, project):
         tasks = request.env["project.task"].search([("project_id", "=", project.id)])
         stages = request.env["project.task.type"].search(
@@ -149,9 +177,9 @@ class EvolutaApi(http.Controller):
                     {
                         "id": p.id,
                         "name": p.name,
-                        "total_tasks": request.env["project.task"].search_count(
-                            [("project_id", "=", p.id)]
-                        ),
+                        "total_tasks": p.evoluta_total_tasks,
+                        "done_tasks": p.evoluta_done_tasks,
+                        "overdue_tasks": p.evoluta_overdue_tasks,
                         "orcamento": p.evoluta_orcamento,
                     }
                     for p in projects
@@ -167,6 +195,19 @@ class EvolutaApi(http.Controller):
         if not project.exists():
             return self._json({"error": "Projeto não encontrado."}, status=404)
         return self._json({"record": self._project_vals(project)})
+
+    @http.route("/api/indicadores", auth="user", type="http", methods=["GET"])
+    def get_indicadores(self, project_id=None):
+        project_id = self._inteiro(project_id or request.httprequest.args.get("project_id"))
+        if not project_id:
+            return self._json({"error": "Informe o projeto para buscar os indicadores."}, status=400)
+        project = request.env["project.project"].browse(project_id).exists()
+        if not project:
+            return self._json({"error": "Projeto não encontrado."}, status=404)
+        try:
+            return self._json({"record": self._indicadores_vals(project)})
+        except AccessError:
+            return self._json({"error": "Você não tem permissão para consultar os indicadores."}, status=403)
 
     @http.route("/api/planos", auth="user", type="http", methods=["GET"])
     def list_plans(self, project_id=None):
