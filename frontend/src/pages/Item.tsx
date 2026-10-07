@@ -20,6 +20,7 @@ import {
   TelaStakeholders,
   TelaW2H,
 } from "./ferramentas/Ferramentas";
+import { KanbanProjeto } from "./KanbanProjeto";
 import { TelaIshikawaReal, TelaPorquesReal, TelaRaciReal, TelaRiscosReal } from "./ferramentas/FerramentasReais";
 import { formatBRLComCentavos } from "@/features/dashboard/formatos";
 import { GEN, MARCA } from "@/config/marca";
@@ -83,6 +84,7 @@ const Item: React.FC = () => {
       {(p) => {
         if (!aba) return <AbaEmConstrucao rotulo="Divisória não encontrada" voltarPara={`${MARCA.rotaDaLista}/${p.id}`} />;
         if (aba.caminho === "") return <Ficha objeto={p.object} valor={formatBRLComCentavos(p.estimated_value)} />;
+        if (aba.caminho === "kanban") return <KanbanProjeto />;
         if (aba.caminho === "porques") return <TelaPorquesReal />;
         if (aba.caminho === "w2h") return <TelaW2H />;
         if (aba.caminho === "ishikawa") return <TelaIshikawaReal />;

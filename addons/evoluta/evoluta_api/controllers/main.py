@@ -247,9 +247,11 @@ class EvolutaApi(http.Controller):
             stage_id = int(dados.get("stage_id") or 0)
         except (TypeError, ValueError):
             stage_id = 0
-        task = request.env["project.task"].browse(task_id)
-        stage = request.env["project.task.type"].browse(stage_id)
-        if not task.exists() or not stage.exists():
+        task = request.env["project.task"].browse(task_id).exists()
+        stage = request.env["project.task.type"].browse(stage_id).exists()
+        if not task or not stage:
             return self._json({"error": "Task ou etapa inexistente."}, status=404)
+        if stage.project_ids and task.project_id not in stage.project_ids:
+            return self._json({"error": "A etapa não pertence ao projeto da task."}, status=400)
         task.with_context(skip_5w2h_sync=True).write({"stage_id": stage.id})
         return self._json({"record": {"id": task.id, "stage_id": stage.id}})

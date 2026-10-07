@@ -18,6 +18,7 @@ export interface AbaDaPasta {
 
 export const DIVISORIAS_DO_PROCESSO: AbaDaPasta[] = [
   { caminho: "", curto: "Capa", rotulo: "Capa do projeto" },
+  { caminho: "kanban", curto: "Kanban", rotulo: "Kanban do projeto" },
   { caminho: "porques", curto: "5 Porquês", rotulo: "5 Porquês" },
   { caminho: "w2h", curto: "5W2H", rotulo: "5W2H" },
   { caminho: "ishikawa", curto: "Ishikawa", rotulo: "Ishikawa" },
