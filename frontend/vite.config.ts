@@ -16,5 +16,11 @@ export default defineConfig({
   plugins: [react()],
   define: { __GIT_SHA__: JSON.stringify(gitSha) },
   resolve: { alias: { "@": path.resolve(__dirname, "./src") } },
-  server: { port: 8080 },
+  server: {
+    port: 8080,
+    proxy: {
+      "/api": { target: "http://localhost:8069", changeOrigin: true },
+      "/web/session": { target: "http://localhost:8069", changeOrigin: true },
+    },
+  },
 });
