@@ -141,7 +141,8 @@ Aceite:
 - [ ] Relatório abre com números iguais aos Indicadores F11.
 Exceção permitida: sem branch 19 estável → corta e registra.
 
-## F16 — Workflows avançados
+## F16 — Workflows avançados [CONCLUÍDO 07/10]
+Notas: 5W2H herda `tier.validation` (state draft/confirmed/approved/cancel); registrar modelo via `_get_tier_validation_model_names`; gate por `validation_status`; liberar `task_id` nas exceptions; Tier Definitions são dados via UI (recriar no staging). SLA exige Equipe com calendário no ticket.
 Objetivo: aprovações + SLA vivos.
 Exato: Tier Validation aplicado a 5W2H (2 níveis: Secretário > Gabinete) + SLA no Helpdesk (helpdesk_mgmt_sla já baixado). 1 fluxo demo fim-a-fim.
 Aceite:
