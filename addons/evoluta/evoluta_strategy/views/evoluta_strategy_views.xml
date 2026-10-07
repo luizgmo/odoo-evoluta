@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_evoluta_triangulo_list" model="ir.ui.view">
+    <field name="name">evoluta.triangulo.list</field>
+    <field name="model">evoluta.triangulo</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="project_id"/>
+      </list>
+    </field>
+  </record>
+  <record id="view_evoluta_triangulo_form" model="ir.ui.view">
+    <field name="name">evoluta.triangulo.form</field>
+    <field name="model">evoluta.triangulo</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="project_id"/>
+          </group>
+          <group>
+            <field name="valor_publico"/>
+            <field name="legitimidade"/>
+            <field name="capacidade"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="action_evoluta_triangulo" model="ir.actions.act_window">
+    <field name="name">Triângulo Estratégico</field>
+    <field name="res_model">evoluta.triangulo</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <record id="view_evoluta_arvore_problemas_list" model="ir.ui.view">
+    <field name="name">evoluta.arvore.problemas.list</field>
+    <field name="model">evoluta.arvore.problemas</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="project_id"/>
+        <field name="problema_central"/>
+      </list>
+    </field>
+  </record>
+  <record id="view_evoluta_arvore_problemas_form" model="ir.ui.view">
+    <field name="name">evoluta.arvore.problemas.form</field>
+    <field name="model">evoluta.arvore.problemas</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <button name="action_converter_objetivos" string="Converter em objetivos" type="object" class="oe_highlight"/>
+        </header>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="project_id"/>
+          </group>
+          <group>
+            <field name="causas"/>
+            <field name="problema_central"/>
+            <field name="efeitos"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="action_evoluta_arvore_problemas" model="ir.actions.act_window">
+    <field name="name">Árvore de Problemas</field>
+    <field name="res_model">evoluta.arvore.problemas</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <record id="view_evoluta_arvore_objetivos_list" model="ir.ui.view">
+    <field name="name">evoluta.arvore.objetivos.list</field>
+    <field name="model">evoluta.arvore.objetivos</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="project_id"/>
+        <field name="objetivo_central"/>
+        <field name="task_id"/>
+      </list>
+    </field>
+  </record>
+  <record id="view_evoluta_arvore_objetivos_form" model="ir.ui.view">
+    <field name="name">evoluta.arvore.objetivos.form</field>
+    <field name="model">evoluta.arvore.objetivos</field>
+    <field name="arch" type="xml">
+      <form>
+        <header>
+          <button name="action_create_task" string="Gerar ação" type="object" class="oe_highlight"/>
+        </header>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="project_id"/>
+            <field name="origem_id"/>
+            <field name="task_id"/>
+          </group>
+          <group>
+            <field name="acoes"/>
+            <field name="objetivo_central"/>
+            <field name="resultados"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+  <record id="action_evoluta_arvore_objetivos" model="ir.actions.act_window">
+    <field name="name">Árvore de Objetivos</field>
+    <field name="res_model">evoluta.arvore.objetivos</field>
+    <field name="view_mode">list,form</field>
+  </record>
+</odoo>

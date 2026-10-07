@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
   <menuitem id="menu_evoluta_stakeholder" name="Stakeholders" parent="evoluta_core.menu_evoluta_root" sequence="40" action="action_evoluta_stakeholder"/>
+  <menuitem id="menu_evoluta_triangulo" name="Triângulo" parent="evoluta_core.menu_evoluta_root" sequence="90" action="action_evoluta_triangulo"/>
+  <menuitem id="menu_evoluta_arvore_problemas" name="Árvore de Problemas" parent="evoluta_core.menu_evoluta_root" sequence="100" action="action_evoluta_arvore_problemas"/>
+  <menuitem id="menu_evoluta_arvore_objetivos" name="Árvore de Objetivos" parent="evoluta_core.menu_evoluta_root" sequence="110" action="action_evoluta_arvore_objetivos"/>
 </odoo>

@@ -8,6 +8,7 @@
     "data": [
         "security/ir.model.access.csv",
         "views/evoluta_stakeholder_views.xml",
+        "views/evoluta_strategy_views.xml",
         "views/menus.xml",
     ],
     "installable": True,
