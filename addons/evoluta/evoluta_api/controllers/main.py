@@ -74,3 +74,64 @@ class EvolutaApi(http.Controller):
                 ]
             }
         )
+
+    @http.route("/api/projetos", auth="user", type="http", methods=["POST"], csrf=False)
+    def create_project(self):
+        dados = request.get_json_data() or {}
+        nome = (dados.get("name") or "").strip()
+        if not nome:
+            return self._json({"error": "Informe o nome do projeto."})
+        project = request.env["project.project"].create({"name": nome})
+        return self._json({"record": {"id": project.id, "name": project.name}})
+
+    @http.route("/api/5w2h", auth="user", type="http", methods=["POST"], csrf=False)
+    def create_plan(self):
+        from odoo.exceptions import ValidationError
+
+        dados = request.get_json_data() or {}
+        try:
+            project_id = int(dados.get("project_id") or 0)
+        except (TypeError, ValueError):
+            project_id = 0
+        if not project_id or not (dados.get("what") or "").strip():
+            return self._json({"error": "Projeto e What são obrigatórios."})
+        try:
+            plan = (
+                request.env["evoluta.5w2h"]
+                .with_context(skip_task_sync=True)
+                .create(
+                    {
+                        "name": dados.get("name") or dados["what"],
+                        "project_id": project_id,
+                        "what": dados["what"].strip(),
+                        "why": dados.get("why") or "",
+                        "where": dados.get("where") or "",
+                        "date_deadline": dados.get("date_deadline") or False,
+                        "how": dados.get("how") or "",
+                        "how_much": dados.get("how_much") or 0.0,
+                    }
+                )
+            )
+        except ValidationError as err:
+            return self._json({"error": str(err)})
+        return self._json({"record": {"id": plan.id, "name": plan.name}})
+
+    @http.route(
+        "/api/tasks/<int:task_id>/mover",
+        auth="user",
+        type="http",
+        methods=["POST"],
+        csrf=False,
+    )
+    def move_task(self, task_id):
+        dados = request.get_json_data() or {}
+        try:
+            stage_id = int(dados.get("stage_id") or 0)
+        except (TypeError, ValueError):
+            stage_id = 0
+        task = request.env["project.task"].browse(task_id)
+        stage = request.env["project.task.type"].browse(stage_id)
+        if not task.exists() or not stage.exists():
+            return self._json({"error": "Task ou etapa inexistente."})
+        task.with_context(skip_5w2h_sync=True).write({"stage_id": stage.id})
+        return self._json({"record": {"id": task.id, "stage_id": stage.id}})

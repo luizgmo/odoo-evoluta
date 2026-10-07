@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { FolhaDaTela } from "@/components/mesa/FolhaDaTela";
 import { useAvisoDeResultado } from "@/components/mesa/avisoDeResultado";
-import { adicionarProcesso } from "@/hooks/useMesaDados";
+import { apiPost } from "@/services/api/client";
 import { GEN, MARCA } from "@/config/marca";
 
 const plural = MARCA.objeto.plural.charAt(0).toUpperCase() + MARCA.objeto.plural.slice(1);
@@ -21,18 +21,25 @@ const Formulario: React.FC = () => {
   const { avisar } = useAvisoDeResultado();
   const [objeto, setObjeto] = useState("");
   const [valor, setValor] = useState("");
+  const [erro, setErro] = useState<string | null>(null);
+  const [enviando, setEnviando] = useState(false);
 
-  const salvar = (e: React.FormEvent) => {
+  const salvar = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Para o desenvolvedor: adicionarProcesso grava só na memória da demonstração (useMesaDados.ts);
-    // troque-o pelo envio ao servidor e só então avise.
-    const numero = Number(valor.replace(/\./g, "").replace(",", "."));
-    const criado = adicionarProcesso({
-      object: objeto.trim(),
-      estimated_value: Number.isFinite(numero) ? numero.toFixed(2) : "0.00",
-    });
-    avisar({ texto: `${GEN.O} ${MARCA.objeto.singular} ${criado.code} foi criad${GEN.fim}. Os dados ficam só nesta demonstração.` });
-    navigate(MARCA.rotaDaLista);
+    if (enviando) return;
+    setErro(null);
+    setEnviando(true);
+    try {
+      const criado = await apiPost<{ record: { id: number; name: string } }>("/api/projetos", {
+        name: objeto.trim(),
+      });
+      avisar({ texto: `${GEN.O} ${MARCA.objeto.singular} "${criado.record.name}" foi criad${GEN.fim}.` });
+      navigate(`${MARCA.rotaDaLista}/${criado.record.id}`);
+    } catch (err) {
+      setErro(err instanceof Error ? err.message : "Não deu para salvar, e nada foi alterado.");
+    } finally {
+      setEnviando(false);
+    }
   };
 
   return (
@@ -55,12 +62,19 @@ const Formulario: React.FC = () => {
           <Label htmlFor="valor">{MARCA.campos.valor} (R$)</Label>
           <Input id="valor" inputMode="decimal" value={valor} onChange={(e) => setValor(e.target.value)} />
         </div>
-        <div className="flex gap-3">
-          <Button type="submit">Salvar</Button>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button type="submit" disabled={enviando}>
+            {enviando ? "Salvando…" : "Salvar"}
+          </Button>
           <Button type="button" variant="outline" onClick={() => navigate(-1)}>
             Cancelar
           </Button>
         </div>
+        {erro && (
+          <p role="alert" className="text-sm text-destructive">
+            {erro}
+          </p>
+        )}
       </form>
     </FolhaDaTela>
   );

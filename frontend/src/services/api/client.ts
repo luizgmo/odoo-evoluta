@@ -84,6 +84,19 @@ export async function logoutOdoo(): Promise<void> {
   }
 }
 
+/** POST JSON autenticado (rotas com csrf=False). Erro do servidor vira Error com a mensagem. */
+export async function apiPost<T>(caminho: string, corpo: unknown): Promise<T> {
+  const res = await fetch(caminho, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(corpo ?? {}),
+  });
+  if (!res.ok) throw new Error("Falha de conexão. Confira e tente de novo.");
+  const dados = (await lerJson(res)) as { error?: string } & Record<string, unknown>;
+  if (dados && typeof dados.error === "string" && dados.error) throw new Error(dados.error);
+  return dados as T;
+}
 export const apiClient = {
   async post(_url: string, _corpo?: unknown): Promise<{ data: Record<string, unknown> }> {
     await new Promise((r) => setTimeout(r, 300));
