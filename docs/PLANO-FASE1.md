@@ -132,7 +132,8 @@ Aceite:
 - [ ] Usuário portal vê só seus projetos/tasks, sem menus internos.
 Teste: login portal em anônima.
 
-## F15 — BI/Dashboards
+## F15 — BI/Dashboards [CONCLUÍDO 07/10]
+Notas: mis_builder exige `date_range` (repo server-ux no path). BI SQL: colunas com prefixo `x_`, sem `id` (módulo injeta), CAST varchar p/ traduzidos, `name->>'pt_BR'` p/ JSON de tradução, view é materializada (Refresh após mudar dados).
 Objetivo: efetivar o que foi pilotado.
 Exato: instalar MIS Builder e/ou BI SQL Editor (branch 19.0, mesmo ritual F1); 1 relatório "Tasks por etapa por projeto" + dashboard no menu Evoluta.
 Fora: preditiva (Fase 3).
