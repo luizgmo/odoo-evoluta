@@ -23,7 +23,12 @@ Teste: build + navegar menu admin/operador + URLs inválidas.
 
 ## G3 — Telas mock (dados em memória)
 Objetivo: fluxo clicável sem backend (R-TEL-01/02, R-EST-01, R-TXT).
-Exato: Minha Mesa (saudação+resumo), Lista Projetos (gaveta+divisórias), Projeto (pasta com 6 divisórias Evoluta), 5W2H (MesaPagina formulário), Indicadores (livro + barras CSS), resto EmConstrucao. Cada tela com os 4 estados (carregando/erro/vazio/conteúdo), microcopy de `references/10`, carimbos com tintas certas, sem `Badge` p/ situação, sem `Card` como contêiner.
+Exato:
+- **G3a (núcleo)**: Minha Mesa (saudação+resumo), Lista Projetos (gaveta+divisórias), Projeto (pasta), 5W2H (MesaPagina formulário), Indicadores (livro + barras CSS), resto EmConstrucao.
+- **G3b (ferramentas = divisórias do Projeto, R-SIT-04/R-TEL-01)**: dentro da pasta do Projeto, uma divisória por ferramenta do backend — 5 Porquês, Ishikawa, Matriz, RACI, Riscos, Stakeholders, Estratégia (Triângulo + Árvores + Teoria). Cada uma: MesaPagina com o formulário + botão que gera (mock).
+- **G3c (listas próprias)**: Templates (biblioteca → Gerar projeto mock), Chamados (lista Helpdesk mock). Onboarding/Cadastros, Tier/SLA, Sign, BI avançado e portal ficam no Odoo nesta fase (decisão registrada, não esquecimento).
+Cobertura backend: F4–F11 via G3b, F13 via G3c, F11 via Indicadores.
+Cada tela com os 4 estados (carregando/erro/vazio/conteúdo), microcopy de `references/10`, carimbos com tintas certas, sem `Badge` p/ situação, sem `Card` como contêiner.
 Fora: dados reais, escrita no servidor (vale `CLIENTE_DE_DEMONSTRACAO=true` + aviso, R-AUTH-04).
 Aceite:
 - [ ] R-VER-05: 2 temas × 400/1024px, `h1` único, foco visível, contraste medido (R-TOK-18), sem rolagem lateral (R-RES-02).
@@ -32,7 +37,7 @@ Teste: manual por tela (relato seção E) + `tsc --noEmit`.
 
 ## G4 — Ponte API leitura
 Objetivo: telas lendo o banco demo (fim do mock de leitura).
-Exato: `base_rest` no Odoo (endpoints GET projeto/task/5w2h) ou JSON-RPC + CORS; `services/api/client.ts` real com `CLIENTE_DE_DEMONSTRACAO=false` para leitura; login por sessão Odoo (trocar AuthContext demo, R-AUTH-01); erro de API vira `MesaErroBusca` com "Tentar de novo", nunca tela em branco (R-EST-01/02); token/cookie fora do git.
+Exato: `base_rest` no Odoo (endpoints GET projeto/task/5w2h + ferramentas G3b: porques/ishikawa/matriz/riscos/raci/stakeholders/estrategia/teoria + templates/chamados) ou JSON-RPC + CORS; `services/api/client.ts` real com `CLIENTE_DE_DEMONSTRACAO=false` para leitura; login por sessão Odoo (trocar AuthContext demo, R-AUTH-01); erro de API vira `MesaErroBusca` com "Tentar de novo", nunca tela em branco (R-EST-01/02); token/cookie fora do git.
 Fora: escrita (G5).
 Aceite:
 - [ ] Lista Projetos e Kanban carregam do banco demo; derrubar o Odoo mostra erro com retry (teste: parar container).
