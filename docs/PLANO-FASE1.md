@@ -87,7 +87,7 @@ Aceite:
 - [ ] Botão cria exatamente 1 plano 5W2H ligado ao projeto.
 Teste: matriz 2 alternativas x 2 critérios no demo.
 
-## F10 — Triângulo + Árvores
+## F10 — Triângulo + Árvores [CONCLUÍDO 07/10]
 Objetivo: §18 fiel em formato texto (sem grafos na Fase 1).
 Modelos: `evoluta.triangulo` (project_id, valor_publico text required, legitimidade text required, capacidade text required); `evoluta.arvore.problemas` (project_id, causas text, problema_central required text, efeitos text) + botão Converter em objetivos (cria `evoluta.arvore.objetivos` com espelho editável); objetivos com botão Gerar ação (task).
 Aceite:
