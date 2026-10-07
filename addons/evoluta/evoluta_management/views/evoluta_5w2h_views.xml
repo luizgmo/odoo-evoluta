@@ -21,7 +21,11 @@
     <field name="arch" type="xml">
       <form>
         <header>
+          <button name="request_validation" string="Solicitar validação" type="object" invisible="state != 'draft'"/>
+          <button name="validate_tier" string="Aprovar" type="object" invisible="not can_review"/>
+          <button name="restart_validation" string="Reiniciar validação" type="object" invisible="state not in ('confirmed', 'approved')"/>
           <button name="action_create_task" string="Gerar Task" type="object" class="oe_highlight"/>
+          <field name="state" widget="statusbar"/>
         </header>
         <sheet>
           <group>
@@ -38,6 +42,7 @@
             <field name="how"/>
             <field name="how_much"/>
           </group>
+          <field name="review_ids"/>
         </sheet>
       </form>
     </field>

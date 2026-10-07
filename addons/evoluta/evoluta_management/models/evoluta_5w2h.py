@@ -1,9 +1,11 @@
 from odoo import fields, models
+from odoo.exceptions import UserError
 
 
 class Evoluta5W2H(models.Model):
     _name = "evoluta.5w2h"
     _description = "5W2H"
+    _inherit = ["tier.validation"]
 
     name = fields.Char(required=True, default="Novo plano 5W2H")
     project_id = fields.Many2one("project.project", required=True, ondelete="cascade")
@@ -15,6 +17,25 @@ class Evoluta5W2H(models.Model):
     who_id = fields.Many2one("res.users", string="Who (Quem)")
     how = fields.Text(string="How (Como)")
     how_much = fields.Float(string="How Much (Quanto)")
+    state = fields.Selection(
+        [
+            ("draft", "Rascunho"),
+            ("confirmed", "Em validação"),
+            ("approved", "Aprovado"),
+            ("cancel", "Cancelado"),
+        ],
+        default="draft",
+    )
+
+    def _get_under_validation_exceptions(self):
+        res = super()._get_under_validation_exceptions()
+        res.append("task_id")
+        return res
+
+    def _get_after_validation_exceptions(self):
+        res = super()._get_after_validation_exceptions()
+        res.append("task_id")
+        return res
 
     def _task_vals(self):
         return {
@@ -37,6 +58,8 @@ class Evoluta5W2H(models.Model):
 
     def action_create_task(self):
         self.ensure_one()
+        if self.review_ids and self.validation_status != "validated":
+            raise UserError("Plano precisa estar Aprovado (2 níveis) para gerar a task.")
         if self.task_id:
             self.task_id.with_context(skip_5w2h_sync=True).write(self._task_vals())
             task = self.task_id

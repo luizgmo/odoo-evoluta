@@ -4,7 +4,7 @@
     "summary": "5W2H que gera project.task",
     "author": "AlphaMec + Evoluta",
     "license": "LGPL-3",
-    "depends": ["base", "project", "evoluta_core"],
+    "depends": ["base", "project", "evoluta_core", "base_tier_validation"],
     "data": [
         "security/ir.model.access.csv",
         "views/evoluta_5w2h_views.xml",
