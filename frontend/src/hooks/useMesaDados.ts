@@ -134,15 +134,39 @@ export function useProcessosDaMesa() {
 }
 
 export function useProcessoDaMesa(id: string | undefined) {
-  const processos = useSyncExternalStore(assinar, lerArmazem);
+  const processosMock = useSyncExternalStore(assinar, lerArmazem);
   const [carregando, setCarregando] = useState(true);
-  const buscar = useCallback(() => setCarregando(false), []);
-  useEffect(() => {
+  const [data, setData] = useState<Process | undefined>(undefined);
+  const [error, setError] = useState<{ status: number } | null>(null);
+  const buscar = useCallback(() => {
+    if (!id) {
+      setData(undefined);
+      setError({ status: 404 });
+      setCarregando(false);
+      return;
+    }
     setCarregando(true);
-    const t = setTimeout(buscar, 200);
-    return () => clearTimeout(t);
-  }, [id, buscar]);
-  const data = carregando ? undefined : processos.find((p) => String(p.id) === String(id));
-  const error = !carregando && !data ? { status: 404 } : null;
+    setError(null);
+    apiGet<{ records: ProjetoApi[] }>("/api/projetos")
+      .then((d) => {
+        const achado = d.records.find((r) => String(r.id) === String(id));
+        if (achado) {
+          setData(paraProcesso(achado));
+        } else {
+          const mock = processosMock.find((p) => String(p.id) === String(id));
+          if (mock) setData(mock);
+          else setError({ status: 404 });
+        }
+      })
+      .catch(() => {
+        const mock = processosMock.find((p) => String(p.id) === String(id));
+        if (mock) setData(mock);
+        else setError({ status: 500 });
+      })
+      .finally(() => setCarregando(false));
+  }, [id, processosMock]);
+  useEffect(() => {
+    buscar();
+  }, [buscar]);
   return { data, isLoading: carregando, error, refetch: buscar };
 }
