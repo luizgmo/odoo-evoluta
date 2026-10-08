@@ -162,7 +162,7 @@ const Login: React.FC = () => {
                     <strong>{perfil}</strong> ({DESCRICAO_DO_PERFIL[perfil]})
                   </React.Fragment>
                 ))}
-                . Qualquer outro nome entra como gestor.
+                . O perfil administrativo real vem das permissões da conta no Odoo.
               </p>
             )}
             {/* Link de recuperação de senha. */}

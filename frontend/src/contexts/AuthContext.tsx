@@ -1,8 +1,8 @@
 /**
  * Autenticação real no Odoo (sessão em cookie). Mantém a forma do contexto
  * ({ user, isAuthenticated, isLoading, login, logout }).
- * O perfil continua pelo nome na demonstração (admin/master/operador/gestor);
- * o servidor decide o que cada conta pode ver (grupos do Odoo).
+ * O perfil administrativo vem dos indicadores reais da sessão Odoo;
+ * o servidor continua sendo a fonte das permissões da conta.
  */
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { MARCA, chaveDoSistema } from "@/config/marca";
@@ -11,7 +11,7 @@ import { loginOdoo, logoutOdoo, sessaoAtual } from "@/services/api/client";
 /** Única definição dos perfis: ProtectedRoute, RequerPerfil, navegacao e Unauthorized importam este tipo. */
 export type Perfil = "master" | "admin" | "gestor" | "operador";
 
-/** Nomes de usuário que entram com o perfil de mesmo nome na demonstração (a dica do Login lê esta lista). */
+/** Mantido apenas para a dica de desenvolvimento; não define permissões reais. */
 export const PERFIS_DE_DEMONSTRACAO: readonly Perfil[] = ["admin", "master", "operador", "gestor"];
 
 /** Texto da dica do Login para cada perfil; um perfil novo precisa de uma linha aqui. */
@@ -42,13 +42,10 @@ interface AuthContextValue {
 const CHAVE = chaveDoSistema("sessao-demo");
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-/** Perfil pelo nome (demonstração de menus): admin/master/operador entram com
- * esse perfil; qualquer outro nome entra como gestor. O servidor separa o acesso real. */
-const paraUsuario = (nome: string): Usuario => {
-  const curto = nome.trim();
-  const role: Perfil = (PERFIS_DE_DEMONSTRACAO as readonly string[]).includes(curto.toLowerCase())
-    ? (curto.toLowerCase() as Perfil)
-    : "gestor";
+/** O menu administrativo acompanha os flags reais enviados pelo Odoo, não o login digitado. */
+const paraUsuario = (sessao: { username: string; is_admin?: boolean; is_system?: boolean }): Usuario => {
+  const curto = sessao.username.trim();
+  const role: Perfil = sessao.is_admin || sessao.is_system ? "admin" : "gestor";
   return { username: curto, email: curto.includes("@") ? curto : `${curto}@exemplo.org`, role };
 };
 
@@ -61,7 +58,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     sessaoAtual()
       .then((sessao) => {
         if (!vivo || !sessao) return;
-        setUser(paraUsuario(sessao.username));
+        setUser(paraUsuario(sessao));
       })
       .catch(() => {})
       .finally(() => {
@@ -74,7 +71,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = useCallback(async (username: string, password: string) => {
     const sessao = await loginOdoo(username.trim(), password);
-    const novo = paraUsuario(sessao.username);
+    const novo = paraUsuario(sessao);
     try {
       localStorage.setItem(CHAVE, JSON.stringify(novo));
     } catch {

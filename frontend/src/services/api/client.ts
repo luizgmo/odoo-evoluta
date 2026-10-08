@@ -83,6 +83,9 @@ export interface SessaoOdoo {
   uid: number;
   username: string;
   name: string;
+  is_admin?: boolean;
+  is_system?: boolean;
+  is_internal_user?: boolean;
 }
 
 /** Login real no Odoo (cria a sessão em cookie). */
