@@ -4,14 +4,9 @@
  * pela leitura/edição do documento; mantenha a moldura FolhaDaTela, a trilha e o botão de baixar
  * (a ação mais importante).
  *
- * Aqui não há servidor: o id só é conferido no formato (somente dígitos). Se for o id de um item
- * (useProcessoDaMesa), o documento é o relatório montado dos dados dele (blocosDoItem); senão vale
- * o conteúdo de demonstração (BLOCOS). Nos dois casos o que está na folha é o que vai ao .docx,
- * e o título da tela é o título do arquivo.
- * Na tela real, cubra os quatro estados — carregando, erro com "Tentar de novo", documento que
- * não existe (o ramo "não encontrado" abaixo) e conteúdo — e esconda o botão de baixar quando
- * não houver documento. Para texto em markdown, use TextoDoDocumento (puxa markdown + DOMPurify,
- * ≈ 70 kB a mais no JS) com `blocosParaMarkdown(blocos)` (utils/baixarDocx.ts).
+ * O documento é montado somente a partir do projeto retornado pelo Odoo. Não existe conteúdo
+ * demonstrativo nem fallback local: id inválido, projeto inexistente ou projeto fora do escopo
+ * municipal resultam em "não encontrado".
  */
 import React from "react";
 import { Link, useParams } from "react-router-dom";
@@ -22,24 +17,14 @@ import { MesaCarregando } from "@/components/mesa/Mesa";
 import { BaixarDocumento } from "@/components/documents/BaixarDocumento";
 import { useProcessoDaMesa } from "@/hooks/useMesaDados";
 import { MARCA } from "@/config/marca";
-import type { BlocoDocx } from "@/utils/baixarDocx";
 import { blocosDoItem, nomeDoDocumentoDoItem } from "@/utils/blocosDoItem";
-
-/** Conteúdo de demonstração (id que não é de item): parágrafos e { titulo }. Troque pelo documento real. */
-const TITULO_DA_DEMONSTRACAO = "Documento";
-const BLOCOS: BlocoDocx[] = [
-  { titulo: "Texto do documento" },
-  "Este é o conteúdo de demonstração do documento.",
-  { titulo: "Observações" },
-  "O arquivo baixado leva exatamente o que está nesta folha.",
-];
 
 const Documento: React.FC = () => {
   const { id = "" } = useParams<{ id: string }>();
   const idValido = /^\d{1,12}$/.test(id);
-  const { data: item, isLoading } = useProcessoDaMesa(idValido ? id : undefined);
-  const titulo = item ? nomeDoDocumentoDoItem(item) : TITULO_DA_DEMONSTRACAO;
-  const blocos = item ? blocosDoItem(item) : BLOCOS;
+  const { data: item, isLoading, error } = useProcessoDaMesa(idValido ? id : undefined);
+  const titulo = item ? nomeDoDocumentoDoItem(item) : "Documento do projeto";
+  const blocos = item ? blocosDoItem(item) : [];
   const voltar = (
     <Button asChild className="nao-imprimir">
       <Link to={MARCA.rotaInicial}>Voltar para {MARCA.inicio} ›</Link>
@@ -52,7 +37,7 @@ const Documento: React.FC = () => {
         trilha={[{ rotulo: MARCA.inicio, para: MARCA.rotaInicial }, { rotulo: "Documento" }]}
         titulo={titulo}
         acao={
-          idValido && !isLoading ? (
+          idValido && !isLoading && item ? (
             <BaixarDocumento variant="outline" nome={titulo} idDoArquivo={id} rotulo="Baixar o documento (.docx)" blocos={blocos} />
           ) : undefined
         }
@@ -63,8 +48,12 @@ const Documento: React.FC = () => {
           </AvisoDeEstado>
         ) : isLoading ? (
           <MesaCarregando texto="Abrindo o documento…" />
+        ) : !item || error ? (
+          <AvisoDeEstado rotulo="Não encontrado" titulo="Este projeto não está disponível" nivel={2} acoes={voltar}>
+            O projeto pode ter sido arquivado, removido ou estar fora do município da sua conta.
+          </AvisoDeEstado>
         ) : (
-          <article className="folha texto-do-documento p-5 md:p-8" aria-label="Texto do documento">
+          <article className="folha texto-do-documento p-5 md:p-8" aria-label="Ficha do projeto">
             {blocos.map((b, i) => (typeof b === "string" ? <p key={i}>{b}</p> : <h2 key={i}>{b.titulo}</h2>))}
           </article>
         )}

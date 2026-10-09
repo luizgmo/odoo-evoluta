@@ -1,38 +1,32 @@
-export interface ModalityStage {
+export interface ProjectReference {
   id: string | number;
   name: string;
-  description: string;
-  order: number;
-  is_required: boolean;
 }
 
-export interface Modality {
-  /** False = agrupamento extinto (ex.: modalidade antiga), oculto do
-   *  formulário mas preservado nos itens que o usam. */
-  is_selectable?: boolean;
-  id: string | number;
-  name: string;
-  description: string;
-  stages?: ModalityStage[];
+export interface ProjectInfo {
+  municipio: ProjectReference | null;
+  secretaria: ProjectReference | null;
+  departamento: ProjectReference | null;
+  responsavel: ProjectReference | null;
+  etapa: ProjectReference | null;
+  date_deadline: string | null;
 }
 
+/** DTO de apresentação do projeto municipal retornado pela API Evoluta. */
 export interface Process {
   id: string | number;
   code: string;
   description: string;
-  modality: Modality;
-  modality_id?: string | number; // Usado para referenciar a FK
   object: string;
   estimated_value: string;
-  publication_date: string;
   responsible: string;
-  opening_date: string | null;
-  opening_time: string | null;
   status: string;
   author: string | number;
   company: string | number | null;
   created_at: string;
   updated_at: string;
+  active: boolean;
+  projectInfo: ProjectInfo;
 }
 
 export interface ProcessResponse {

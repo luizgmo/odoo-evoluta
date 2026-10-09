@@ -4,6 +4,8 @@ import { FolhaDaTela } from "@/components/mesa/FolhaDaTela";
 import { MesaCarregando, MesaErroBusca } from "@/components/mesa/Mesa";
 import { Button } from "@/components/ui/button";
 import { useAvisoDeResultado } from "@/components/mesa/avisoDeResultado";
+import { useAuth } from "@/contexts/AuthContext";
+import { listarMunicipios, type Municipio } from "@/services/api/organization";
 import { MARCA } from "@/config/marca";
 import { consultarJob, gerarProjetoTemplate, listarTemplates, type JobStatus, type TemplateProjeto } from "@/services/api/templates";
 
@@ -18,7 +20,10 @@ const erroDa = (error: unknown, padrao: string) => error instanceof Error ? erro
 const Templates: React.FC = () => {
   const navigate = useNavigate();
   const { avisar } = useAvisoDeResultado();
+  const { user } = useAuth();
   const [templates, setTemplates] = useState<TemplateProjeto[]>([]);
+  const [municipios, setMunicipios] = useState<Municipio[]>([]);
+  const [municipioId, setMunicipioId] = useState("");
   const [loading, setLoading] = useState(true);
   const [erroBusca, setErroBusca] = useState(false);
   const [jobs, setJobs] = useState<JobsPorTemplate>({});
@@ -31,6 +36,10 @@ const Templates: React.FC = () => {
   }, []);
 
   useEffect(() => { void carregar(); }, [carregar]);
+  useEffect(() => {
+    if (user?.role !== "super_admin") return;
+    void listarMunicipios().then((resposta) => setMunicipios(resposta.records)).catch(() => setMunicipios([]));
+  }, [user?.role]);
   useEffect(() => () => { Object.values(timers.current).forEach((timer) => window.clearTimeout(timer)); }, []);
 
   const limparTimer = (jobId: string) => {
@@ -68,12 +77,13 @@ const Templates: React.FC = () => {
   }, [avisar, navigate]);
 
   const gerar = async (template: TemplateProjeto) => {
+    if (user?.role === "super_admin" && !municipioId) return;
     const atual = jobs[template.id];
     if (atual && (atual.state === "pending" || atual.state === "started") && !atual.timedOut) return;
     if (atual) limparTimer(atual.id);
     setJobs((anteriores) => ({ ...anteriores, [template.id]: { id: `template-${template.id}`, state: "pending" } }));
     try {
-      const resposta = await gerarProjetoTemplate(template.id);
+      const resposta = await gerarProjetoTemplate(template.id, municipioId ? { municipio_id: Number(municipioId) } : {});
       const job = resposta.job;
       setJobs((anteriores) => ({ ...anteriores, [template.id]: job }));
       void polling(template.id, job.id, Date.now());
@@ -84,6 +94,7 @@ const Templates: React.FC = () => {
 
   return (
     <FolhaDaTela trilha={[{ rotulo: "Templates" }]} titulo="Biblioteca de templates" subtitulo="Método pronto que vira projeto com um clique.">
+      {user?.role === "super_admin" && <div className="folha-simples mb-5 space-y-2 border border-border p-4"><label htmlFor="template-municipio" className="font-ui text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">Município que receberá o projeto</label><select id="template-municipio" value={municipioId} onChange={(event) => setMunicipioId(event.target.value)} className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"><option value="">Selecione antes de gerar</option>{municipios.map((municipio) => <option key={municipio.id} value={municipio.id}>{municipio.name}</option>)}</select><p className="text-xs text-muted-foreground">O projeto e todas as tasks geradas serão vinculados a este município. Usuários municipais usam automaticamente o município da própria sessão.</p></div>}
       {loading ? <MesaCarregando texto="Buscando templates cadastrados…" /> : erroBusca ? <MesaErroBusca titulo="Não deu para buscar os templates" onTentarDeNovo={() => void carregar()} /> : templates.length === 0 ? (
         <div className="folha-simples border border-dashed border-border p-5"><p className="mesa-secao tinta-ocre">Nenhum template cadastrado</p><p className="mt-1 text-sm text-muted-foreground">Cadastre templates no Odoo para disponibilizá-los aqui.</p></div>
       ) : (
@@ -91,7 +102,7 @@ const Templates: React.FC = () => {
           {templates.map((template) => {
             const job = jobs[template.id];
             const ocupado = !!job && (job.state === "pending" || job.state === "started") && !job.timedOut;
-            return <li key={template.id} className="folha-simples space-y-3 border border-border p-4 md:p-6"><div className="flex flex-wrap items-start justify-between gap-3"><h2 className="font-display text-2xl font-semibold">{template.name}</h2><span className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">{template.task_count} {template.task_count === 1 ? "task modelo" : "tasks modelo"}</span></div><p className="text-sm text-muted-foreground">{template.descricao || "Sem descrição cadastrada."}</p><Button type="button" onClick={() => void gerar(template)} disabled={ocupado}>{ocupado ? "Gerando projeto…" : job?.state === "done" ? "Projeto gerado" : job?.state === "failed" || job?.timedOut ? "Tentar novamente" : "Gerar projeto"}</Button>{ocupado && <p role="status" className="text-sm text-muted-foreground">A geração está em andamento. Esta tela consulta o Odoo a cada segundo por até 30 segundos.</p>}{job?.state === "failed" && <p role="alert" className="text-sm text-destructive">{job.error || "A geração falhou."}</p>}</li>;
+            return <li key={template.id} className="folha-simples space-y-3 border border-border p-4 md:p-6"><div className="flex flex-wrap items-start justify-between gap-3"><h2 className="font-display text-2xl font-semibold">{template.name}</h2><span className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">{template.task_count} {template.task_count === 1 ? "task modelo" : "tasks modelo"}</span></div><p className="text-sm text-muted-foreground">{template.descricao || "Sem descrição cadastrada."}</p><Button type="button" onClick={() => void gerar(template)} disabled={ocupado || (user?.role === "super_admin" && !municipioId)}>{ocupado ? "Gerando projeto…" : job?.state === "done" ? "Projeto gerado" : job?.state === "failed" || job?.timedOut ? "Tentar novamente" : "Gerar projeto"}</Button>{ocupado && <p role="status" className="text-sm text-muted-foreground">A geração está em andamento. Esta tela consulta o Odoo a cada segundo por até 30 segundos.</p>}{job?.state === "failed" && <p role="alert" className="text-sm text-destructive">{job.error || "A geração falhou."}</p>}</li>;
           })}
         </ul>
       )}

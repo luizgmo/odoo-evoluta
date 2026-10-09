@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "./client";
+import { apiGet, apiPatch, apiPost } from "./client";
 
 export interface Triangulo {
   id: number;
@@ -14,6 +14,7 @@ export interface ArvoreObjetivo {
   name: string;
   objetivo_central: string;
   task_id: number | false;
+  five_w2h_id?: number | false;
 }
 
 export interface ArvoreProblemas {
@@ -79,9 +80,17 @@ export function criarArvoreProblemas(data: NovaArvoreProblemas) {
   return apiPost<{ record: ArvoreProblemas }>("/api/estrategia/arvores-problemas", data);
 }
 
+export function atualizarTriangulo(id: number, data: Partial<Omit<NovaTriangulo, "project_id">>) { return apiPatch<{ record: Triangulo }>(`/api/estrategia/triangulo/${id}`, data); }
+export function arquivarTriangulo(id: number) { return apiPost<{ record: { id: number; active: boolean } }>(`/api/estrategia/triangulo/${id}/arquivar`, {}); }
+
 export function converterArvoreProblemas(id: number) {
   return apiPost<{ record: ArvoreProblemas; objetivo_id: number }>(`/api/estrategia/arvores-problemas/${id}/converter`, {});
 }
+
+export function gerarPlanoArvoreObjetivos(id: number) { return apiPost<{ record: { id: number; name: string; project_id: number } }>(`/api/estrategia/arvores-objetivos/${id}/gerar-5w2h`, {}); }
+export function criarAcaoArvoreObjetivos(id: number) { return apiPost<{ record: { id: number; task_id: number } }>(`/api/estrategia/arvores-objetivos/${id}/criar-acao`, {}); }
+export function atualizarArvoreProblemas(id: number, data: Partial<Omit<NovaArvoreProblemas, "project_id">>) { return apiPatch<{ record: ArvoreProblemas }>(`/api/estrategia/arvores-problemas/${id}`, data); }
+export function arquivarArvoreProblemas(id: number) { return apiPost<{ record: { id: number; active: boolean } }>(`/api/estrategia/arvores-problemas/${id}/arquivar`, {}); }
 
 export function listarTeorias(projectId: number) {
   return apiGet<{ records: TeoriaMudanca[] }>(`/api/teoria?project_id=${encodeURIComponent(projectId)}`);
@@ -90,3 +99,5 @@ export function listarTeorias(projectId: number) {
 export function criarTeoria(data: NovaTeoriaMudanca) {
   return apiPost<{ record: TeoriaMudanca }>("/api/teoria", data);
 }
+export function atualizarTeoria(id: number, data: Partial<Omit<NovaTeoriaMudanca, "project_id">>) { return apiPatch<{ record: TeoriaMudanca }>(`/api/teoria/${id}`, data); }
+export function arquivarTeoria(id: number) { return apiPost<{ record: { id: number; active: boolean } }>(`/api/teoria/${id}/arquivar`, {}); }

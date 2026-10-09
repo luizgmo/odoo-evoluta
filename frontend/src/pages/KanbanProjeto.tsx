@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { CalendarDays, GripVertical, Loader2 } from "lucide-react";
+import { Archive, CalendarDays, CheckCircle2, GripVertical, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MesaCarregando, MesaErroBusca } from "@/components/mesa/Mesa";
 import { useAvisoDeResultado } from "@/components/mesa/avisoDeResultado";
-import { buscarKanbanProjeto, moverTask, type KanbanProject, type KanbanStage, type KanbanTask } from "@/services/api/kanban";
+import { arquivarTask, buscarKanbanProjeto, concluirTask, moverTask, type KanbanProject, type KanbanStage, type KanbanTask } from "@/services/api/kanban";
 import { useParams } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const hoje = () => {
   const valor = new Date();
@@ -35,6 +36,7 @@ export const KanbanProjeto: React.FC = () => {
   const [movendo, setMovendo] = useState<number | null>(null);
   const [arrastando, setArrastando] = useState<number | null>(null);
   const { avisar } = useAvisoDeResultado();
+  const { can } = useAuth();
 
   const carregar = useCallback(() => {
     setLoading(true);
@@ -49,6 +51,36 @@ export const KanbanProjeto: React.FC = () => {
   }, [projectId]);
 
   useEffect(() => { void carregar(); }, [carregar]);
+
+  const concluir = async (task: KanbanTask) => {
+    if (!can("manage_projects") || movendo !== null || !window.confirm(`Concluir a ação “${task.name}”?`)) return;
+    setMovendo(task.id);
+    setErro(null);
+    try {
+      await concluirTask(task.id);
+      await carregar();
+      avisar({ texto: "Ação concluída e movida para a etapa final." });
+    } catch (error) {
+      setErro(error instanceof Error ? error.message : "Não foi possível concluir a ação.");
+    } finally {
+      setMovendo(null);
+    }
+  };
+
+  const arquivar = async (task: KanbanTask) => {
+    if (!can("archive_projects") || movendo !== null || !window.confirm(`Arquivar a ação “${task.name}”?`)) return;
+    setMovendo(task.id);
+    setErro(null);
+    try {
+      await arquivarTask(task.id);
+      await carregar();
+      avisar({ texto: "Ação arquivada; o histórico permanece no Odoo." });
+    } catch (error) {
+      setErro(error instanceof Error ? error.message : "Não foi possível arquivar a ação.");
+    } finally {
+      setMovendo(null);
+    }
+  };
 
   const mover = async (taskId: number, stageId: number) => {
     if (!projeto || movendo) return;
@@ -90,7 +122,9 @@ export const KanbanProjeto: React.FC = () => {
           {porEtapa(projeto.tasks, stage.id).map((task) => <li key={task.id} draggable={movendo === null} onDragStart={() => setArrastando(task.id)} onDragEnd={() => setArrastando(null)} className="rounded-md border border-border bg-[hsl(var(--mesa-papel))] p-3 shadow-sm focus-within:ring-2 focus-within:ring-ring">
             <div className="flex items-start gap-2"><GripVertical className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" /><p className="min-w-0 flex-1 font-semibold">{task.name}</p>{movendo === task.id && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" aria-label="Movendo ação" />}</div>
             <p className={`mt-2 flex items-center gap-1 text-xs ${atrasada(task.date_deadline) && !stage.fold ? "tinta-carmim" : "text-muted-foreground"}`}><CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />{atrasada(task.date_deadline) && !stage.fold ? `Atrasada · ${dataBR(task.date_deadline)}` : dataBR(task.date_deadline)}</p>
+            {task.responsaveis.length > 0 && <p className="mt-2 text-xs text-muted-foreground">Responsável: {task.responsaveis.map((responsavel) => responsavel.name).join(", ")}</p>}
             <label className="mt-3 grid gap-1 text-xs text-muted-foreground"><span>Mover para</span><select value={stage.id} disabled={movendo !== null} onChange={(event) => void mover(task.id, Number(event.target.value))} className="h-8 rounded-md border border-input bg-background px-2 text-xs text-foreground"><option value={stage.id}>{stage.name}</option>{projeto.stages.filter((option) => option.id !== stage.id).map((option) => <option key={option.id} value={option.id}>{option.name}</option>)}</select></label>
+            <div className="mt-3 flex flex-wrap gap-2">{can("manage_projects") && !stage.fold && <Button type="button" variant="outline" size="sm" onClick={() => void concluir(task)} disabled={movendo !== null}><CheckCircle2 className="mr-1 h-3.5 w-3.5" aria-hidden="true" />Concluir</Button>}{can("archive_projects") && <Button type="button" variant="ghost" size="sm" onClick={() => void arquivar(task)} disabled={movendo !== null}><Archive className="mr-1 h-3.5 w-3.5" aria-hidden="true" />Arquivar</Button>}</div>
           </li>)}
           {porEtapa(projeto.tasks, stage.id).length === 0 && <li className="py-4 text-center text-xs text-muted-foreground">Nenhuma ação nesta etapa</li>}
         </ul>

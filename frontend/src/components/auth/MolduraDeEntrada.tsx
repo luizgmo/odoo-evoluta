@@ -1,5 +1,5 @@
 /**
- * Moldura das telas de entrada (login e recuperação de senha), no estilo
+ * Moldura da tela de entrada, no estilo
  * Workspace Evoluta: painel azul com os logos e o que o sistema faz, e a
  * folha marfim com o formulário.
  */
@@ -31,8 +31,8 @@ export const MolduraDeEntrada: React.FC<Props> = ({ rotulo, titulo, subtitulo, c
   <div className="flex min-h-screen w-full flex-col bg-background pb-[env(safe-area-inset-bottom,0px)] pl-[env(safe-area-inset-left,0px)] pr-[env(safe-area-inset-right,0px)] pt-[env(safe-area-inset-top,0px)] lg:flex-row">
     <aside className="flex flex-col bg-moldura px-6 py-6 text-moldura-foreground lg:w-[46%] lg:px-14 lg:py-12">
       {/* O logo encolhe (min-w-0 + object-contain) antes de espremer a assinatura, que não encolhe (shrink-0) */}
-      <div className="flex min-w-0 items-center gap-3 sm:gap-5">
-        <img src={MARCA.logo} alt={MARCA.nome} className="h-12 w-auto min-w-0 shrink object-contain object-left lg:h-16" />
+      <div className="flex min-w-0 flex-wrap items-center gap-3 sm:gap-5">
+        <img src={MARCA.logo} alt={MARCA.nome} className="h-12 w-auto max-w-full min-w-0 shrink object-contain object-left lg:h-16" />
         <span className="h-10 w-px shrink-0 bg-moldura-foreground/20" aria-hidden="true" />
         <AssinaturaEvoluta className="w-24 shrink-0 text-moldura-foreground/70 lg:w-28" />
       </div>
@@ -64,7 +64,7 @@ export const MolduraDeEntrada: React.FC<Props> = ({ rotulo, titulo, subtitulo, c
               )}
               <h1 className="text-4xl font-semibold text-foreground">{titulo}</h1>
             </div>
-            {carimbo && <div className="max-w-full shrink-0">{carimbo}</div>}
+            {carimbo && <div className="w-full max-w-full shrink-0 basis-full sm:w-auto sm:basis-auto">{carimbo}</div>}
           </div>
           <p className="text-muted-foreground">{subtitulo}</p>
         </div>

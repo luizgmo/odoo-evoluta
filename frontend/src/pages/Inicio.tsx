@@ -28,7 +28,7 @@ const Inicio: React.FC = () => {
   const agora = new Date();
   const primeiroNome = user?.username?.trim().split(/\s+/)[0];
   const ativos = daAba(processos, "ativos");
-  const proximos = ordenar(ativos, "proxima-abertura", agora).slice(0, 4);
+  const proximos = ordenar(ativos, "proximo-prazo", agora).slice(0, 4);
   const valorTotal = ativos.reduce((soma, p) => soma + (Number.parseFloat(p.estimated_value) || 0), 0);
   const contagens = [
     { rotulo: `${MARCA.objeto.plural} ativ${GEN.fim}s`, valor: ativos.length },
@@ -50,12 +50,12 @@ const Inicio: React.FC = () => {
           <Button variant="outline" asChild>
             <Link to={MARCA.rotaDaLista}>Ver {MARCA.objeto.plural}</Link>
           </Button>
-          <Button asChild>
+          {user && user.permissions.manage_projects && <Button asChild>
             <Link to={MARCA.acaoPrincipal.caminho}>
               <Plus className="mr-2 h-5 w-5" aria-hidden="true" />
               {MARCA.acaoPrincipal.rotulo}
             </Link>
-          </Button>
+          </Button>}
         </div>
       </header>
 
@@ -102,7 +102,7 @@ const Inicio: React.FC = () => {
                   <Link to={`${MARCA.rotaDaLista}/${p.id}`} className="flex flex-wrap items-center justify-between gap-3 py-3 hover:bg-muted/50">
                     <span className="min-w-0">
                       <span className="block font-mono text-xs text-muted-foreground">
-                        {p.code} · {MARCA.campos.data.toLowerCase()} {dataDeAbertura(p.opening_date)}
+                        {p.code} · {MARCA.campos.data.toLowerCase()} {p.projectInfo?.date_deadline ? dataDeAbertura(p.projectInfo.date_deadline) : MARCA.campos.semData}
                       </span>
                       <span className="block truncate font-semibold" title={p.object}>
                         {p.object}

@@ -20,8 +20,8 @@ export function listarTemplates() {
   return apiGet<{ records: TemplateProjeto[] }>("/api/templates");
 }
 
-export function gerarProjetoTemplate(templateId: number) {
-  return apiPost<{ job: JobStatus }>(`/api/templates/${templateId}/gerar`, {});
+export function gerarProjetoTemplate(templateId: number, data: { municipio_id?: number; secretaria_id?: number; departamento_id?: number } = {}) {
+  return apiPost<{ job: JobStatus }>(`/api/templates/${templateId}/gerar`, data);
 }
 
 export function consultarJob(jobId: string) {

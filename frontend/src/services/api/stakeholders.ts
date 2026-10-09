@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "./client";
+import { apiGet, apiPatch, apiPost } from "./client";
 
 export type StakeholderPoder = "baixo" | "medio" | "alto";
 export type StakeholderPosicao = "apoiador" | "neutro" | "opositor";
@@ -39,4 +39,12 @@ export function listarStakeholders(projectId: number): Promise<{ records: Stakeh
 
 export function criarStakeholder(dados: NovoStakeholder): Promise<{ record: Stakeholder }> {
   return apiPost<{ record: Stakeholder }>("/api/stakeholders", dados);
+}
+
+export function atualizarStakeholder(id: number, dados: Partial<Omit<NovoStakeholder, "project_id">>) {
+  return apiPatch<{ record: Stakeholder }>(`/api/stakeholders/${id}`, dados);
+}
+
+export function arquivarStakeholder(id: number) {
+  return apiPost<{ record: { id: number; active: boolean } }>(`/api/stakeholders/${id}/arquivar`, {});
 }

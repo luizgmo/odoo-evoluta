@@ -1,34 +1,60 @@
 /**
- * Autenticação real no Odoo (sessão em cookie). Mantém a forma do contexto
- * ({ user, isAuthenticated, isLoading, login, logout }).
- * O perfil administrativo vem dos indicadores reais da sessão Odoo;
- * o servidor continua sendo a fonte das permissões da conta.
+ * Autenticação real no Odoo (sessão em cookie) e perfil municipal derivado
+ * dos grupos retornados pela API da Evoluta.
  */
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { MARCA, chaveDoSistema } from "@/config/marca";
-import { loginOdoo, logoutOdoo, sessaoAtual } from "@/services/api/client";
+import { apiGet, loginOdoo, logoutOdoo, sessaoAtual, type SessaoOdoo } from "@/services/api/client";
 
-/** Única definição dos perfis: ProtectedRoute, RequerPerfil, navegacao e Unauthorized importam este tipo. */
-export type Perfil = "master" | "admin" | "gestor" | "operador";
+export type Perfil = "super_admin" | "admin_municipal" | "secretario" | "atendente";
 
-/** Mantido apenas para a dica de desenvolvimento; não define permissões reais. */
-export const PERFIS_DE_DEMONSTRACAO: readonly Perfil[] = ["admin", "master", "operador", "gestor"];
+export interface Permissoes {
+  manage_municipios: boolean;
+  manage_organization: boolean;
+  manage_users: boolean;
+  manage_projects: boolean;
+  archive_projects: boolean;
+  manage_templates: boolean;
+  approve_5w2h: boolean;
+  view_indicators: boolean;
+  view_audit: boolean;
+  create_tickets: boolean;
+  manage_tickets: boolean;
+  assign_tickets: boolean;
+}
 
-/** Texto da dica do Login para cada perfil; um perfil novo precisa de uma linha aqui. */
-export const DESCRICAO_DO_PERFIL: Record<Perfil, string> = {
-  admin: "vê o menu completo",
-  master: "vê só a faixa do alto",
-  operador: "vê só o menu de operação",
-  gestor: `vê o menu e ${MARCA.campos.paineisTrilha.toLowerCase()}, sem a administração`,
-};
-
-/** Nome legível do perfil (faixa do alto, gaveta do celular e tela "sem permissão"); um perfil novo precisa de uma linha aqui. */
-export const NOME_DO_PERFIL: Record<Perfil, string> = { master: "master", admin: "administrador", gestor: "gestor", operador: "operador" };
+export interface VinculoOrganizacional {
+  id: number;
+  name: string;
+}
 
 export interface Usuario {
+  id: number;
   username: string;
+  name: string;
   email: string;
   role: Perfil;
+  groups: string[];
+  isSystem: boolean;
+  scopeReady: boolean;
+  municipio: VinculoOrganizacional | null;
+  secretaria: VinculoOrganizacional | null;
+  departamento: VinculoOrganizacional | null;
+  permissions: Permissoes;
+}
+
+interface PerfilApi {
+  id: number;
+  name: string;
+  login: string;
+  email: string;
+  role: Perfil;
+  groups?: string[];
+  is_system?: boolean;
+  scope_ready?: boolean;
+  municipio?: VinculoOrganizacional | null;
+  secretaria?: VinculoOrganizacional | null;
+  departamento?: VinculoOrganizacional | null;
+  permissions: Permissoes;
 }
 
 interface AuthContextValue {
@@ -37,16 +63,37 @@ interface AuthContextValue {
   isLoading: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
+  can: (permission: keyof Permissoes) => boolean;
 }
 
-const CHAVE = chaveDoSistema("sessao-demo");
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-/** O menu administrativo acompanha os flags reais enviados pelo Odoo, não o login digitado. */
-const paraUsuario = (sessao: { username: string; is_admin?: boolean; is_system?: boolean }): Usuario => {
-  const curto = sessao.username.trim();
-  const role: Perfil = sessao.is_admin || sessao.is_system ? "admin" : "gestor";
-  return { username: curto, email: curto.includes("@") ? curto : `${curto}@exemplo.org`, role };
+const paraUsuario = (perfil: PerfilApi): Usuario => ({
+  id: perfil.id,
+  username: perfil.login,
+  name: perfil.name,
+  email: perfil.email || perfil.login,
+  role: perfil.role,
+  groups: perfil.groups ?? [],
+  isSystem: Boolean(perfil.is_system),
+  scopeReady: Boolean(perfil.scope_ready),
+  municipio: perfil.municipio ?? null,
+  secretaria: perfil.secretaria ?? null,
+  departamento: perfil.departamento ?? null,
+  permissions: perfil.permissions,
+});
+
+const buscarPerfil = async (): Promise<Usuario> => {
+  const resposta = await apiGet<{ record: PerfilApi }>("/api/me");
+  if (!resposta.record) throw new Error("Não foi possível carregar o perfil da conta.");
+  return paraUsuario(resposta.record);
+};
+
+export const NOME_DO_PERFIL: Record<Perfil, string> = {
+  super_admin: "super administrador Evoluta",
+  admin_municipal: "administrador municipal",
+  secretario: "secretário",
+  atendente: "atendente",
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -55,10 +102,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     let vivo = true;
-    sessaoAtual()
-      .then((sessao) => {
-        if (!vivo || !sessao) return;
-        setUser(paraUsuario(sessao));
+    Promise.race<SessaoOdoo | null>([
+      sessaoAtual(),
+      new Promise<null>((resolve) => globalThis.setTimeout(() => resolve(null), 5_000)),
+    ])
+      .then(async (sessao) => {
+        if (!sessao || !vivo) return;
+        const perfil = await buscarPerfil();
+        if (vivo) setUser(perfil);
       })
       .catch(() => {})
       .finally(() => {
@@ -70,29 +121,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = useCallback(async (username: string, password: string) => {
-    const sessao = await loginOdoo(username.trim(), password);
-    const novo = paraUsuario(sessao);
-    try {
-      localStorage.setItem(CHAVE, JSON.stringify(novo));
-    } catch {
-      /* segue sem guardar */
-    }
+    await loginOdoo(username.trim(), password);
+    const novo = await buscarPerfil();
+    // O cookie HttpOnly do Odoo é a única fonte de sessão. Não persistimos
+    // perfil, tenant ou permissões no navegador para evitar estado municipal
+    // obsoleto depois de logout, troca de conta ou expiração da sessão.
     setUser(novo);
   }, []);
 
   const logout = useCallback(() => {
     logoutOdoo().catch(() => {});
-    try {
-      localStorage.removeItem(CHAVE);
-    } catch {
-      /* nada a limpar */
-    }
     setUser(null);
   }, []);
 
+  const can = useCallback(
+    (permission: keyof Permissoes) => Boolean(user?.permissions[permission]),
+    [user],
+  );
+
   const value = useMemo(
-    () => ({ user, isAuthenticated: !!user, isLoading, login, logout }),
-    [user, isLoading, login, logout],
+    () => ({ user, isAuthenticated: !!user, isLoading, login, logout, can }),
+    [user, isLoading, login, logout, can],
   );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

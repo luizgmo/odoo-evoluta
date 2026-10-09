@@ -14,11 +14,11 @@ export const nomeDoDocumentoDoItem = (p: Pick<Process, "code">) => `Ficha ${p.co
 
 export const blocosDoItem = (p: Process): BlocoDocx[] => [
   { titulo: MARCA.campos.agrupamento },
-  p.modality?.name || MARCA.objeto.semAgrupamento,
+  p.projectInfo?.secretaria?.name || MARCA.objeto.semAgrupamento,
   { titulo: MARCA.campos.objeto },
   p.object || MARCA.objeto.semDescricao,
   { titulo: MARCA.campos.data },
-  dataDeAbertura(p.opening_date),
+  p.projectInfo?.date_deadline ? dataDeAbertura(p.projectInfo.date_deadline) : MARCA.campos.semData,
   { titulo: MARCA.campos.valor },
   formatBRLComCentavos(p.estimated_value),
   { titulo: MARCA.campos.responsavel },

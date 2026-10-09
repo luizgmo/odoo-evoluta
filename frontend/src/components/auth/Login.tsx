@@ -4,8 +4,8 @@
  */
 
 import React, { useState, useCallback, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { DESCRICAO_DO_PERFIL, PERFIS_DE_DEMONSTRACAO, useAuth } from "@/contexts/AuthContext";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -152,28 +152,10 @@ const Login: React.FC = () => {
                 "Entrar"
               )}
             </Button>
-            {/* Dica da demonstração (só em desenvolvimento): apague junto com o AuthContext de demonstração */}
-            {import.meta.env.DEV && (
-              <p className="text-center text-xs text-muted-foreground">
-                Demonstração, entre com o usuário:{" "}
-                {PERFIS_DE_DEMONSTRACAO.map((perfil, i) => (
-                  <React.Fragment key={perfil}>
-                    {i > 0 && "; "}
-                    <strong>{perfil}</strong> ({DESCRICAO_DO_PERFIL[perfil]})
-                  </React.Fragment>
-                ))}
-                . O perfil administrativo real vem das permissões da conta no Odoo.
-              </p>
-            )}
-            {/* Link de recuperação de senha. */}
-            <div className="text-center">
-              <Link
-                to="/reset-password"
-                className="text-sm font-medium text-primary hover:underline dark:text-accent"
-              >
-                Esqueceu sua senha?
-              </Link>
-            </div>
+            <p className="text-center text-xs text-muted-foreground">
+              O acesso e as permissões são definidos pela conta da prefeitura no Odoo.
+            </p>
+
           </form>
           {/* Additional Info */}
           <div className="space-y-2 border-t border-border pt-4">

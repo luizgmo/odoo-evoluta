@@ -12,7 +12,7 @@ import { MARCA } from "@/config/marca";
 const Unauthorized: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const perfil = (user && NOME_DO_PERFIL[user.role]) ?? "operador";
+  const perfil = user ? NOME_DO_PERFIL[user.role] : "usuário";
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-background p-4">
       <AvisoDeEstado

@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "./client";
+import { apiGet, apiPatch, apiPost } from "./client";
 
 export interface CincoPorques {
   id: number;
@@ -59,6 +59,12 @@ export function criarPorques(dados: NovoCincoPorques) {
   return apiPost<{ record: CincoPorques }>("/api/porques", dados);
 }
 
+export function atualizarPorques(id: number, dados: Partial<Omit<NovoCincoPorques, "project_id">>) {
+  return apiPatch<{ record: CincoPorques }>(`/api/porques/${id}`, dados);
+}
+
+export function arquivarPorques(id: number) { return apiPost<{ record: { id: number; active: boolean } }>(`/api/porques/${id}/arquivar`, {}); }
+
 export function criarAcaoPorques(id: number) {
   return apiPost<{ record: { id: number; task_id: number; task_name: string } }>(`/api/porques/${id}/criar-acao`, {});
 }
@@ -70,6 +76,12 @@ export function listarRiscos(projectId: number) {
 export function criarRisco(dados: NovoRisco) {
   return apiPost<{ record: Risco }>("/api/riscos", dados);
 }
+
+export function atualizarRisco(id: number, dados: Partial<Omit<NovoRisco, "project_id">>) {
+  return apiPatch<{ record: Risco }>(`/api/riscos/${id}`, dados);
+}
+
+export function arquivarRisco(id: number) { return apiPost<{ record: { id: number; active: boolean } }>(`/api/riscos/${id}/arquivar`, {}); }
 
 export function criarAcaoRisco(id: number) {
   return apiPost<{ record: { id: number; task_id: number; task_name: string } }>(`/api/riscos/${id}/criar-acao`, {});
@@ -108,6 +120,12 @@ export function criarIshikawa(dados: { project_id: number; name: string; problem
   return apiPost<{ record: Ishikawa }>("/api/ishikawa", dados);
 }
 
+export function atualizarIshikawa(id: number, dados: { name?: string; problema?: string; causas?: NovaIshikawaCausa[] }) {
+  return apiPatch<{ record: Ishikawa }>(`/api/ishikawa/${id}`, dados);
+}
+
+export function arquivarIshikawa(id: number) { return apiPost<{ record: { id: number; active: boolean } }>(`/api/ishikawa/${id}/arquivar`, {}); }
+
 export function definirCausaRaizIshikawa(id: number) {
   return apiPost<{ record: Ishikawa }>(`/api/ishikawa/${id}/definir-causa-raiz`, {});
 }
@@ -141,3 +159,9 @@ export function listarRaci(taskId: number) {
 export function criarRaci(dados: { task_id: number; name: string; responsible_id: number; accountable_id: number; consulted_ids: number[]; informed_ids: number[] }) {
   return apiPost<{ record: Raci }>("/api/raci", dados);
 }
+
+export function atualizarRaci(id: number, dados: Partial<Pick<Raci, "name">> & { responsible_id?: number; accountable_id?: number; consulted_ids?: number[]; informed_ids?: number[] }) {
+  return apiPatch<{ record: Raci }>(`/api/raci/${id}`, dados);
+}
+
+export function arquivarRaci(id: number) { return apiPost<{ record: { id: number; active: boolean } }>(`/api/raci/${id}/arquivar`, {}); }

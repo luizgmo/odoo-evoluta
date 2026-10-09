@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from "./client";
+import { apiGet, apiPatch, apiPost } from "./client";
 
 export interface RevisaoPlano {
   id: number;
@@ -15,6 +15,8 @@ export interface Plano5W2H {
   why: string;
   where: string;
   date_deadline: string | false;
+  who_id: number | false;
+  who_name: string;
   how: string;
   how_much: number;
   state: "draft" | "confirmed" | "approved" | "cancel";
@@ -30,8 +32,12 @@ export function listarPlanos5W2H(projectId: number) {
   return apiGet<{ records: Plano5W2H[] }>(`/api/5w2h?project_id=${encodeURIComponent(projectId)}`);
 }
 
-export function criarPlano5W2H(data: { project_id: number; name?: string; what: string; why: string; where: string; date_deadline?: string; how: string; how_much: number }) {
+export function criarPlano5W2H(data: { project_id: number; name?: string; what: string; why: string; where: string; date_deadline?: string; who_id?: number; how: string; how_much: number }) {
   return apiPost<{ record: Plano5W2H }>("/api/5w2h", data);
+}
+
+export function atualizarPlano(id: number, data: { name?: string; what?: string; why?: string; where?: string; date_deadline?: string; who_id?: number; how?: string; how_much?: number }) {
+  return apiPatch<{ record: Plano5W2H }>(`/api/5w2h/${id}`, data);
 }
 
 export function solicitarValidacaoPlano(id: number) {

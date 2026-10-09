@@ -18,18 +18,20 @@ import { useProcessosDaMesa } from "@/hooks/useMesaDados";
 import { daAba, listaVazia, ordenar, type AbaDaLista, type Ordem } from "@/features/processos/listaDeProcessos";
 import { dataDeAbertura, formatBRL } from "@/features/dashboard/formatos";
 import { GEN, MARCA } from "@/config/marca";
+import { useAuth } from "@/contexts/AuthContext";
 
 const plural = MARCA.objeto.plural.charAt(0).toUpperCase() + MARCA.objeto.plural.slice(1);
 const ABAS: AbaDaLista[] = ["ativos", "sem-data", "todos"];
 
 const Lista: React.FC = () => {
   const { processos, isLoading, isError, refetch } = useProcessosDaMesa();
+  const { can } = useAuth();
   const [params, setParams] = useSearchParams();
   const pedida = params.get("aba") as AbaDaLista | null;
   const aba: AbaDaLista = pedida && ABAS.includes(pedida) ? pedida : "ativos";
   const setAba = (a: AbaDaLista) => setParams(a === "ativos" ? {} : { aba: a }, { replace: true });
   const [busca, setBusca] = useState("");
-  const [ordem, setOrdem] = useState<Ordem>("proxima-abertura");
+  const [ordem, setOrdem] = useState<Ordem>("proximo-prazo");
 
   const termo = busca.trim().toLowerCase();
   const filtrando = termo !== "";
@@ -43,14 +45,14 @@ const Lista: React.FC = () => {
       trilha={[{ rotulo: MARCA.inicio, para: MARCA.rotaInicial }, { rotulo: plural }]}
       titulo={plural}
       subtitulo={`Tudo o que está em andamento, uma pasta para cada item. O que terminou fica em "${MARCA.campos.arquivo}".`}
-      acao={
+      acao={can("manage_projects") ? (
         <Button asChild>
           <Link to={MARCA.acaoPrincipal.caminho}>
             <Plus className="mr-2 h-5 w-5" aria-hidden="true" />
             {MARCA.acaoPrincipal.rotulo}
           </Link>
         </Button>
-      }
+      ) : undefined}
     >
       <div>
         <div className="flex flex-wrap items-end justify-between gap-2">
@@ -89,7 +91,7 @@ const Lista: React.FC = () => {
                 <SelectValue placeholder="Ordenar por" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="proxima-abertura">{MARCA.campos.ordemPorData}</SelectItem>
+                <SelectItem value="proximo-prazo">{MARCA.campos.ordemPorData}</SelectItem>
                 <SelectItem value="recentes">Mais recentes</SelectItem>
                 <SelectItem value="maior-valor">{MARCA.campos.ordemPorValor}</SelectItem>
                 <SelectItem value="numero">Número</SelectItem>
@@ -133,7 +135,7 @@ const Lista: React.FC = () => {
                 dados={[
                   { rotulo: MARCA.campos.valor, valor: formatBRL(p.estimated_value) },
                   { rotulo: MARCA.campos.responsavel, valor: p.responsible || "Sem dono" },
-                  { rotulo: MARCA.campos.data, valor: dataDeAbertura(p.opening_date) },
+                  { rotulo: MARCA.campos.data, valor: p.projectInfo?.date_deadline ? dataDeAbertura(p.projectInfo.date_deadline) : MARCA.campos.semData },
                 ]}
               />
             </li>

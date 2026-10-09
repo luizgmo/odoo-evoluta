@@ -5,18 +5,21 @@
  * Troque cada ramo pela tela real da divisória; o envoltório (ProcessoNaMesa) não muda.
  */
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ProcessoNaMesa } from "@/components/mesa/ProcessoNaMesa";
 import { DIVISORIAS_DO_PROCESSO, FERRAMENTAS_DO_PROCESSO, caminhoDaAba } from "@/components/mesa/ferramentas";
 import { BaixarDocumento } from "@/components/documents/BaixarDocumento";
 import { TelaStakeholders } from "./ferramentas/Ferramentas";
 import { KanbanProjeto } from "./KanbanProjeto";
+import TarefasProjeto from "./TarefasProjeto";
+import AtividadesProjeto from "./AtividadesProjeto";
 import { MatrizProjeto } from "./MatrizProjeto";
 import { EstrategiaProjeto } from "./EstrategiaProjeto";
 import W2HProjeto from "./W2HProjeto";
 import { TelaIshikawaReal, TelaPorquesReal, TelaRaciReal, TelaRiscosReal } from "./ferramentas/FerramentasReais";
 import { formatBRLComCentavos } from "@/features/dashboard/formatos";
+import { useAuth } from "@/contexts/AuthContext";
 import { GEN, MARCA } from "@/config/marca";
 import { blocosDoItem, nomeDoDocumentoDoItem } from "@/utils/blocosDoItem";
 
@@ -39,20 +42,9 @@ const Ficha: React.FC<{ objeto: string; valor: string }> = ({ objeto, valor }) =
   </div>
 );
 
-/** Divisória ainda sem tela: fica dentro da pasta, com a saída de volta à capa. */
-const AbaEmConstrucao: React.FC<{ rotulo: string; voltarPara: string }> = ({ rotulo, voltarPara }) => (
-  <div className="folha nao-imprimir space-y-3 p-4 md:p-6">
-    <p className={ROTULO}>Em construção</p>
-    <h2 className="font-display text-2xl font-semibold">{rotulo}</h2>
-    {/* Para o desenvolvedor: troque este bloco pela tela de verdade desta divisória. */}
-    <p className="text-muted-foreground">Esta parte ainda não está disponível.</p>
-    <Button asChild variant="outline">
-      <Link to={voltarPara}>Voltar à capa ›</Link>
-    </Button>
-  </div>
-);
 
 const Item: React.FC = () => {
+  const { can } = useAuth();
   const { "*": resto = "" } = useParams();
   const caminho = resto.split("/")[0];
   const aba = [...DIVISORIAS_DO_PROCESSO, ...FERRAMENTAS_DO_PROCESSO].find((a) => a.caminho === caminho);
@@ -62,9 +54,8 @@ const Item: React.FC = () => {
       imprimivel={caminho === ""}
       acoes={(p) => (
         <>
-          <Button asChild variant="outline" size="sm" className="nao-imprimir">
-            <Link to={`/documents/${p.id}`}>Abrir como documento</Link>
-          </Button>
+          {can("manage_projects") && <Button asChild variant="outline" size="sm" className="nao-imprimir"><Link to={`${MARCA.rotaDaLista}/${p.id}/editar`}>Editar projeto</Link></Button>}
+          <Button asChild variant="outline" size="sm" className="nao-imprimir"><Link to={`/documents/${p.id}`}>Abrir como documento</Link></Button>
           <BaixarDocumento
             variant="outline"
             nome={nomeDoDocumentoDoItem(p)}
@@ -76,9 +67,11 @@ const Item: React.FC = () => {
       )}
     >
       {(p) => {
-        if (!aba) return <AbaEmConstrucao rotulo="Divisória não encontrada" voltarPara={`${MARCA.rotaDaLista}/${p.id}`} />;
+        if (!aba) return <Navigate to={`${MARCA.rotaDaLista}/${p.id}`} replace />;
         if (aba.caminho === "") return <Ficha objeto={p.object} valor={formatBRLComCentavos(p.estimated_value)} />;
         if (aba.caminho === "kanban") return <KanbanProjeto />;
+        if (aba.caminho === "tarefas") return <TarefasProjeto />;
+        if (aba.caminho === "atividades") return <AtividadesProjeto />;
         if (aba.caminho === "porques") return <TelaPorquesReal />;
         if (aba.caminho === "w2h") return <W2HProjeto />;
         if (aba.caminho === "ishikawa") return <TelaIshikawaReal />;
@@ -87,7 +80,7 @@ const Item: React.FC = () => {
         if (aba.caminho === "riscos") return <TelaRiscosReal />;
         if (aba.caminho === "estrategia") return <EstrategiaProjeto />;
         if (aba.caminho === "stakeholders") return <TelaStakeholders />;
-        return <AbaEmConstrucao rotulo={aba.rotulo} voltarPara={caminhoDaAba(p.id, DIVISORIAS_DO_PROCESSO[0])} />;
+        return <Navigate to={caminhoDaAba(p.id, DIVISORIAS_DO_PROCESSO[0])} replace />;
       }}
     </ProcessoNaMesa>
   );
