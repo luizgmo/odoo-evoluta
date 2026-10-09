@@ -80,7 +80,7 @@ Nunca versione os arquivos reais. Cada ambiente deve possuir senha diferente par
 Renderizar as configurações:
 
 ```bash
-./deploy/scripts/render-config.sh staging staging.example.com
+./deploy/scripts/render-config.sh staging staging.evoluta.org.br
 ```
 
 Inicializar um banco staging vazio:
@@ -104,8 +104,8 @@ Fazer o deploy:
 Preparar o Nginx:
 
 ```bash
-./deploy/scripts/prepare-nginx.sh staging staging.example.com
-sudo certbot --nginx -d staging.example.com
+./deploy/scripts/prepare-nginx.sh staging staging.evoluta.org.br
+sudo certbot --nginx -d staging.evoluta.org.br
 ```
 
 Depois do certificado, validar login, sessão, isolamento e todos os workflows pelo domínio HTTPS.
@@ -125,8 +125,8 @@ O comando `bootstrap-admin.sh` cria ou atualiza o superadmin técnico usando as 
 Preparar Nginx e certificado:
 
 ```bash
-./deploy/scripts/prepare-nginx.sh prod app.example.com
-sudo certbot --nginx -d app.example.com
+./deploy/scripts/prepare-nginx.sh prod app.evoluta.org.br
+sudo certbot --nginx -d app.evoluta.org.br
 ```
 
 Publicar uma versão aprovada somente após backup e aprovação do staging:
