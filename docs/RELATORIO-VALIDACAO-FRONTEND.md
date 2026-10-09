@@ -1,6 +1,6 @@
 # Relatório de validação do frontend Evoluta
 
-Data: 2026-10-08
+Data: 2026-10-09
 
 ## Alterações de fechamento executadas
 
@@ -23,24 +23,35 @@ Data: 2026-10-08
 - A guarda de sessão não fica mais presa indefinidamente na tela de verificação: a restauração inicial tem limite visual de 5 segundos e depende somente do cookie Odoo.
 - O carimbo da entrada passa para uma linha própria em viewport estreita; o E2E confirmou ausência de overflow horizontal em 400px.
 - O asset `frontend/public/evoluta-logo.png` foi substituído pelo logo Evoluta oficial da skill; o arquivo antigo do Licitars não é mais usado.
+- Corrigidas as ACLs do `base.group_system` para permitir ao `super_admin` consultar e administrar os modelos necessários sem `403` indevido.
+- Templates e indicadores passaram a bloquear explicitamente o perfil `atendente` com `403`, mantendo a defesa no backend mesmo em acesso direto por URL/API.
+- A geração de 5W2H pela matriz tornou-se idempotente: novas tentativas reutilizam o plano associado e não criam duplicatas.
+- A agenda passou a declarar os parâmetros de período no controller (`from`/`to`), eliminando o warning de argumentos ignorados pelo Odoo.
 
 ## Comandos executados com sucesso
 
 ```text
-cd frontend && npm run typecheck
-cd frontend && npm run test
-cd frontend && npm run build
+cd frontend && npm run typecheck && npm run test && npm run build
+cd frontend && E2E_LOGIN='<segredo-local>' E2E_PASSWORD='<segredo-local>' npm run test:e2e
+# O teste visual/PWA foi executado localmente com configuração Playwright temporária não versionada.
 python3 -m py_compile addons/evoluta/evoluta_api/controllers/*.py addons/evoluta/evoluta_core/models/*.py addons/evoluta/evoluta_management/models/*.py addons/evoluta/evoluta_management/migrations/19.0.1.0.1/*.py addons/evoluta/evoluta_strategy/models/*.py addons/evoluta/evoluta_templates/models/*.py
 git diff --check
-docker-compose exec -T web odoo -c /etc/odoo/odoo.conf -d demo -u evoluta_management,evoluta_api --stop-after-init
-docker-compose exec -T web odoo -c /etc/odoo/odoo.conf -d demo -u evoluta_api,evoluta_core --stop-after-init
-curl -sS -i http://127.0.0.1:8069/api/projetos
-docker-compose stop web && docker-compose start web && docker-compose ps
+docker-compose exec -T web odoo -c /etc/odoo/odoo.conf -d demo -u evoluta_core,evoluta_management,evoluta_strategy,evoluta_templates,evoluta_api --stop-after-init
+docker-compose restart web
+docker-compose ps
 ```
 
-Resultado Vitest: 9 testes passando.
+Resultados finais:
 
-Resultado E2E sem credenciais: 3 testes passaram — login inválido, rota protegida sem sessão e entrada em 400px — e o login autenticado foi corretamente marcado como `skipped` por ausência de `E2E_LOGIN`/`E2E_PASSWORD` no ambiente.
+- TypeScript/typecheck: passou.
+- Vitest: 9 testes passando.
+- Build Vite: passou.
+- E2E Playwright autenticado: 4 testes passando.
+- E2E visual/PWA temporário: 4 testes passando — perfis/rotas, 400px/tablet/desktop sem overflow, teclado/foco/tema/impressão e manifest/service worker.
+- Matriz autenticada: `SUMMARY checks=118 failures=0`.
+- Workflows autenticados: `SUMMARY checks=47 failures=0`.
+- Compilação Python e `git diff --check`: passaram.
+- Verificação pós-limpeza: `E2E_VERIFY PASS 0`.
 
 ## Auditoria de dependências
 
@@ -55,21 +66,26 @@ Os upgrades aplicados foram:
 
 ## Evidências de runtime
 
-- `evoluta_db_1` e `evoluta_web_1` ficaram `Up` após stop/start.
-- Atualização dos módulos concluiu sem traceback.
-- O warning antigo de `evoluta.5w2h.what` não reapareceu após a migração; a ocorrência anterior no log é histórica, anterior à quarentena.
-- Sem cookie, `/api/csrf` redireciona a sessão expirada e `/web/session/get_session_info` responde sem sessão; não há sucesso falso autenticado.
-- Smoke test sem sessão em `/api/projetos` retornou `303` para `/web/login`, sem dados municipais.
-- Login inválido real contra o Odoo não criou sessão e retornou ao formulário sem sucesso falso.
-- Rota direta `/projetos` sem sessão foi recusada pelo frontend e redirecionou para `/login`.
-- A tela de login em viewport de 400px não apresentou overflow horizontal; o excedente anterior do carimbo foi eliminado.
-- `docker-compose ps` confirmou `evoluta_db_1` e `evoluta_web_1` em estado `Up` após a atualização dos módulos.
+- `evoluta_db_1` e `evoluta_web_1` permanecem `Up` após atualização/restart.
+- Atualização dos módulos concluiu sem traceback; a compilação Python também passou.
+- A matriz confirmou autenticação das sete contas E2E, isolamento Município A × Município B, escopo de secretarias/departamentos, projetos/tasks, indicadores, auditoria, templates, Helpdesk, atividades, 5W2H, ferramentas, comentários, anexos e sessão expirada.
+- Os workflows confirmaram Kanban, rollback, movimentação permitida de task atribuída ao atendente, conclusão/arquivamento, agenda, árvore de problemas → objetivos, ações idempotentes, Helpdesk, Chatter, anexos e job assíncrono de templates.
+- O teste visual confirmou redirecionamento de atendente para `/unauthorized`, ausência de overflow em 400px/768px/1440px, foco visível, tema escuro, impressão via `emulateMedia("print")`, manifest e service worker sem interceptar `/api/` ou `/web/`.
+- Sem cookie, `/api/projetos` retorna `303` para `/web/login`; login inválido não cria sessão; rota protegida redireciona para `/login`.
+- A limpeza pós-teste removeu somente a massa `E2E-20261009`; a verificação encontrou zero resíduos nos modelos de negócio, auditoria e aliases.
+- A equipe Helpdesk existente `1` não foi apagada; os seis usuários E2E foram removidos e o time ficou sem membros E2E. Os times `2` e `3` não foram alterados.
+- Após a correção da assinatura da agenda, não surgiram novos warnings de parâmetros `from/to`; os warnings antigos no log são anteriores ao restart.
 
-## Pendências que exigem ambiente/decisão externa
+## Decisão de aceite
 
-1. Executar `npm run test:e2e` com `E2E_LOGIN` e `E2E_PASSWORD` fornecidos por segredo do ambiente; não colocar credenciais no repositório.
-2. Repetir a matriz de autorização completa com quatro contas reais e dois municípios.
-3. Conferir manualmente acessibilidade, impressão, temas, 400px/tablet/desktop e instalação PWA em navegador visual.
-4. Decidir a migração futura do Tailwind 3 para eliminar as 5 vulnerabilidades altas sem aceitar um upgrade major cego.
+**GO COM RESSALVAS para a fase atual de integração do frontend**, condicionado às ressalvas abaixo. Os critérios funcionais e de isolamento cobertos por esta fase passaram; não há bloqueador conhecido nos testes automatizados executados.
 
-Até as quatro pendências acima serem executadas, este relatório não autoriza declarar aceite de produção nem fazer commit/push.
+Ressalvas não bloqueantes:
+
+1. `npm audit --audit-level=moderate` continua apontando 5 vulnerabilidades altas na cadeia de build do Tailwind 3 (`chokidar`/`braces`). Não foi executado `npm audit fix --force`; a migração para Tailwind 4 deve ser tratada separadamente.
+2. O build produz um bundle JavaScript de aproximadamente 612 kB minificado, acima do limite de aviso de 500 kB. Code splitting pode ser planejado como otimização posterior.
+3. A impressão foi validada automaticamente com `emulateMedia("print")`; a homologação visual em impressora física continua sendo uma conferência operacional futura.
+4. O Helpdesk usa o estágio fechado configurado no Odoo, exibido nos testes como `Rejeitado`; isso foi registrado como comportamento da configuração atual, não como falha técnica.
+5. O job de templates depende do cron do Odoo e pode levar aproximadamente 80 segundos em ambiente local; o workflow confirmou estado final `done` e projeto no escopo correto.
+
+A massa E2E, credenciais temporárias e scripts temporários devem permanecer fora do versionamento. Este relatório não autoriza commit ou push por si só; qualquer commit/push depende de autorização explícita.
