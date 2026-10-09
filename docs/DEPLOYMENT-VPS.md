@@ -87,9 +87,12 @@ Inicializar um banco staging vazio:
 
 ```bash
 ./deploy/scripts/bootstrap-db.sh staging
+./deploy/scripts/bootstrap-admin.sh staging
 ```
 
-Se o staging for uma cópia do ambiente local, restaure o dump PostgreSQL e o filestore com `restore.sh`, em vez de usar `bootstrap-db.sh`.
+O comando `bootstrap-admin.sh` cria ou atualiza o superadmin técnico usando `BOOTSTRAP_ADMIN_LOGIN`, `BOOTSTRAP_ADMIN_PASSWORD` e `BOOTSTRAP_ADMIN_NAME` do `.env.staging`. Use uma senha temporária forte e troque-a após o primeiro acesso, se necessário.
+
+Se o staging for uma cópia do ambiente local, restaure o dump PostgreSQL e o filestore com `restore.sh`, em vez de usar `bootstrap-db.sh`. Depois da restauração, execute `bootstrap-admin.sh` para garantir o acesso administrativo do ambiente.
 
 Fazer o deploy:
 
@@ -112,11 +115,12 @@ Depois do certificado, validar login, sessão, isolamento e todos os workflows p
 Produção deve ser inicializada sem a massa `DEMO-20261009`:
 
 ```bash
-./deploy/scripts/render-config.sh prod app.example.com
+./deploy/scripts/render-config.sh prod app.evoluta.org.br
 ./deploy/scripts/bootstrap-db.sh prod
+./deploy/scripts/bootstrap-admin.sh prod
 ```
 
-Criar o superadmin técnico inicial usando o procedimento seguro definido pela equipe. Não usar as credenciais de demonstração.
+O comando `bootstrap-admin.sh` cria ou atualiza o superadmin técnico usando as variáveis `BOOTSTRAP_ADMIN_*` do `.env.prod`. Defina credenciais reais, únicas e fortes antes de executá-lo. Não usar as credenciais de demonstração nem deixar os valores `CHANGE_ME` no servidor.
 
 Preparar Nginx e certificado:
 

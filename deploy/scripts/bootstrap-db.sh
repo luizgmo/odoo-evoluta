@@ -15,7 +15,11 @@ log "iniciando somente o PostgreSQL de $ENVIRONMENT"
 compose up -d db
 sleep 5
 
-log "criando/instalando o banco $ODOO_DB sem dados de demonstração"
+if ! compose exec -T db psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -tAc "SELECT 1 FROM pg_database WHERE datname = '$ODOO_DB'" | grep -q 1; then
+  compose exec -T db createdb -U "$POSTGRES_USER" "$ODOO_DB"
+fi
+
+log "instalando os módulos no banco $ODOO_DB sem dados de demonstração"
 compose run --rm web odoo -c /etc/odoo/odoo.conf -d "$ODOO_DB" -i "$MODULES" --without-demo=all --stop-after-init
 compose up -d web
 wait_for_odoo
