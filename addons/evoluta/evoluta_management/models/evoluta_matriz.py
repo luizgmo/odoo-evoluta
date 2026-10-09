@@ -11,6 +11,7 @@ class EvolutaMatriz(models.Model):
     project_id = fields.Many2one("project.project", required=True, ondelete="cascade")
     criterio_ids = fields.One2many("evoluta.matriz.criterio", "matriz_id")
     alternativa_ids = fields.One2many("evoluta.matriz.alternativa", "matriz_id")
+    five_w2h_id = fields.Many2one("evoluta.5w2h", string="Plano 5W2H", readonly=True, ondelete="set null")
     vencedor_id = fields.Many2one(
         "evoluta.matriz.alternativa", string="Vencedora", compute="_compute_vencedor", store=True
     )
@@ -25,13 +26,16 @@ class EvolutaMatriz(models.Model):
         self.ensure_one()
         if not self.vencedor_id:
             raise UserError("Preencha notas para definir a vencedora antes.")
-        plan = self.env["evoluta.5w2h"].create(
-            {
-                "name": f"5W2H - {self.vencedor_id.name}",
-                "project_id": self.project_id.id,
-                "what": self.vencedor_id.name,
-            }
-        )
+        plan = self.five_w2h_id
+        if not plan:
+            plan = self.env["evoluta.5w2h"].create(
+                {
+                    "name": f"5W2H - {self.vencedor_id.name}",
+                    "project_id": self.project_id.id,
+                    "what": self.vencedor_id.name,
+                }
+            )
+            self.five_w2h_id = plan.id
         return {
             "type": "ir.actions.act_window",
             "res_model": "evoluta.5w2h",

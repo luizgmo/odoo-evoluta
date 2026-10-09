@@ -24,6 +24,8 @@ class EvolutaTemplatesApi(http.Controller):
 
     @http.route("/api/templates", auth="user", type="http", methods=["GET"])
     def list_templates(self):
+        if user_role(request.env.user) not in {ROLE_PLATFORM, ROLE_ADMIN, ROLE_SECRETARY}:
+            return self._json({"error": "Seu perfil não pode consultar templates.", "code": "PERMISSION_DENIED"}, status=403)
         try:
             records = request.env["evoluta.template"].sudo().search([("active", "=", True)], order="id")
             return self._json({"records": [self._template_vals(record) for record in records]})

@@ -455,6 +455,8 @@ class EvolutaApi(http.Controller):
 
     @http.route("/api/indicadores", auth="user", type="http", methods=["GET"])
     def get_indicadores(self, project_id=None):
+        if user_role(request.env.user) not in {ROLE_PLATFORM, ROLE_ADMIN, ROLE_SECRETARY}:
+            return self._json({"error": "Seu perfil não pode consultar os indicadores.", "code": "PERMISSION_DENIED"}, status=403)
         project_id = self._inteiro(project_id or request.httprequest.args.get("project_id"))
         try:
             if not project_id:
@@ -964,9 +966,9 @@ class EvolutaApi(http.Controller):
             return self._json({"error": str(error)}, status=403 if isinstance(error, AccessError) else 400)
 
     @http.route("/api/agenda", auth="user", type="http", methods=["GET"])
-    def list_agenda(self):
-        inicio = request.httprequest.args.get("from") or "0001-01-01"
-        fim = request.httprequest.args.get("to") or "9999-12-31"
+    def list_agenda(self, **kwargs):
+        inicio = kwargs.get("from") or request.httprequest.args.get("from") or "0001-01-01"
+        fim = kwargs.get("to") or request.httprequest.args.get("to") or "9999-12-31"
         projects = request.env["project.project"].search(project_scope_domain(request.env.user) + [("active", "=", True), ("date", ">=", inicio), ("date", "<=", fim)])
         records = [{"id": f"project-{project.id}", "kind": "project_deadline", "date": project.date.isoformat(), "title": "Prazo final do projeto", "project_id": project.id, "project_name": project.name} for project in projects if project.date]
         activities = request.env["mail.activity"].search([("res_model", "=", "project.project"), ("date_deadline", ">=", inicio), ("date_deadline", "<=", fim)], order="date_deadline, id")

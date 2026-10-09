@@ -24,3 +24,13 @@ access_evoluta_onboarding_sec,access.evoluta.onboarding.sec,model_evoluta_onboar
 access_evoluta_onboarding_ate,access.evoluta.onboarding.ate,model_evoluta_onboarding,evoluta_group_atendente,1,1,0,0
 access_evoluta_job_runner_admin,access.evoluta.job.runner.admin,model_evoluta_job_runner,evoluta_group_admin,1,0,0,0
 access_evoluta_auditoria_admin,access.evoluta.auditoria.admin,model_evoluta_auditoria,evoluta_group_admin,1,0,0,0
+access_project_project_system,access.project.project.system,project.model_project_project,base.group_system,1,1,1,1
+access_project_task_system,access.project.task.system,project.model_project_task,base.group_system,1,1,1,1
+access_project_task_type_system,access.project.task.type.system,project.model_project_task_type,base.group_system,1,1,1,1
+access_evoluta_municipio_system,access.evoluta.municipio.system,model_evoluta_municipio,base.group_system,1,1,1,1
+access_evoluta_secretaria_system,access.evoluta.secretaria.system,model_evoluta_secretaria,base.group_system,1,1,1,1
+access_evoluta_departamento_system,access.evoluta.departamento.system,model_evoluta_departamento,base.group_system,1,1,1,1
+access_evoluta_plano_system,access.evoluta.plano.system,model_evoluta_plano,base.group_system,1,1,1,1
+access_evoluta_onboarding_system,access.evoluta.onboarding.system,model_evoluta_onboarding,base.group_system,1,1,1,1
+access_evoluta_job_runner_system,access.evoluta.job.runner.system,model_evoluta_job_runner,base.group_system,1,1,1,1
+access_evoluta_auditoria_system,access.evoluta.auditoria.system,model_evoluta_auditoria,base.group_system,1,1,1,1
