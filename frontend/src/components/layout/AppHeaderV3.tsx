@@ -7,7 +7,7 @@
  */
 
 import React from "react";
-import { HelpCircle, LogOut, Menu, PanelLeftClose, PanelLeftOpen, Plus, type LucideIcon } from "lucide-react";
+import { LogOut, Menu, PanelLeftClose, PanelLeftOpen, Plus, type LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -82,8 +82,7 @@ const AppHeaderV3: React.FC<AppHeaderV3Props> = ({ menuAberto, onAlternarMenu })
 
   return (
     <header data-moldura-faixa className="flex items-center gap-3 bg-moldura px-4 py-2 text-moldura-foreground md:gap-5 md:px-6">
-      {/* Mobile hamburger menu (o perfil master só tem a faixa do alto: sem gaveta) */}
-      {user?.role !== "master" && (
+      {/* Menu móvel com as mesmas permissões da navegação lateral. */}
       <Sheet>
         <SheetTrigger asChild>
           <Button
@@ -98,7 +97,7 @@ const AppHeaderV3: React.FC<AppHeaderV3Props> = ({ menuAberto, onAlternarMenu })
         {/* Gaveta azul, igual ao menu lateral: mesmos grupos, mesma ação principal, mesmo item aceso */}
         <SheetContent side="left" className="rolagem-moldura w-72 overflow-y-auto border-moldura-2 bg-moldura p-0 text-moldura-foreground">
           <SheetTitle className="sr-only">Menu de navegação</SheetTitle>
-          <SheetDescription className="sr-only">Seções do sistema, ajuda, tema e saída.</SheetDescription>
+          <SheetDescription className="sr-only">Seções do sistema, tema e saída.</SheetDescription>
           <nav className="flex flex-col gap-5 px-3 pb-4 pt-12" aria-label="Seções do sistema">
             <SheetClose asChild>
               <Link
@@ -137,13 +136,11 @@ const AppHeaderV3: React.FC<AppHeaderV3Props> = ({ menuAberto, onAlternarMenu })
             </ul>
           </nav>
           {/* No celular a faixa não comporta tudo (sobretudo com o texto aumentado):
-              tema, ajuda e a saída ficam aqui, sempre ao alcance */}
+              tema e a saída ficam aqui, sempre ao alcance */}
           <div className="mx-3 space-y-1 border-t border-moldura-foreground/10 py-4">
             <p className="px-3 text-sm font-semibold">{user?.username || "Usuário"}</p>
-            <p className="px-3 pb-2 text-xs text-moldura-foreground/65 first-letter:uppercase">{NOME_DO_PERFIL[user?.role ?? "operador"]}</p>
-            <SheetClose asChild>
-              <ItemDaGaveta caminho="/help" rotulo="Ajuda" Icone={HelpCircle} ativo={abaAtiva("/help", pathname)} />
-            </SheetClose>
+            <p className="px-3 pb-2 text-xs text-moldura-foreground/65 first-letter:uppercase">{user?.role ? NOME_DO_PERFIL[user.role] : "usuário"}</p>
+
             <div className="flex items-center justify-between rounded-lg px-3 text-sm text-moldura-foreground/75">
               Tema
               <ThemeToggle className={BOTAO_NA_FAIXA} />
@@ -164,10 +161,9 @@ const AppHeaderV3: React.FC<AppHeaderV3Props> = ({ menuAberto, onAlternarMenu })
           </div>
         </SheetContent>
       </Sheet>
-      )}
 
       {/* Abre e recolhe o menu lateral (do tablet para cima) */}
-      {onAlternarMenu && user?.role !== "master" && (
+      {onAlternarMenu && (
         <Button
           variant="ghost"
           size="icon"
@@ -192,27 +188,11 @@ const AppHeaderV3: React.FC<AppHeaderV3Props> = ({ menuAberto, onAlternarMenu })
       </NavLink>
       <span className="hidden h-8 w-px bg-moldura-foreground/20 sm:block" aria-hidden="true" />
       <AssinaturaEvoluta className="hidden w-[5.5rem] text-moldura-foreground/70 sm:flex" />
-      {user?.role === "master" && (
-        <span className="hidden whitespace-nowrap rounded-full border border-gold/60 px-3 py-1 font-ui text-xs font-semibold uppercase tracking-wide text-gold sm:inline-block">
-          Painel Master
-        </span>
-      )}
 
       {/* Right Side Actions */}
       <div className="ml-auto flex min-w-0 shrink-0 items-center gap-1 md:gap-2">
         <BuscaRapida perfil={user?.role} className="mr-1 w-10 justify-center px-0 lg:w-52 lg:justify-start lg:px-3 xl:w-72" />
-        {/* No celular, tema e ajuda ficam na gaveta do menu */}
         <ThemeToggle className={cn("hidden sm:inline-flex", BOTAO_NA_FAIXA)} />
-        <Button
-          variant="ghost"
-          size="icon"
-          aria-label="Ajuda"
-          title="Ajuda"
-          onClick={() => navigate("/help")}
-          className={cn("hidden sm:inline-flex", BOTAO_NA_FAIXA)}
-        >
-          <HelpCircle className="w-5 h-5" aria-hidden="true" />
-        </Button>
         <div className="mx-1 hidden h-6 w-px bg-moldura-foreground/20 sm:block" aria-hidden="true" />
         {/* User Menu */}
         <DropdownMenu>
@@ -232,7 +212,7 @@ const AppHeaderV3: React.FC<AppHeaderV3Props> = ({ menuAberto, onAlternarMenu })
                   {user?.username || "Usuário"}
                 </p>
                 <p className="truncate text-xs text-moldura-foreground/65 first-letter:uppercase">
-                  {NOME_DO_PERFIL[user?.role ?? "operador"]}
+                  {user?.role ? NOME_DO_PERFIL[user.role] : "usuário"}
                 </p>
               </div>
             </button>

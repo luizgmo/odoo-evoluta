@@ -50,11 +50,9 @@ const Item: React.FC<{ item: ItemNavegacao; ativo: boolean; aberto: boolean }> =
   );
 };
 
-const AppSidebarV3: React.FC<AppSidebarV3Props> = ({ userRole = "operador", aberto = true }) => {
+const AppSidebarV3: React.FC<AppSidebarV3Props> = ({ userRole = "atendente", aberto = true }) => {
   const { pathname } = useLocation();
 
-  // O perfil master (Evoluta) não navega pelas telas do cliente.
-  if (userRole === "master") return null;
 
   const grupos = menuDoPerfil(userRole);
   const novaAtiva = acaoPrincipalAtiva(pathname);

@@ -4,8 +4,7 @@
  * - FERRAMENTAS, na borda direita: o que ajuda a conduzir o objeto,
  *   na ordem em que ele anda.
  * Uma lista só para a capa, as telas das ferramentas e a busca.
- * EXEMPLO DE DOMÍNIO: os rótulos abaixo (Autos, Prazos, Diário, Repetir contratação)
- * são de licitação; troque pelos do seu sistema, mantendo a estrutura.
+ * Os rótulos pertencem às ferramentas metodológicas da Evoluta.
  */
 import { MARCA } from "@/config/marca";
 
@@ -19,6 +18,8 @@ export interface AbaDaPasta {
 export const DIVISORIAS_DO_PROCESSO: AbaDaPasta[] = [
   { caminho: "", curto: "Capa", rotulo: "Capa do projeto" },
   { caminho: "kanban", curto: "Kanban", rotulo: "Kanban do projeto" },
+  { caminho: "tarefas", curto: "Tasks", rotulo: "Tasks do projeto" },
+  { caminho: "atividades", curto: "Atividades", rotulo: "Atividades do projeto" },
   { caminho: "porques", curto: "5 Porquês", rotulo: "5 Porquês" },
   { caminho: "w2h", curto: "5W2H", rotulo: "5W2H" },
   { caminho: "ishikawa", curto: "Ishikawa", rotulo: "Ishikawa" },

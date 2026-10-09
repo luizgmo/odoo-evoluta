@@ -6,9 +6,18 @@ import { apiGet } from "@/services/api/client";
 
 interface ProjetoApi {
   id: number;
+  active?: boolean;
   name: unknown;
+  created_at?: string | false;
+  updated_at?: string | false;
   total_tasks: number;
   orcamento?: number;
+  date_deadline?: string | false;
+  municipio: { id: number; name: string } | null;
+  secretaria: { id: number; name: string } | null;
+  departamento: { id: number; name: string } | null;
+  responsavel: { id: number; name: string } | null;
+  etapa: { id: number; name: string } | null;
 }
 
 interface TaskApi {
@@ -26,8 +35,17 @@ interface StageApi {
 
 interface ProjetoDetalheApi {
   id: number;
+  active?: boolean;
   name: unknown;
+  created_at?: string | false;
+  updated_at?: string | false;
   orcamento?: number;
+  date_deadline?: string | false;
+  municipio: { id: number; name: string } | null;
+  secretaria: { id: number; name: string } | null;
+  departamento: { id: number; name: string } | null;
+  responsavel: { id: number; name: string } | null;
+  etapa: { id: number; name: string } | null;
   stages: StageApi[];
   tasks: TaskApi[];
 }
@@ -38,29 +56,26 @@ const paraProcesso = (r: ProjetoApi): Process => ({
   id: r.id,
   code: `EVG-${String(r.id).padStart(5, "0")}`,
   description: "",
-  modality: { id: 0, name: "", description: "" },
   object: texto(r.name),
   estimated_value: String(Number(r.orcamento ?? 0).toFixed(2)),
-  publication_date: "",
-  responsible: "",
-  opening_date: null,
-  opening_time: null,
+  responsible: r.responsavel?.name ?? "",
   status: r.total_tasks > 0 ? "EM_ANDAMENTO" : "ABERTO",
-  author: 1,
+  projectInfo: {
+    municipio: r.municipio,
+    secretaria: r.secretaria,
+    departamento: r.departamento,
+    responsavel: r.responsavel,
+    etapa: r.etapa,
+    date_deadline: typeof r.date_deadline === "string" ? r.date_deadline : null,
+  },
+  author: "",
   company: null,
-  created_at: new Date().toISOString(),
-  updated_at: new Date().toISOString(),
+  created_at: typeof r.created_at === "string" ? r.created_at : "",
+  updated_at: typeof r.updated_at === "string" ? r.updated_at : "",
+  active: r.active !== false,
 });
 
 const paraProcessoDetalhe = (r: ProjetoDetalheApi): Process => {
-  const porEtapa = new Map<number, number>();
-  for (const t of r.tasks) {
-    if (typeof t.stage_id === "number") porEtapa.set(t.stage_id, (porEtapa.get(t.stage_id) ?? 0) + 1);
-  }
-  const prazos = r.tasks
-    .map((t) => (typeof t.date_deadline === "string" ? t.date_deadline.slice(0, 10) : ""))
-    .filter(Boolean)
-    .sort();
   const todasFeitas = r.tasks.length > 0 && r.tasks.every((t) => {
     const st = r.stages.find((s) => s.id === t.stage_id);
     return st ? st.fold : false;
@@ -69,34 +84,39 @@ const paraProcessoDetalhe = (r: ProjetoDetalheApi): Process => {
     id: r.id,
     code: `EVG-${String(r.id).padStart(5, "0")}`,
     description: "",
-    modality: { id: 0, name: "", description: "" },
-    object: texto(r.name),
+      object: texto(r.name),
     estimated_value: String(Number(r.orcamento ?? 0).toFixed(2)),
-    publication_date: "",
-    responsible: "",
-    opening_date: prazos.length > 0 ? prazos[0] : null,
-    opening_time: null,
+    responsible: r.responsavel?.name ?? "",
     status: todasFeitas ? "CONCLUIDO" : r.tasks.length > 0 ? "EM_ANDAMENTO" : "ABERTO",
-    author: 1,
+    projectInfo: {
+      municipio: r.municipio,
+      secretaria: r.secretaria,
+      departamento: r.departamento,
+      responsavel: r.responsavel,
+      etapa: r.etapa,
+      date_deadline: typeof r.date_deadline === "string" ? r.date_deadline : null,
+    },
+    author: "",
     company: null,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
+    created_at: typeof r.created_at === "string" ? r.created_at : "",
+    updated_at: typeof r.updated_at === "string" ? r.updated_at : "",
+    active: r.active !== false,
   };
 };
 
 
-export function useProcessosDaMesa() {
+export function useProcessosDaMesa(arquivados = false) {
   const [processos, setProcessos] = useState<Process[]>([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState<unknown>(null);
   const buscar = useCallback(() => {
     setCarregando(true);
     setErro(null);
-    apiGet<{ records: ProjetoApi[] }>("/api/projetos")
+    apiGet<{ records: ProjetoApi[] }>(`/api/projetos${arquivados ? "?arquivados=1" : ""}`)
       .then((d) => setProcessos(d.records.map(paraProcesso)))
       .catch((e) => setErro(e))
       .finally(() => setCarregando(false));
-  }, []);
+  }, [arquivados]);
   useEffect(() => {
     buscar();
   }, [buscar]);

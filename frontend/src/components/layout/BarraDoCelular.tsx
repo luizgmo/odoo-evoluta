@@ -15,8 +15,7 @@ const FOCO = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring
 
 export const BarraDoCelular: React.FC<{ userRole?: Perfil }> = ({ userRole }) => {
   const { pathname } = useLocation();
-  // O perfil master (Evoluta) não navega pelas telas do cliente
-  if (userRole === "master") return null;
+
   // Na ordem de MARCA.destinosDoCelular, só os que o perfil enxerga (o item some do menu e some daqui)
   const itens = itensDoPerfil(userRole);
   const destinos = MARCA.destinosDoCelular

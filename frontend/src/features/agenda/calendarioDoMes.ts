@@ -1,6 +1,6 @@
 /**
  * Calendário de mesa e bloco de notas da agenda: o mês em semanas (domingo a
- * sábado), com feriado, fim de semana, hoje e os dias de prazo e de sessão; e os
+ * sábado), com feriado, fim de semana, hoje e os dias de prazo; e os
  * compromissos agrupados por semana ("Esta semana", "Semana que vem"…).
  */
 import { CALENDARIO_PADRAO, motivoSemExpediente, paraISO, type OpcoesCalendario } from "@/utils/datas";
@@ -14,7 +14,7 @@ export interface DiaDoMes {
   /** Nome do feriado ou do dia sem expediente; fim de semana não entra aqui. */
   feriado: string | null;
   prazo: boolean;
-  sessao: boolean;
+  destaque: boolean;
   compromissos: Compromisso[];
 }
 
@@ -25,8 +25,8 @@ export function montarMes(
   compromissos: Compromisso[],
   hoje: Date = new Date(),
   cal: OpcoesCalendario = CALENDARIO_PADRAO,
-  /** Tipo de compromisso que ganha a moldura dupla azul (no exemplo, a sessão pública). */
-  tipoEmDestaque: string = "sessao",
+  /** Tipo de compromisso que recebe o destaque visual. */
+  tipoEmDestaque: string = "prazo_final",
 ): (DiaDoMes | null)[][] {
   const doDia = new Map<string, Compromisso[]>();
   for (const c of compromissos) {
@@ -48,8 +48,8 @@ export function montarMes(
       hoje: iso === hojeISO,
       fimDeSemana,
       feriado: fimDeSemana ? null : motivo,
-      prazo: dele.some((c) => c.legal),
-      sessao: dele.some((c) => c.tipo === tipoEmDestaque),
+      prazo: dele.some((c) => c.critico),
+      destaque: dele.some((c) => c.tipo === tipoEmDestaque),
       compromissos: dele,
     });
   }

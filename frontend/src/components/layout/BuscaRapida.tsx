@@ -1,13 +1,10 @@
 /**
  * Busca rápida (Ctrl+K ou o campo da faixa): ir a uma tela ou abrir um
- * processo pelo número ou objeto. Os processos vêm da mesma consulta das
- * telas da mesa (chave ["processes"]), só enquanto a janela está aberta.
- * Os artigos da lei que o sistema usa abrem na gaveta "Lei ao lado" (só quando
- * MARCA.leiAoLado é true, ou seja, em sistema de licitação).
+ * projeto pelo código ou nome. Os projetos vêm da mesma consulta das telas da Mesa.
  */
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FolderOpen, Plus, Scale, Search } from "lucide-react";
+import { FolderOpen, Plus, Search } from "lucide-react";
 import {
   CommandDialog,
   CommandEmpty,
@@ -19,8 +16,7 @@ import {
 import { DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { useProcessosDaMesa } from "@/hooks/useMesaDados";
 import { cn } from "@/lib/utils";
-import { ARTIGOS } from "@/features/lei/artigos";
-import { useLeiAoLado } from "@/features/lei/contextoDaLei";
+
 import { GEN, MARCA } from "@/config/marca";
 import { itensDoPerfil } from "./navegacao";
 
@@ -58,8 +54,6 @@ const ResultadosDeProcessos: React.FC<{ ir: (para: string) => void }> = ({ ir })
 export const BuscaRapida: React.FC<{ perfil?: string; className?: string }> = ({ perfil, className }) => {
   const [aberta, setAberta] = useState(false);
   const navigate = useNavigate();
-  const leiDoContexto = useLeiAoLado();
-  const lei = MARCA.leiAoLado && ARTIGOS.length > 0 ? leiDoContexto : null;
 
   useEffect(() => {
     const aoTeclar = (e: KeyboardEvent) => {
@@ -76,11 +70,7 @@ export const BuscaRapida: React.FC<{ perfil?: string; className?: string }> = ({
     setAberta(false);
     navigate(para);
   };
-  const abrirArtigo = (numero: string) => {
-    setAberta(false);
-    // Depois de a busca fechar e devolver o foco, a gaveta abre e o toma
-    setTimeout(() => lei?.abrir(numero), 0);
-  };
+
   const telas = itensDoPerfil(perfil);
 
   return (
@@ -106,8 +96,8 @@ export const BuscaRapida: React.FC<{ perfil?: string; className?: string }> = ({
       <CommandDialog open={aberta} onOpenChange={setAberta}>
         {/* Nome da janela para leitor de tela */}
         <DialogTitle className="sr-only">Busca rápida</DialogTitle>
-        <DialogDescription className="sr-only">Digite para achar {GEN.um} {MARCA.objeto.singular}, ir a uma tela{lei ? " ou abrir um artigo da lei" : ""}.</DialogDescription>
-        <CommandInput placeholder={`Número ${GEN.do} ${MARCA.objeto.singular}, título${lei ? ", tela ou artigo da lei" : " ou tela"}…`} />
+        <DialogDescription className="sr-only">Digite para achar {GEN.um} {MARCA.objeto.singular} ou ir a uma tela.</DialogDescription>
+        <CommandInput placeholder={`Código ${GEN.do} ${MARCA.objeto.singular}, nome ou tela…`} />
         <CommandList>
           <CommandEmpty>Nada encontrado com esse texto.</CommandEmpty>
           <CommandGroup heading="Ações">
@@ -125,17 +115,7 @@ export const BuscaRapida: React.FC<{ perfil?: string; className?: string }> = ({
             ))}
           </CommandGroup>
           {aberta && <ResultadosDeProcessos ir={ir} />}
-          {lei && (
-            <CommandGroup heading="Na lei">
-              {ARTIGOS.map((a) => (
-                <CommandItem key={a.numero} value={`lei art ${a.numero} artigo ${a.numero} ${a.titulo}`} onSelect={() => abrirArtigo(a.numero)}>
-                  <Scale className="mr-2 h-4 w-4 shrink-0" aria-hidden="true" />
-                  <span className="mr-2 whitespace-nowrap font-mono text-sm">Art. {a.numero}</span>
-                  <span className="truncate text-muted-foreground group-data-[selected=true]:text-accent-foreground" title={a.titulo}>{a.titulo}</span>
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          )}
+
         </CommandList>
       </CommandDialog>
     </>

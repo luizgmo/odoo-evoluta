@@ -1028,7 +1028,7 @@
   @media (prefers-reduced-motion: reduce) {
     .carimbo-bate { animation: none; }
   }
-  /* Carimbo pequeno (situação na lista, na planta, nas ferramentas): continua
+  /* Carimbo pequeno (situação na lista e nas ferramentas): continua
      sendo carimbo — contorno duplo, caixa alta e leve inclinação —, só menor.
      Sem as falhas de tinta, que em letra pequena atrapalham a leitura. */
   .carimbo:not(.carimbo-grande) {
@@ -1249,7 +1249,7 @@
   }
   .linha-de-caderno { border-bottom: 1px solid hsl(var(--mesa-pauta)); }
 
-  /* Calendário de mesa: o dia importante é circulado (prazo) ou emoldurado (sessão) em tinta */
+  /* Calendário de mesa: o prazo é circulado em tinta */
   .cal-marca {
     position: absolute;
     inset: 5px 4px;

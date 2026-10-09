@@ -8,7 +8,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { destinoDoAtalho } from "@/features/preferencias/preferencias";
 import { useMenuLateral } from "./useMenuLateral";
 import { AvisosDeResultado } from "@/components/mesa/AvisosDeResultado";
-import { LeiAoLadoProvider } from "@/features/lei/LeiAoLado";
+
 import AppSidebarV3 from "./AppSidebarV3";
 import AppHeaderV3 from "./AppHeaderV3";
 import { BarraDoCelular } from "./BarraDoCelular";
@@ -44,8 +44,7 @@ const AppLayoutV3 = () => {
   }, [pathname, hash]);
 
   return (
-    // A lei ao lado abre de qualquer ponto: da folha e da busca do cabeçalho
-    <LeiAoLadoProvider>
+    <>
       {/* h-dvh: no celular, a altura visível de fato (com a barra do navegador), para a barra de atalhos não ficar por baixo dela */}
       {/* Sem viewport-fit=cover o próprio navegador já afasta a tela do recorte da câmera
           (e as folgas abaixo valem 0). Se um dia a tela for até as bordas, estas folgas
@@ -75,7 +74,7 @@ const AppLayoutV3 = () => {
         </div>
         <BarraDoCelular userRole={user?.role} />
       </div>
-    </LeiAoLadoProvider>
+    </>
   );
 };
 

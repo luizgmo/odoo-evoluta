@@ -3,7 +3,7 @@
  * computador (localStorage) e viram classes no <html>, que o CSS usa.
  */
 import { MARCA, chaveDoSistema } from "@/config/marca";
-import { ARTIGOS } from "@/features/lei/artigos";
+
 
 export interface Preferencias {
   /** 0 = padrão; -1 menor; 1, 2 maiores. */
@@ -82,8 +82,7 @@ export const ATALHOS: { tecla: string; rotulo: string; para?: string }[] = [
   { tecla: ATALHO_DA_LISTA, rotulo: maiuscula(MARCA.objeto.plural), para: MARCA.rotaDaLista },
   { tecla: "Alt A", rotulo: MARCA.campos.agenda, para: "/agenda" },
   ATALHO_DA_ACAO,
-  // "lei ao lado" só existe com a gaveta ligada E com artigos para abrir
-  { tecla: "Esc", rotulo: MARCA.leiAoLado && ARTIGOS.length > 0 ? "Fechar janela, busca ou lei ao lado" : "Fechar janela ou busca" },
+  { tecla: "Esc", rotulo: "Fechar janela ou busca" },
 ];
 
 /** Para onde vai um Alt+letra (ou nada). */

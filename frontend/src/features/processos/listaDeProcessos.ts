@@ -1,15 +1,11 @@
-/**
- * Regras da lista e do Arquivo: divisórias de filtro, ordenação e o ano de cada item encerrado.
- * EXEMPLO DE DOMÍNIO: abas "ativos/sem data", situações e `ehContratacaoDireta` são de licitação;
- * troque pelas do seu objeto principal.
- */
+/** Regras da lista e do Arquivo: filtros, ordenação e agrupamento por ano. */
 import type { Process } from "@/types/process";
 import { GEN, MARCA } from "@/config/marca";
-import { ehContratacaoDireta } from "@/components/mesa/fasesDaLicitacao";
+
 import { ehSituacaoAtiva, ehSituacaoEncerrada } from "@/constants/process-status";
 
 export type AbaDaLista = "ativos" | "sem-data" | "todos";
-export type Ordem = "proxima-abertura" | "recentes" | "maior-valor" | "numero";
+export type Ordem = "proximo-prazo" | "recentes" | "maior-valor" | "numero";
 
 // Quais situações são "ativas" e "encerradas" mora na tabela de constants/process-status.ts
 export const ehAtivo = (p: Pick<Process, "status">) => ehSituacaoAtiva(p.status);
@@ -17,8 +13,7 @@ export const ehEncerrado = (p: Pick<Process, "status">) => ehSituacaoEncerrada(p
 
 export function daAba(processos: Process[], aba: AbaDaLista): Process[] {
   if (aba === "ativos") return processos.filter(ehAtivo);
-  // contratação direta não tem sessão: não fica cobrando data de abertura
-  if (aba === "sem-data") return processos.filter((p) => ehAtivo(p) && !p.opening_date && !ehContratacaoDireta(p.modality?.name));
+  if (aba === "sem-data") return processos.filter((p) => ehAtivo(p) && !p.projectInfo?.date_deadline);
   return processos;
 }
 
@@ -52,22 +47,21 @@ const diaDeHoje = (hoje: Date) =>
 export function ordenar(processos: Process[], ordem: Ordem, hoje: Date = new Date()): Process[] {
   const lista = [...processos];
   switch (ordem) {
-    case "proxima-abertura": {
-      // Primeiro as sessões de hoje em diante (a mais próxima no alto); depois as
-      // que já passaram, da mais recente para a mais antiga; por último as sem data.
+    case "proximo-prazo": {
+      // Primeiro os prazos de hoje em diante; depois os que já passaram;
+      // por último os projetos sem prazo.
       // Datas em "AAAA-MM-DD" ordenam como texto.
       const agora = diaDeHoje(hoje);
       const grupo = (p: Process) => {
-        const d = p.opening_date?.slice(0, 10);
+        const d = p.projectInfo?.date_deadline?.slice(0, 10);
         return !d ? 2 : d >= agora ? 0 : 1;
       };
       return lista.sort((a, b) => {
         const ga = grupo(a);
         const gb = grupo(b);
         if (ga !== gb) return ga - gb;
-        // Mesmo dia: desempata pela hora (sessão sem hora fica no fim do dia)
-        const da = `${a.opening_date ?? ""} ${a.opening_time || "99"}`;
-        const db = `${b.opening_date ?? ""} ${b.opening_time || "99"}`;
+        const da = a.projectInfo?.date_deadline ?? "";
+                const db = b.projectInfo?.date_deadline ?? "";
         return ga === 1 ? db.localeCompare(da) : da.localeCompare(db);
       });
     }

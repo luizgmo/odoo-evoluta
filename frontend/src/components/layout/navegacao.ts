@@ -2,19 +2,17 @@
  * Itens de navegação da moldura — uma lista só, usada pelo menu lateral
  * (AppSidebarV3), pela gaveta do celular (AppHeaderV3) e pela busca rápida.
  * Gavetas: trabalho do dia, consulta e a administração do órgão.
- * EXEMPLO DE DOMÍNIO: os rótulos (Processos, Prazos e agenda, Processos do período,
- * Modelos do órgão…) e as rotas são do sistema de licitações; troque pelos do seu.
+ * A navegação expõe somente recursos reais da gestão municipal.
  */
 import {
   Accessibility,
   Archive,
   BarChart3,
-  BookMarked,
-  BookOpen,
+
   CalendarClock,
   FolderOpen,
   Home,
-  LayoutGrid,
+
   LifeBuoy,
   Settings,
   type LucideIcon,
@@ -55,21 +53,19 @@ export const GRUPOS_DO_MENU: GrupoDoMenu[] = [
   {
     titulo: "Consulta",
     itens: [
-      { caminho: "/library", rotulo: "Biblioteca", icone: BookOpen },
-      { caminho: "/chamados", rotulo: "Chamados", icone: LifeBuoy },
-      { caminho: "/metrics", rotulo: MARCA.campos.paineisTrilha, icone: BarChart3, perfis: ["gestor", "admin", "master"] },
+      { caminho: "/chamados", rotulo: "Demandas", icone: LifeBuoy },
+      { caminho: "/metrics", rotulo: MARCA.campos.paineisTrilha, icone: BarChart3, perfis: ["super_admin", "admin_municipal", "secretario"] },
     ],
   },
-  {
-    titulo: "Prefeitura",
-    itens: [
-      { caminho: "/planta", rotulo: "Quem está com o quê", icone: LayoutGrid },
-      { caminho: "/livro-gestao", rotulo: "Projetos do período", icone: BookMarked },
-    ],
-  },
+
   {
     titulo: "Administração",
-    itens: [{ caminho: "/templates", rotulo: "Modelos do município", icone: Settings, perfis: ["admin"] }],
+    itens: [
+      { caminho: "/templates", rotulo: "Modelos do município", icone: Settings, perfis: ["super_admin", "admin_municipal", "secretario"] },
+      { caminho: "/configuracoes/organizacao", rotulo: "Estrutura municipal", icone: Settings, perfis: ["super_admin", "admin_municipal"] },
+            { caminho: "/configuracoes/usuarios", rotulo: "Usuários municipais", icone: Settings, perfis: ["super_admin", "admin_municipal"] },
+            { caminho: "/auditoria", rotulo: "Auditoria", icone: Settings, perfis: ["super_admin", "admin_municipal"] },
+    ],
   },
 ];
 

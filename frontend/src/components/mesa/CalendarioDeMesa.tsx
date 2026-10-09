@@ -1,7 +1,6 @@
 /**
- * Calendário de mesa: o mês numa folha de espiral. O dia de prazo legal é
- * circulado em tinta carmim; o da sessão pública leva moldura dupla azul; feriado
- * fica em carmim. Setas passam de mês; "Hoje" volta ao mês atual.
+ * Calendário de mesa: o mês numa folha de espiral. O prazo final do projeto é
+ * circulado em tinta carmim; feriado fica em carmim. Setas passam de mês; "Hoje" volta ao mês atual.
  */
 import React, { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -23,7 +22,7 @@ const descricaoDoDia = (d: DiaDoMes) => {
 };
 
 const Dia: React.FC<{ d: DiaDoMes }> = ({ d }) => {
-  const marcado = d.prazo || d.sessao || d.hoje || !!d.feriado;
+  const marcado = d.prazo || d.destaque || d.hoje || !!d.feriado;
   return (
     <td
       className={cn(
@@ -33,7 +32,7 @@ const Dia: React.FC<{ d: DiaDoMes }> = ({ d }) => {
       title={d.feriado ?? undefined}
     >
       {d.prazo && <i className="cal-marca text-[hsl(var(--tinta-carmim))]" aria-hidden="true" />}
-      {d.sessao && <i className="cal-marca cal-marca-quadro text-[hsl(var(--tinta-azul))]" aria-hidden="true" />}
+      {d.destaque && <i className="cal-marca cal-marca-quadro text-[hsl(var(--tinta-azul))]" aria-hidden="true" />}
       <span
         className={cn(
           "relative inline-grid h-[30px] w-[30px] place-items-center rounded-full",
@@ -51,22 +50,17 @@ const Dia: React.FC<{ d: DiaDoMes }> = ({ d }) => {
 interface Props {
   compromissos: Compromisso[];
   hoje: Date;
-  /** `tipo` do compromisso que ganha a moldura dupla azul (padrão MARCA.campos.tipoDoEvento). */
-  tipoEmDestaque?: string;
-  /** Rótulos da legenda (padrão MARCA.campos.prazo / .evento): troque por prop ou em MARCA, sem editar o componente. */
+  /** Rótulo da legenda do prazo. */
   rotuloPrazo?: string;
-  rotuloDestaque?: string;
 }
 
 export const CalendarioDeMesa: React.FC<Props> = ({
   compromissos,
   hoje,
-  tipoEmDestaque = MARCA.campos.tipoDoEvento,
   rotuloPrazo = MARCA.campos.prazo,
-  rotuloDestaque = MARCA.campos.evento,
 }) => {
   const [visto, setVisto] = useState({ ano: hoje.getFullYear(), mes: hoje.getMonth() });
-  const semanas = montarMes(visto.ano, visto.mes, compromissos, hoje, undefined, tipoEmDestaque);
+  const semanas = montarMes(visto.ano, visto.mes, compromissos, hoje);
   const noMesDeHoje = visto.ano === hoje.getFullYear() && visto.mes === hoje.getMonth();
   const passar = (n: number) => {
     const d = new Date(visto.ano, visto.mes + n, 1);
@@ -135,12 +129,7 @@ export const CalendarioDeMesa: React.FC<Props> = ({
           </span>
           circulado em tinta no dia
         </div>
-        <div className="flex items-center gap-2.5">
-          <span className="inline-flex min-w-[5.5rem] justify-center">
-            <Carimbo tinta="azul" giro={2}>{rotuloDestaque}</Carimbo>
-          </span>
-          moldura dupla
-        </div>
+
         <div className="flex items-center gap-2.5">
           <span className="inline-block min-w-[5.5rem] text-center font-semibold text-[hsl(var(--tinta-carmim))]">12</span>
           {MARCA.campos.feriadoNota}

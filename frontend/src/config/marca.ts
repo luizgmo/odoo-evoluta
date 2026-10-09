@@ -11,15 +11,14 @@ const ROTA_INICIAL = "/dashboard";
 export const ROTA_DA_LISTA = "/projetos";
 
 export const MARCA = {
-  /** Nome curto do produto: "Meu Sistema", "Contratos"… */
+  /** Nome curto do produto municipal. */
   nome: "Evoluta Gestão",
   /**
    * Logo do produto, em public/: PNG com fundo transparente, pensado para o azul-noite
-   * (texto claro), com proporção entre 2:1 e 4:1 de largura por altura (o logo-produto-modelo.svg é 4:1; o PNG de exemplo, 857x435, é ≈2:1; o da Evoluta, 480x120).
+   * (texto claro), com proporção entre 2:1 e 4:1 de largura por altura. O arquivo usado nesta entrega é o PNG oficial da Evoluta.
    * Aparece com altura h-9 (celular), h-12 (sm) e h-14 (md+); a largura segue a proporção.
-   * O modelo genérico abaixo é trocado pelo logo do produto.
    */
-  logo: "/logo-gestao.svg",
+  logo: "/evoluta-logo.png",
   /** Nome da tela inicial, usado no texto alternativo do logo. */
   inicio: "Minha Mesa",
   /** Nome da tela inicial na barra do celular e no menu recolhido (cabe em ~90px). */
@@ -57,10 +56,7 @@ export const MARCA = {
   },
 
   /**
-   * Gaveta "Lei ao lado" e grupo "Na lei" da busca rápida: só fazem sentido em sistema
-   * de licitação (exemplo de domínio). `false` = a gaveta não é montada e a busca não
-   * mostra o grupo. Padrão da base neutra: `false`. Para ligar, ponha `true`, preencha
-   * `ARTIGOS`/`LEI_NOME` em features/lei/artigos.ts e, se houver tela de lista, `LEI_ROTA_DA_LISTA`.
+   * Recurso opcional da base visual. A Evoluta Gestão não exibe legislação contextual.
    */
   leiAoLado: false,
 
@@ -73,30 +69,23 @@ export const MARCA = {
     plural: "projetos",
     /** Gênero gramatical do singular: "m" (o processo) ou "f" (a ordem de serviço). Os textos concordam por ele (veja `GEN`). */
     genero: "m",
-    /** Linha pequena acima do número, na capa completa da pasta ("Processo licitatório", "Contrato", "Chamado"…). */
+    /** Linha pequena acima do código na capa completa da pasta. */
     rotuloDaCapa: "Projeto",
     /** Título da pasta quando o item não tem objeto/descrição preenchido. */
     semDescricao: "Projeto sem objeto descrito",
     /** Quando o item não tem número/código. */
     semNumero: "Sem número",
-    /** Quando a pasta não traz o agrupamento principal (modalidade, categoria, tipo…). */
+    /** Quando o projeto não traz uma secretaria. */
     semAgrupamento: "Sem secretaria",
   },
 
   /**
-   * Rótulos dos campos do objeto, nas pastas, listas, formulário e agenda.
-   * EXEMPLO DE DOMÍNIO — troque todos pelos do seu sistema (os valores abaixo são de licitação).
-   * Quem usa: PastaDoProcesso (`fases` = aria-label da lista de fases), PastaNaGaveta, FasesEmBolinhas,
-   * ResumoDaPasta, Lista e listaDeProcessos (`arquivo`), Inicio (`resumoDoDia`), Item, Formulario, Agenda,
-   * Paineis (`paineisTrilha`, `paineisMontando`, `paineisSituacao`, `paineisPorSituacao`, `paineisTitulo`,
-   * `paineisApoio`), PecasDosAutos (`rubrica`), CalendarioDeMesa (`feriadoNota`, `prazo`, `evento`),
-   * navegacao.ts (`arquivo`, `paineisTrilha`, `agenda`), AuthContext (`paineisTrilha`), useMesaDados
-   * (`prefixoDoCodigo`, `responsavelPadrao`) e montarAgenda.ts (PRODID, e os seis marcos em `eventos`).
+   * Rótulos dos campos exibidos na Mesa, nas pastas, listas, formulários e agenda.
    */
   campos: {
     /** Rótulo do texto do objeto (a descrição que o usuário digita): formulário, ficha e busca da lista. */
     objeto: "Objeto",
-    /** Agrupamento principal do item (modalidade, categoria, tipo…). */
+    /** Agrupamento principal do item, normalmente a secretaria. */
     agrupamento: "Secretaria",
     /** Data principal do item. */
     data: "Prazo final",
@@ -109,13 +98,8 @@ export const MARCA = {
     responsavel: "Responsável",
     /** Etapa em que o item está. */
     fase: "Etapa",
-    /** Nome da etapa no marcador de progresso: "Fase 3 de 7: Julgamento" (FasesEmBolinhas). */
+    /** Rótulo da etapa persistida no projeto. */
     faseRotulo: "Etapa",
-    /** Frase abaixo das fases na capa; segue "do/da {singular}. {explicação}". */
-    faseEstimada: "Fase estimada pelas datas",
-    /** Quando o item não passa pelas fases (caso especial do fluxo) e a nota que explica. */
-    contratacaoDireta: "Acompanhamento direto",
-    contratacaoDiretaNota: "não passa pelas etapas. As fases estão na linha do tempo, abaixo.",
     /** Título do quadro dos documentos concluídos, na capa. */
     documentos: "Documentos principais",
     /** Carimbo datado da capa (quando o item foi criado). */
@@ -126,8 +110,7 @@ export const MARCA = {
     /** Legenda dos compromissos da agenda: o que tem consequência e o que só marca o dia. */
     prazo: "Prazo",
     evento: "Evento",
-    /** Valor de `tipo` do compromisso que ganha a moldura dupla azul no calendário (o que `evento` rotula). */
-    tipoDoEvento: "sessao",
+
     /** Nome da tela de agenda. */
     agenda: "Prazos e agenda",
     /** Legenda do dia de folga no calendário ("12" em carmim). */
@@ -150,22 +133,8 @@ export const MARCA = {
     /** Prefixo do código dos itens de demonstração e responsável padrão (useMesaDados.ts). */
     prefixoDoCodigo: "EVG-2026-",
     responsavelPadrao: "Equipe gestora",
-    /** Linha de assinatura sob os documentos (Rubrica, em components/mesa/PecasDosAutos.tsx). */
-    rubrica: "Nome e matrícula",
-    /**
-     * Os seis marcos que montarAgenda cria para cada item (título que o usuário lê e a regra
-     * que o justifica, que vai também para o .ics). As chaves são os `tipo` dos compromissos;
-     * troque os textos. Os de LICITAÇÃO (edital, impugnação, sessão, art. 164…) estão em
-     * exemplos/features/agenda/eventosDeLicitacao.ts, para colar aqui se o sistema for de licitação.
-     */
-    eventos: {
-      publicacao: { titulo: "Abertura do prazo", fundamento: "regra do exemplo" },
-      impugnacao: { titulo: "Último dia para contestar", fundamento: "regra do exemplo" },
-      resposta: { titulo: "Último dia para responder", fundamento: "regra do exemplo" },
-      sessao: { titulo: "Evento principal", fundamento: "regra do exemplo" },
-      recurso: { titulo: "Fim do prazo de recurso (se houver)", fundamento: "regra do exemplo" },
-      contrarrazoes: { titulo: "Fim do prazo de resposta ao recurso (se houver)", fundamento: "regra do exemplo" },
-    },
+
+
   },
 
   /**
@@ -175,14 +144,14 @@ export const MARCA = {
    * `atalho` que colida com M, P ou A (início, lista, agenda): ver preferencias.ts.
    */
   acaoPrincipal: {
-    rotulo: "Novo plano",
+    rotulo: "Novo projeto",
     /** Rótulo curto da barra do celular (cabe em ~90px). */
-    curto: "Novo",
+    curto: "Projeto",
     caminho: `${ROTA_DA_LISTA}/new`,
     /** Alt + esta letra. */
     atalho: "N",
     /** Palavras extras para a busca rápida achar a ação. */
-    sinonimos: "criar novo cadastrar",
+    sinonimos: "projeto plano criar novo cadastrar",
   },
 
   /** Os três primeiros destinos da barra do celular, na ordem em que aparecem (a ação principal é o quarto). Cada caminho precisa existir em navegacao.ts. */
