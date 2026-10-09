@@ -1,0 +1,18 @@
+# Aggregated external Python dependencies declared by the OCA modules used by Evoluta.
+openupgradelib
+requests
+cryptography
+dataclasses
+numpy
+odoorpc
+paramiko<4.0.0
+pysftp
+sentry_sdk>=2.0.0,<=2.22.0
+pdf2image
+pyzbar
+py3o.formats
+py3o.template
+xlrd
+xlsxwriter
+freezegun
+bokeh==3.9.0

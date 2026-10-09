@@ -1,0 +1,13 @@
+.git
+.gitignore
+pgdata/
+addons/oca/
+**/__pycache__/
+frontend/node_modules/
+frontend/dist/
+deploy/backups/
+*.dump
+*.tar.gz
+.env
+.env.*
+!*.example

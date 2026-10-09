@@ -12,6 +12,7 @@ load_env "$ENV_FILE"
 
 [ "$(git -C "$ROOT_DIR" status --porcelain)" = "" ] || fail "working tree contém alterações locais"
 render_odoo_config "$ENVIRONMENT"
+build_odoo_image
 build_frontend
 compose up -d db web
 wait_for_odoo

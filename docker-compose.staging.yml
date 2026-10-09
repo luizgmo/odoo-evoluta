@@ -19,7 +19,10 @@ services:
       - backend
 
   web:
-    image: odoo:19
+    build:
+      context: .
+      dockerfile: deploy/odoo/Dockerfile
+    image: evoluta-odoo:19
     depends_on:
       - db
     env_file:

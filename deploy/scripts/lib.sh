@@ -84,6 +84,11 @@ PY
   log "configuração Nginx renderizada em $OUTPUT"
 }
 
+build_odoo_image() {
+  compose build web
+  log "imagem Odoo construída com as dependências Python e de sistema"
+}
+
 build_frontend() {
   : "${ODOO_DB:?ODOO_DB não definido}"
   cd "$ROOT_DIR/frontend"

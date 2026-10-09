@@ -16,6 +16,7 @@ load_env "$ENV_FILE"
 [ -f "$FILESTORE_TAR" ] || fail "filestore não encontrado"
 [ "$ENVIRONMENT" != "prod" ] || [ "${CONFIRM_PROD_RESTORE:-}" = "YES" ] || fail "defina CONFIRM_PROD_RESTORE=YES para restaurar produção"
 
+build_odoo_image
 log "parando Odoo antes da restauração"
 compose stop web
 compose up -d db

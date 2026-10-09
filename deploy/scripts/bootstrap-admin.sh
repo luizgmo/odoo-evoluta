@@ -13,6 +13,7 @@ load_env "$ENV_FILE"
 : "${BOOTSTRAP_ADMIN_PASSWORD:?BOOTSTRAP_ADMIN_PASSWORD não definido}"
 : "${BOOTSTRAP_ADMIN_NAME:?BOOTSTRAP_ADMIN_NAME não definido}"
 
+build_odoo_image
 compose up -d db web
 wait_for_odoo
 compose exec -T web odoo shell -c /etc/odoo/odoo.conf -d "$ODOO_DB" <<'PY'

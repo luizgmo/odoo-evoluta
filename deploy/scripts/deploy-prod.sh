@@ -20,6 +20,7 @@ load_env "$ENV_FILE"
 log "criando backup antes do deploy"
 "$SCRIPT_DIR/backup.sh" prod
 render_odoo_config "$ENVIRONMENT"
+build_odoo_image
 build_frontend
 compose up -d db web
 wait_for_odoo
