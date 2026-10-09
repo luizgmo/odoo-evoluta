@@ -108,7 +108,7 @@ wait_for_odoo() {
 }
 
 update_modules() {
-  compose exec -T web odoo -c /etc/odoo/odoo.conf -d "$ODOO_DB" -u "$MODULES" --stop-after-init
+  compose exec -T web odoo -c /etc/odoo/odoo.conf -d "$ODOO_DB" -u "$MODULES" --stop-after-init --no-http
   compose restart web
   wait_for_odoo
 }
