@@ -16,7 +16,7 @@ load_env "$ENV_FILE"
 build_odoo_image
 compose up -d db web
 wait_for_odoo
-compose exec -T web odoo shell -c /etc/odoo/odoo.conf -d "$ODOO_DB" <<'PY'
+compose exec -T web odoo shell -c /etc/odoo/odoo.conf -d "$ODOO_DB" --no-http <<'PY'
 import os
 
 User = env["res.users"].sudo()
