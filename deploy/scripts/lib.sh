@@ -54,7 +54,8 @@ for key, value in values.items():
     template = template.replace(key, value)
 pathlib.Path(sys.argv[2]).write_text(template, encoding="utf-8")
 PY
-  chmod 600 "$OUTPUT"
+  # O processo Odoo dentro da imagem não roda como root e precisa ler este arquivo montado.
+  chmod 644 "$OUTPUT"
   log "configuração Odoo renderizada em $OUTPUT"
 }
 
