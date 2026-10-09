@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="rule_project_municipal_scope" model="ir.rule">
+    <field name="name">Projetos: município do usuário</field>
+    <field name="model_id" ref="project.model_project_project"/>
+    <field name="groups" eval="[(4, ref('evoluta_group_atendente')), (4, ref('evoluta_group_secretario')), (4, ref('evoluta_group_admin'))]"/>
+    <field name="domain_force">[('municipio_id', '=', user.municipio_id.id)]</field>
+  </record>
+  <record id="rule_task_attendant_scope" model="ir.rule">
+    <field name="name">Tasks: atendente responsável</field>
+    <field name="model_id" ref="project.model_project_task"/>
+    <field name="groups" eval="[(4, ref('evoluta_group_atendente'))]"/>
+    <field name="domain_force">[('project_id.municipio_id', '=', user.municipio_id.id), ('user_ids', 'in', user.id)]</field>
+  </record>
+  <record id="rule_task_secretary_scope" model="ir.rule">
+    <field name="name">Tasks: secretaria municipal</field>
+    <field name="model_id" ref="project.model_project_task"/>
+    <field name="groups" eval="[(4, ref('evoluta_group_secretario')), (4, ref('evoluta_group_admin'))]"/>
+    <field name="domain_force">[('project_id.municipio_id', '=', user.municipio_id.id)]</field>
+  </record>
+  <record id="rule_helpdesk_admin_municipal_scope" model="ir.rule">
+    <field name="name">Chamados: município do administrador municipal</field>
+    <field name="model_id" ref="helpdesk_mgmt.model_helpdesk_ticket"/>
+    <field name="groups" eval="[(4, ref('evoluta_group_admin'))]"/>
+    <field name="domain_force">[('municipio_id', '=', user.municipio_id.id)]</field>
+  </record>
+  <record id="rule_helpdesk_secretary_scope" model="ir.rule">
+    <field name="name">Chamados: secretaria municipal</field>
+    <field name="model_id" ref="helpdesk_mgmt.model_helpdesk_ticket"/>
+    <field name="groups" eval="[(4, ref('evoluta_group_secretario'))]"/>
+    <field name="domain_force">[('municipio_id', '=', user.municipio_id.id), '|', ('secretaria_id', '=', False), ('secretaria_id', '=', user.secretaria_id.id)]</field>
+  </record>
+  <record id="rule_auditoria_admin_scope" model="ir.rule">
+    <field name="name">Auditoria: município do administrador municipal</field>
+    <field name="model_id" ref="model_evoluta_auditoria"/>
+    <field name="groups" eval="[(4, ref('evoluta_group_admin'))]"/>
+    <field name="domain_force">[('municipio_id', '=', user.municipio_id.id)]</field>
+  </record>
+  <record id="rule_helpdesk_attendant_scope" model="ir.rule">
+    <field name="name">Chamados: departamento do atendente</field>
+    <field name="model_id" ref="helpdesk_mgmt.model_helpdesk_ticket"/>
+    <field name="groups" eval="[(4, ref('evoluta_group_atendente'))]"/>
+    <field name="domain_force">[('municipio_id', '=', user.municipio_id.id), '|', ('secretaria_id', '=', False), ('secretaria_id', '=', user.secretaria_id.id), '|', ('departamento_id', '=', False), ('departamento_id', '=', user.departamento_id.id)]</field>
+  </record>
+</odoo>

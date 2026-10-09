@@ -1,12 +1,13 @@
 {
     "name": "Evoluta Management - 5W2H",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.0.1",
     "summary": "5W2H que gera project.task",
     "author": "AlphaMec + Evoluta",
     "license": "LGPL-3",
     "depends": ["base", "project", "evoluta_core", "base_tier_validation"],
     "data": [
         "security/ir.model.access.csv",
+        "security/rules.xml",
         "views/evoluta_5w2h_views.xml",
         "views/evoluta_porques_views.xml",
         "views/evoluta_risco_views.xml",

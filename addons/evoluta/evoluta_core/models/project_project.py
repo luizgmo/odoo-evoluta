@@ -1,6 +1,7 @@
 from datetime import date
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 DEFAULT_STAGES = [
     ("NÃO INICIADO", 1, False),
@@ -25,6 +26,23 @@ class ProjectProject(models.Model):
         string="Atrasadas", compute="_compute_evoluta_indicadores"
     )
     evoluta_orcamento = fields.Float(string="Orçamento (R$)")
+    municipio_id = fields.Many2one(
+        "evoluta.municipio", string="Município Evoluta", ondelete="restrict", index=True
+    )
+    secretaria_id = fields.Many2one(
+        "evoluta.secretaria", string="Secretaria Evoluta", ondelete="restrict", index=True
+    )
+    departamento_id = fields.Many2one(
+        "evoluta.departamento", string="Departamento Evoluta", ondelete="restrict", index=True
+    )
+
+    @api.constrains("municipio_id", "secretaria_id", "departamento_id")
+    def _check_evoluta_scope(self):
+        for project in self:
+            if project.secretaria_id and project.municipio_id != project.secretaria_id.municipio_id:
+                raise ValidationError("A secretaria precisa pertencer ao município do projeto.")
+            if project.departamento_id and project.secretaria_id != project.departamento_id.secretaria_id:
+                raise ValidationError("O departamento precisa pertencer à secretaria do projeto.")
 
     @api.depends()
     def _compute_evoluta_indicadores(self):

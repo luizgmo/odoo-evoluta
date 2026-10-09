@@ -3,5 +3,8 @@ from . import evoluta_municipio
 from . import evoluta_departamento
 from . import evoluta_plano
 from . import evoluta_onboarding
+from . import res_users
 from . import queue_runner
 from . import project_project
+from . import helpdesk_ticket
+from . import evoluta_auditoria

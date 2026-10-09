@@ -6,6 +6,7 @@ class EvolutaTriangulo(models.Model):
     _name = "evoluta.triangulo"
     _description = "Triângulo Estratégico"
 
+    active = fields.Boolean(default=True)
     name = fields.Char(required=True, default="Triângulo Estratégico")
     project_id = fields.Many2one("project.project", required=True, ondelete="cascade")
     valor_publico = fields.Text(string="Valor Público", required=True)
@@ -17,6 +18,7 @@ class EvolutaArvoreProblemas(models.Model):
     _name = "evoluta.arvore.problemas"
     _description = "Árvore de Problemas"
 
+    active = fields.Boolean(default=True)
     name = fields.Char(required=True, default="Árvore de Problemas")
     project_id = fields.Many2one("project.project", required=True, ondelete="cascade")
     causas = fields.Text(string="Causas")
@@ -54,10 +56,12 @@ class EvolutaArvoreObjetivos(models.Model):
     _name = "evoluta.arvore.objetivos"
     _description = "Árvore de Objetivos"
 
+    active = fields.Boolean(default=True)
     name = fields.Char(required=True, default="Árvore de Objetivos")
     project_id = fields.Many2one("project.project", required=True, ondelete="cascade")
     origem_id = fields.Many2one("evoluta.arvore.problemas", string="Árvore de origem")
     task_id = fields.Many2one("project.task", readonly=True, ondelete="set null")
+    five_w2h_id = fields.Many2one("evoluta.5w2h", readonly=True, ondelete="set null")
     acoes = fields.Text(string="Ações (ex-causas)")
     objetivo_central = fields.Text(string="Objetivo Central", required=True)
     resultados = fields.Text(string="Resultados (ex-efeitos)")

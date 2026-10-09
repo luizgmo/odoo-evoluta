@@ -4,10 +4,11 @@
     "summary": "Base: municipio, secretaria, permissoes",
     "author": "AlphaMec + Evoluta",
     "license": "LGPL-3",
-    "depends": ["base", "project"],
+    "depends": ["base", "project", "helpdesk_mgmt", "helpdesk_mgmt_sla"],
     "data": [
         "security/groups.xml",
         "security/ir.model.access.csv",
+        "security/rules.xml",
         "views/evoluta_geo_views.xml",
         "views/evoluta_plano_views.xml",
         "views/evoluta_indicadores_views.xml",

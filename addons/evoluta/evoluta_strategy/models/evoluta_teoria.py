@@ -5,6 +5,7 @@ class EvolutaTeoria(models.Model):
     _name = "evoluta.teoria"
     _description = "Teoria da Mudança"
 
+    active = fields.Boolean(default=True)
     name = fields.Char(required=True, default="Nova teoria da mudança")
     project_id = fields.Many2one("project.project", required=True, ondelete="cascade")
     contexto = fields.Text(string="Contexto")

@@ -7,6 +7,7 @@
     "depends": ["base", "project", "evoluta_core"],
     "data": [
         "security/ir.model.access.csv",
+        "security/rules.xml",
         "views/evoluta_stakeholder_views.xml",
         "views/evoluta_strategy_views.xml",
         "views/menus.xml",

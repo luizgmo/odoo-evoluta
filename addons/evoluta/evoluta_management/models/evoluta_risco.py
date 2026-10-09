@@ -6,6 +6,7 @@ class EvolutaRisco(models.Model):
     _name = "evoluta.risco"
     _description = "Risco"
 
+    active = fields.Boolean(default=True)
     name = fields.Char(required=True)
     project_id = fields.Many2one("project.project", required=True, ondelete="cascade")
     task_id = fields.Many2one("project.task", readonly=True, ondelete="set null")

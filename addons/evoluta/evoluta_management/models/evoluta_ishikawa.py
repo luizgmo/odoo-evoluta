@@ -15,6 +15,7 @@ class EvolutaIshikawa(models.Model):
     _name = "evoluta.ishikawa"
     _description = "Ishikawa"
 
+    active = fields.Boolean(default=True)
     name = fields.Char(required=True, default="Nova análise Ishikawa")
     project_id = fields.Many2one("project.project", required=True, ondelete="cascade")
     task_id = fields.Many2one("project.task", readonly=True, ondelete="set null")

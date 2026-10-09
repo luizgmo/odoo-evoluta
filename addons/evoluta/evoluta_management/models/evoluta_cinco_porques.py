@@ -6,6 +6,7 @@ class EvolutaCincoPorques(models.Model):
     _name = "evoluta.cinco_porques"
     _description = "5 Porquês"
 
+    active = fields.Boolean(default=True)
     name = fields.Char(required=True, default="Nova análise 5 Porquês")
     project_id = fields.Many2one("project.project", required=True, ondelete="cascade")
     task_id = fields.Many2one("project.task", readonly=True, ondelete="set null")

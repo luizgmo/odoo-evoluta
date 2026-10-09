@@ -4,6 +4,9 @@ from odoo import http
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.http import Response, request
 
+from .audit_helpers import registrar_auditoria
+from .scope import project_in_scope
+
 
 class EvolutaMatrixApi(http.Controller):
     def _json(self, payload, status=200):
@@ -14,7 +17,8 @@ class EvolutaMatrixApi(http.Controller):
             project_id = int(value or 0)
         except (TypeError, ValueError):
             project_id = 0
-        return request.env["project.project"].browse(project_id).exists()[:1]
+        project = request.env["project.project"].browse(project_id).exists()[:1]
+        return project if project and project_in_scope(request.env.user, project) else project.browse()
 
     @staticmethod
     def _text(value):
@@ -42,12 +46,12 @@ class EvolutaMatrixApi(http.Controller):
         if not project:
             return self._json({"error": "Projeto não encontrado."}, status=404)
         try:
-            records = request.env["evoluta.matriz"].search([("project_id", "=", project.id)], order="id desc")
+            records = request.env["evoluta.matriz"].search([("project_id", "=", project.id), ("active", "=", True)], order="id desc")
             return self._json({"records": [self._values(record) for record in records]})
         except AccessError:
             return self._json({"error": "Você não tem permissão para consultar matrizes."}, status=403)
 
-    @http.route("/api/matriz", auth="user", type="http", methods=["POST"], csrf=False)
+    @http.route("/api/matriz", auth="user", type="http", methods=["POST"])
     def create_matrix(self):
         data = request.get_json_data() or {}
         project = self._project(data.get("project_id"))
@@ -77,14 +81,15 @@ class EvolutaMatrixApi(http.Controller):
                     if criterio:
                         request.env["evoluta.matriz.nota"].create({"alternativa_id": alt.id, "criterio_id": criterio.id, "nota": float(nota or 0)})
             matrix.invalidate_recordset()
+            registrar_auditoria("create", "evoluta.matriz", matrix, project=project)
             return self._json({"record": self._values(matrix)}, status=201)
         except (AccessError, UserError, ValidationError, ValueError) as error:
             return self._json({"error": str(error)}, status=403 if isinstance(error, AccessError) else 400)
 
-    @http.route("/api/matriz/<int:record_id>/gerar-5w2h", auth="user", type="http", methods=["POST"], csrf=False)
+    @http.route("/api/matriz/<int:record_id>/gerar-5w2h", auth="user", type="http", methods=["POST"])
     def generate_matrix_plan(self, record_id):
         matrix = request.env["evoluta.matriz"].browse(record_id).exists()
-        if not matrix:
+        if not matrix or not project_in_scope(request.env.user, matrix.project_id):
             return self._json({"error": "Matriz não encontrada."}, status=404)
         try:
             action = matrix.action_gerar_5w2h()
@@ -92,3 +97,27 @@ class EvolutaMatrixApi(http.Controller):
             return self._json({"record": {"id": plan.id, "name": plan.name, "project_id": plan.project_id.id}}, status=201)
         except (AccessError, UserError, ValidationError) as error:
             return self._json({"error": str(error)}, status=403 if isinstance(error, AccessError) else 400)
+
+    @http.route("/api/matriz/<int:record_id>", auth="user", type="http", methods=["PATCH"])
+    def update_matrix(self, record_id):
+        matrix = request.env["evoluta.matriz"].browse(record_id).exists()
+        if not matrix or not project_in_scope(request.env.user, matrix.project_id):
+            return self._json({"error": "Matriz não encontrada."}, status=404)
+        data = request.get_json_data() or {}
+        values = {"name": self._text(data.get("name"))} if "name" in data else {}
+        try:
+            if values:
+                matrix.write(values)
+                registrar_auditoria("update", "evoluta.matriz", matrix, project=matrix.project_id)
+            return self._json({"record": self._values(matrix)})
+        except (AccessError, UserError, ValidationError) as error:
+            return self._json({"error": str(error)}, status=403 if isinstance(error, AccessError) else 400)
+
+    @http.route("/api/matriz/<int:record_id>/arquivar", auth="user", type="http", methods=["POST"])
+    def archive_matrix(self, record_id):
+        matrix = request.env["evoluta.matriz"].browse(record_id).exists()
+        if not matrix or not project_in_scope(request.env.user, matrix.project_id):
+            return self._json({"error": "Matriz não encontrada."}, status=404)
+        matrix.write({"active": False})
+        registrar_auditoria("archive", "evoluta.matriz", matrix, project=matrix.project_id)
+        return self._json({"record": {"id": matrix.id, "active": False}})

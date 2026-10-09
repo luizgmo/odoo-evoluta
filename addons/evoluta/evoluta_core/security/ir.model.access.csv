@@ -1,4 +1,13 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_project_project_admin,access.project.project.admin,project.model_project_project,evoluta_group_admin,1,1,1,0
+access_project_project_secretario,access.project.project.secretario,project.model_project_project,evoluta_group_secretario,1,1,1,0
+access_project_project_atendente,access.project.project.atendente,project.model_project_project,evoluta_group_atendente,1,0,0,0
+access_project_task_admin,access.project.task.admin,project.model_project_task,evoluta_group_admin,1,1,1,0
+access_project_task_secretario,access.project.task.secretario,project.model_project_task,evoluta_group_secretario,1,1,1,0
+access_project_task_atendente,access.project.task.atendente,project.model_project_task,evoluta_group_atendente,1,1,1,0
+access_project_task_type_admin,access.project.task.type.admin,project.model_project_task_type,evoluta_group_admin,1,1,1,0
+access_project_task_type_secretario,access.project.task.type.secretario,project.model_project_task_type,evoluta_group_secretario,1,1,1,0
+access_project_task_type_atendente,access.project.task.type.atendente,project.model_project_task_type,evoluta_group_atendente,1,0,0,0
 access_evoluta_municipio_admin,access.evoluta.municipio.admin,model_evoluta_municipio,evoluta_group_admin,1,1,1,1
 access_evoluta_municipio_sec,access.evoluta.municipio.sec,model_evoluta_municipio,evoluta_group_secretario,1,0,0,0
 access_evoluta_municipio_ate,access.evoluta.municipio.ate,model_evoluta_municipio,evoluta_group_atendente,1,0,0,0
@@ -14,3 +23,4 @@ access_evoluta_onboarding_admin,access.evoluta.onboarding.admin,model_evoluta_on
 access_evoluta_onboarding_sec,access.evoluta.onboarding.sec,model_evoluta_onboarding,evoluta_group_secretario,1,1,0,0
 access_evoluta_onboarding_ate,access.evoluta.onboarding.ate,model_evoluta_onboarding,evoluta_group_atendente,1,1,0,0
 access_evoluta_job_runner_admin,access.evoluta.job.runner.admin,model_evoluta_job_runner,evoluta_group_admin,1,0,0,0
+access_evoluta_auditoria_admin,access.evoluta.auditoria.admin,model_evoluta_auditoria,evoluta_group_admin,1,0,0,0

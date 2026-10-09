@@ -7,6 +7,8 @@ class Evoluta5W2H(models.Model):
     _description = "5W2H"
     _inherit = ["tier.validation"]
 
+    active = fields.Boolean(default=True)
+
     name = fields.Char(required=True, default="Novo plano 5W2H")
     project_id = fields.Many2one("project.project", required=True, ondelete="cascade")
     task_id = fields.Many2one("project.task", readonly=True, ondelete="set null")

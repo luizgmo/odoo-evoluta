@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="rule_5w2h_municipal_scope" model="ir.rule">
+    <field name="name">5W2H: município do projeto</field>
+    <field name="model_id" ref="model_evoluta_5w2h"/>
+    <field name="groups" eval="[(4, ref('evoluta_core.evoluta_group_atendente'))]"/>
+    <field name="domain_force">[('project_id.municipio_id', '=', user.municipio_id.id)]</field>
+  </record>
+  <record id="rule_porques_municipal_scope" model="ir.rule">
+    <field name="name">5 Porquês: município do projeto</field>
+    <field name="model_id" ref="model_evoluta_cinco_porques"/>
+    <field name="groups" eval="[(4, ref('evoluta_core.evoluta_group_atendente'))]"/>
+    <field name="domain_force">[('project_id.municipio_id', '=', user.municipio_id.id)]</field>
+  </record>
+  <record id="rule_risco_municipal_scope" model="ir.rule">
+    <field name="name">Riscos: município do projeto</field>
+    <field name="model_id" ref="model_evoluta_risco"/>
+    <field name="groups" eval="[(4, ref('evoluta_core.evoluta_group_atendente'))]"/>
+    <field name="domain_force">[('project_id.municipio_id', '=', user.municipio_id.id)]</field>
+  </record>
+  <record id="rule_raci_municipal_scope" model="ir.rule">
+    <field name="name">RACI: município da task</field>
+    <field name="model_id" ref="model_evoluta_raci"/>
+    <field name="groups" eval="[(4, ref('evoluta_core.evoluta_group_atendente'))]"/>
+    <field name="domain_force">[('task_id.project_id.municipio_id', '=', user.municipio_id.id)]</field>
+  </record>
+  <record id="rule_ishikawa_municipal_scope" model="ir.rule">
+    <field name="name">Ishikawa: município do projeto</field>
+    <field name="model_id" ref="model_evoluta_ishikawa"/>
+    <field name="groups" eval="[(4, ref('evoluta_core.evoluta_group_atendente'))]"/>
+    <field name="domain_force">[('project_id.municipio_id', '=', user.municipio_id.id)]</field>
+  </record>
+  <record id="rule_ishikawa_causa_municipal_scope" model="ir.rule">
+    <field name="name">Causas Ishikawa: município do projeto</field>
+    <field name="model_id" ref="model_evoluta_ishikawa_causa"/>
+    <field name="groups" eval="[(4, ref('evoluta_core.evoluta_group_atendente'))]"/>
+    <field name="domain_force">[('ishikawa_id.project_id.municipio_id', '=', user.municipio_id.id)]</field>
+  </record>
+  <record id="rule_matriz_municipal_scope" model="ir.rule">
+    <field name="name">Matriz: município do projeto</field>
+    <field name="model_id" ref="model_evoluta_matriz"/>
+    <field name="groups" eval="[(4, ref('evoluta_core.evoluta_group_atendente'))]"/>
+    <field name="domain_force">[('project_id.municipio_id', '=', user.municipio_id.id)]</field>
+  </record>
+  <record id="rule_matriz_criterio_municipal_scope" model="ir.rule">
+    <field name="name">Critérios da matriz: município do projeto</field>
+    <field name="model_id" ref="model_evoluta_matriz_criterio"/>
+    <field name="groups" eval="[(4, ref('evoluta_core.evoluta_group_atendente'))]"/>
+    <field name="domain_force">[('matriz_id.project_id.municipio_id', '=', user.municipio_id.id)]</field>
+  </record>
+  <record id="rule_matriz_alternativa_municipal_scope" model="ir.rule">
+    <field name="name">Alternativas da matriz: município do projeto</field>
+    <field name="model_id" ref="model_evoluta_matriz_alternativa"/>
+    <field name="groups" eval="[(4, ref('evoluta_core.evoluta_group_atendente'))]"/>
+    <field name="domain_force">[('matriz_id.project_id.municipio_id', '=', user.municipio_id.id)]</field>
+  </record>
+  <record id="rule_matriz_nota_municipal_scope" model="ir.rule">
+    <field name="name">Notas da matriz: município do projeto</field>
+    <field name="model_id" ref="model_evoluta_matriz_nota"/>
+    <field name="groups" eval="[(4, ref('evoluta_core.evoluta_group_atendente'))]"/>
+    <field name="domain_force">[('matriz_id.project_id.municipio_id', '=', user.municipio_id.id)]</field>
+  </record>
+</odoo>

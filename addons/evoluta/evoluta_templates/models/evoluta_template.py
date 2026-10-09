@@ -1,4 +1,5 @@
 from odoo import fields, models
+from odoo.exceptions import UserError
 
 
 class EvolutaTemplate(models.Model):
@@ -12,9 +13,14 @@ class EvolutaTemplate(models.Model):
 
     def action_gerar_projeto(self):
         self.ensure_one()
+        municipio_id = self.env.context.get("evoluta_municipio_id")
+        secretaria_id = self.env.context.get("evoluta_secretaria_id") or False
+        departamento_id = self.env.context.get("evoluta_departamento_id") or False
+        if not municipio_id:
+            raise UserError("O município de destino é obrigatório para gerar um projeto.")
         job = self.with_delay(
             description=f"Gerar projeto do template {self.name}"
-        )._gerar_projeto_job()
+        )._gerar_projeto_job(municipio_id, secretaria_id, departamento_id)
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
@@ -27,17 +33,25 @@ class EvolutaTemplate(models.Model):
             },
         }
 
-    def _gerar_projeto_job(self):
-        project = self.env["project.project"].create({"name": self.name})
+    def _gerar_projeto_job(self, municipio_id, secretaria_id=False, departamento_id=False):
+        project = self.env["project.project"].create(
+            {
+                "name": self.name,
+                "municipio_id": municipio_id,
+                "secretaria_id": secretaria_id or False,
+                "departamento_id": departamento_id or False,
+            }
+        )
         for line in self.task_ids:
+            responsaveis = line.responsavel_id.filtered(
+                lambda user: user.municipio_id.id == municipio_id
+            )
             self.env["project.task"].create(
                 {
                     "name": line.name,
                     "project_id": project.id,
                     "description": line.descricao or "",
-                    "user_ids": (
-                        [(6, 0, line.responsavel_id.ids)] if line.responsavel_id else [(6, 0, [])]
-                    ),
+                    "user_ids": [(6, 0, responsaveis.ids)],
                 }
             )
         return {

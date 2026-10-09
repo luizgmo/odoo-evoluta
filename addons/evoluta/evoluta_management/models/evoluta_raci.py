@@ -6,6 +6,7 @@ class EvolutaRaci(models.Model):
     _name = "evoluta.raci"
     _description = "RACI"
 
+    active = fields.Boolean(default=True)
     name = fields.Char(required=True, default="Matriz RACI")
     task_id = fields.Many2one("project.task", required=True, ondelete="cascade")
     responsible_id = fields.Many2one("res.users", string="Responsible", required=True)

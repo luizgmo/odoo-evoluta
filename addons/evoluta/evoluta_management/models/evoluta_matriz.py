@@ -6,6 +6,7 @@ class EvolutaMatriz(models.Model):
     _name = "evoluta.matriz"
     _description = "Matriz de Decisão"
 
+    active = fields.Boolean(default=True)
     name = fields.Char(required=True, default="Nova matriz de decisão")
     project_id = fields.Many2one("project.project", required=True, ondelete="cascade")
     criterio_ids = fields.One2many("evoluta.matriz.criterio", "matriz_id")
