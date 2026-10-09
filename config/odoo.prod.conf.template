@@ -1,0 +1,16 @@
+[options]
+addons_path = /usr/lib/python3/dist-packages/odoo/addons,/mnt/evoluta,/mnt/oca/helpdesk,/mnt/oca/tier-validation,/mnt/oca/server-tools,/mnt/oca/project,/mnt/oca/web,/mnt/oca/mis-builder,/mnt/oca/reporting-engine,/mnt/oca/server-ux,/mnt/oca/sign,/mnt/oca/queue
+data_dir = /var/lib/odoo
+db_host = db
+db_port = 5432
+db_user = __POSTGRES_USER__
+db_password = __POSTGRES_PASSWORD__
+dbfilter = ^__ODOO_DB__$
+admin_passwd = __ODOO_ADMIN_PASSWORD__
+list_db = False
+proxy_mode = True
+workers = 2
+max_cron_threads = 1
+limit_time_cpu = 120
+limit_time_real = 240
+gevent_port = 8072

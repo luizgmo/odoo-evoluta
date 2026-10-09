@@ -1,0 +1,11 @@
+# repo url commit
+helpdesk https://github.com/OCA/helpdesk.git ed5d7f33ab69539f75334b171ebc00fbdedc48a8
+mis-builder https://github.com/OCA/mis-builder.git b9e8c6cdd2d106614eddaf81bd78f487ae35db45
+project https://github.com/OCA/project.git ff085d56f10e5d1dc68ef85482eb3fc34a5b62d2
+queue https://github.com/OCA/queue.git b4f4302b98b86c38bdac2c9cda30be38d7e53c10
+reporting-engine https://github.com/OCA/reporting-engine.git 7d519f31e1a553d7a5499571a9146f7e3ea49ea4
+server-tools https://github.com/OCA/server-tools.git 2ba869c7466476ec7fb913ae55a1ee49be62392b
+server-ux https://github.com/OCA/server-ux.git f2485eef1437b7fd57e3d44a61537420bbf1b281
+sign https://github.com/OCA/sign.git 3b768318bc5eaccb79535337478f49d59d17d0b1
+tier-validation https://github.com/OCA/tier-validation.git 11e42f4afadde2e8bc8be43030afe9ab73fe1f41
+web https://github.com/OCA/web.git b405af9c04a04d74b1e34bdf827fe4033a28899a

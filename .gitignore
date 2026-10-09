@@ -9,6 +9,14 @@ addons/oca/*
 # Prompts locais de execução, nunca commitar
 docs/PROMPTS.md
 
+# Deployment secrets and generated runtime files
+.env
+.env.*
+!.env.*.example
+config/runtime/
+deploy/backups/
+deploy/nginx/*.conf
+
 # Frontend
 frontend/node_modules/
 frontend/dist/

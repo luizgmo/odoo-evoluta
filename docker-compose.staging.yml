@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15
+    env_file:
+      - .env.staging
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - evoluta_staging_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    networks:
+      - backend
+
+  web:
+    image: odoo:19
+    depends_on:
+      - db
+    env_file:
+      - .env.staging
+    ports:
+      - "127.0.0.1:8070:8069"
+      - "127.0.0.1:8073:8072"
+    volumes:
+      - ./addons/oca:/mnt/oca:ro
+      - ./addons/evoluta:/mnt/evoluta:ro
+      - ./config/runtime/odoo.staging.conf:/etc/odoo/odoo.conf:ro
+      - evoluta_staging_odoo:/var/lib/odoo
+    command: ["odoo", "-c", "/etc/odoo/odoo.conf"]
+    restart: unless-stopped
+    networks:
+      - backend
+
+volumes:
+  evoluta_staging_pgdata:
+  evoluta_staging_odoo:
+
+networks:
+  backend:
+    driver: bridge

@@ -5,7 +5,7 @@
  */
 
 
-const BANCO_ODOO = import.meta.env.VITE_ODOO_DB || "demo";
+const BANCO_ODOO = import.meta.env.VITE_ODOO_DB || (import.meta.env.DEV ? "demo" : "");
 const TEMPO_LIMITE_MS = 15_000;
 let csrfToken: string | null = null;
 let csrfPromise: Promise<string> | null = null;
