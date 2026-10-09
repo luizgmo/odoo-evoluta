@@ -37,8 +37,9 @@ Menu esconde + rota recusa + API barra (três camadas, R-ROT-02/R-ACE-10).
 
 ## 6. Ambientes
 - Local: `npm run dev` (Vite :8080, proxy → `localhost:8069`) + `docker-compose up`.
-- Staging: mesmos containers + build da Mesa, banco demo clonado, subdomínio staging.
-- Prod: banco por município (sem demo data), backup 3-2-1, SSL, sem `VITE_LOGIN_TESTE_*`, sem demo flags.
+- Staging: containers e volumes separados + build da Mesa, banco `evoluta_staging` com massa de demonstração, subdomínio staging.
+- Prod: banco multi-município `evoluta_prod` sem dados demo, volumes próprios, backup 3-2-1, SSL, sem `VITE_LOGIN_TESTE_*`, sem demo flags.
+- A mesma VPS pode hospedar staging e produção inicialmente, desde que bancos, volumes, portas e secrets sejam separados.
 
 ## 7. Segurança
 - Sem segredo no git (`.env` local fora do versionamento); cookies HttpOnly + SameSite; CSRF via sessão Odoo.

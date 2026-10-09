@@ -121,7 +121,7 @@ cd frontend
 npm install
 npm run typecheck
 npm run test
-npm run build
+VITE_ODOO_DB=evoluta_staging npm run build
 ```
 
 O build pode emitir aviso de bundle acima de 500 kB. Esse aviso deve ser registrado, não ignorado silenciosamente.
@@ -864,7 +864,7 @@ Executar na ordem:
 cd frontend
 npm run typecheck
 npm run test
-npm run build
+VITE_ODOO_DB=evoluta_staging npm run build
 npm run test:e2e
 ```
 

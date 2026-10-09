@@ -31,7 +31,7 @@ Data: 2026-10-09
 ## Comandos executados com sucesso
 
 ```text
-cd frontend && npm run typecheck && npm run test && npm run build
+cd frontend && npm run typecheck && npm run test && VITE_ODOO_DB=evoluta_staging npm run build
 cd frontend && E2E_LOGIN='<segredo-local>' E2E_PASSWORD='<segredo-local>' npm run test:e2e
 # O teste visual/PWA foi executado localmente com configuração Playwright temporária não versionada.
 python3 -m py_compile addons/evoluta/evoluta_api/controllers/*.py addons/evoluta/evoluta_core/models/*.py addons/evoluta/evoluta_management/models/*.py addons/evoluta/evoluta_management/migrations/19.0.1.0.1/*.py addons/evoluta/evoluta_strategy/models/*.py addons/evoluta/evoluta_templates/models/*.py

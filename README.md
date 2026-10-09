@@ -881,7 +881,7 @@ Frontend:
 cd frontend
 npm run typecheck
 npm run test
-npm run build
+VITE_ODOO_DB=demo npm run build
 npm run test:e2e
 npm audit --audit-level=moderate
 ```
@@ -925,6 +925,8 @@ Não usar `docker compose` neste projeto; o comando padronizado é `docker-compo
 | `docs/PLANO-FASE1.md` | Escopo técnico da Fase 1 do backend/Odoo |
 | `addons/evoluta/` | Implementação dos módulos próprios Evoluta |
 | `frontend/src/` | Aplicação React oficial para usuários municipais |
+| `docs/DEPLOYMENT-VPS.md` | Preparação e operação de local, staging e produção |
+| `deploy/` | Scripts, templates Nginx e operações de deploy/backup |
 
 ---
 
@@ -940,3 +942,11 @@ Quando surgir uma nova ideia, classifique-a nesta ordem:
 6. **A tela está real, segura, persistida e testada?** Só então marque como concluída.
 
 A Evoluta não é um ERP genérico, não é um portal do cidadão e não é uma cópia do LicitarsAI. É uma camada de experiência simples, metodológica e segura para gestão interna municipal, usando Odoo como engine e a Mesa de Trabalho Evoluta como interface.
+
+---
+
+## 16. Ambientes e preparação para VPS
+
+O projeto trabalha com três ambientes: local, staging/homologação e produção. O staging pode conter dados de demonstração; a produção deve usar o banco multi-município `evoluta_prod` sem registros demo.
+
+A preparação de VPS, Nginx, secrets, Docker, OCA, backup, restore, healthcheck e rollback está em `docs/DEPLOYMENT-VPS.md`. Os secrets reais ficam fora do Git; os arquivos `.env.*.example` são somente modelos.
