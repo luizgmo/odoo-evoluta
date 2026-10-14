@@ -15,6 +15,29 @@ export interface IndicadorSecretaria {
   atrasadas: number;
 }
 
+export interface IndicadorEtapaMunicipal {
+  stage_name: string;
+  total: number;
+}
+
+export interface ProjetoResumo {
+  id: number;
+  name: string;
+  taxa: number;
+  total_tasks: number;
+  concluidas: number;
+  atrasadas: number;
+  date_deadline: string | false;
+}
+
+export interface TaskAtrasada {
+  project_id: number | false;
+  project_name: string;
+  task_id: number;
+  task_name: string;
+  dias_atraso: number;
+}
+
 export interface IndicadoresMunicipais {
   municipio: { id: number | false; name: string };
   projetos: number;
@@ -26,6 +49,9 @@ export interface IndicadoresMunicipais {
   chamados: number;
   chamados_abertos: number;
   por_secretaria: IndicadorSecretaria[];
+  by_stage: IndicadorEtapaMunicipal[];
+  projetos_resumo: ProjetoResumo[];
+  top_atrasadas: TaskAtrasada[];
 }
 
 export interface IndicadoresProjeto {

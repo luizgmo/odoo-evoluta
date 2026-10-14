@@ -451,7 +451,58 @@ class EvolutaApi(http.Controller):
             chamado_aberto = len(chamados.filtered(lambda chamado: not chamado.closed))
         except KeyError:
             pass
-        return {"municipio": {"id": user.municipio_id.id if user.municipio_id else False, "name": user.municipio_id.name if user.municipio_id else "Todos os municípios"}, "projetos": len(projects), "total_tasks": len(tasks), "done_tasks": len(done), "open_tasks": len(tasks) - len(done), "overdue_tasks": len(overdue), "taxa_conclusao": round((len(done) / len(tasks)) * 100, 2) if tasks else 0, "chamados": chamado_total, "chamados_abertos": chamado_aberto, "por_secretaria": list(by_secretaria.values())}
+        by_stage_counts = {}
+        for task in tasks:
+            nome_etapa = task.stage_id.name if task.stage_id else "Sem etapa"
+            by_stage_counts[nome_etapa] = by_stage_counts.get(nome_etapa, 0) + 1
+        ordem_etapas = ["NÃO INICIADO", "PLANEJADO", "EM EXECUÇÃO", "AGUARDANDO TERCEIRO", "VALIDAÇÃO", "CONCLUÍDO", "Sem etapa"]
+        by_stage = [
+            {"stage_name": nome, "total": by_stage_counts[nome]}
+            for nome in ordem_etapas
+            if by_stage_counts.get(nome, 0)
+        ]
+        for nome, total in sorted(by_stage_counts.items()):
+            if not any(item["stage_name"] == nome for item in by_stage):
+                by_stage.append({"stage_name": nome, "total": total})
+        projetos_resumo = []
+        for project in projects:
+            project_tasks = tasks.filtered(lambda task: task.project_id == project)
+            total_p = len(project_tasks)
+            concluidas_p = len(project_tasks.filtered(lambda task: task.stage_id.fold))
+            atrasadas_p = len(project_tasks.filtered(lambda task: task.date_deadline and task.date_deadline < today and not task.stage_id.fold))
+            taxa_p = round((concluidas_p / total_p) * 100, 2) if total_p else 0
+            projetos_resumo.append(
+                {
+                    "id": project.id,
+                    "name": project.name,
+                    "taxa": taxa_p,
+                    "total_tasks": total_p,
+                    "concluidas": concluidas_p,
+                    "atrasadas": atrasadas_p,
+                    "date_deadline": project.date.isoformat() if project.date else False,
+                }
+            )
+        projetos_resumo.sort(key=lambda item: (item["taxa"], -item["atrasadas"]))
+        top_atrasadas = []
+        for task in sorted(
+            overdue,
+            key=lambda task: task.date_deadline or today,
+        )[:5]:
+            prazo = task.date_deadline
+            try:
+                dias = (today.date() - prazo.date()).days if hasattr(today, "date") else (today - prazo).days
+            except Exception:
+                dias = 0
+            top_atrasadas.append(
+                {
+                    "project_id": task.project_id.id if task.project_id else False,
+                    "project_name": task.project_id.name if task.project_id else "",
+                    "task_id": task.id,
+                    "task_name": task.name,
+                    "dias_atraso": max(int(dias), 0),
+                }
+            )
+        return {"municipio": {"id": user.municipio_id.id if user.municipio_id else False, "name": user.municipio_id.name if user.municipio_id else "Todos os municípios"}, "projetos": len(projects), "total_tasks": len(tasks), "done_tasks": len(done), "open_tasks": len(tasks) - len(done), "overdue_tasks": len(overdue), "taxa_conclusao": round((len(done) / len(tasks)) * 100, 2) if tasks else 0, "chamados": chamado_total, "chamados_abertos": chamado_aberto, "por_secretaria": list(by_secretaria.values()), "by_stage": by_stage, "projetos_resumo": projetos_resumo, "top_atrasadas": top_atrasadas}
 
     @http.route("/api/indicadores", auth="user", type="http", methods=["GET"])
     def get_indicadores(self, project_id=None):
